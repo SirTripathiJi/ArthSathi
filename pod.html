@@ -1,0 +1,2455 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArthSaathi — अर्थसाथी</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    /* ===== CSS VARIABLES (NEO-BRUTALISM) ===== */
+    :root[data-theme="light"] {
+      --bg: #fdfbf7;
+      --bg-grid: #e5e5e5;
+      --surface: #ffffff;
+      --surface2: #f0f0f0;
+      --text: #000000;
+      --text2: #333333;
+      --text3: #666666;
+      --border-color: #000000;
+      --shadow-color: #000000;
+      --overlay: rgba(0, 0, 0, 0.8);
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #121212;
+      --bg-grid: #2a2a2a;
+      --surface: #1e1e1e;
+      --surface2: #2d2d2d;
+      --text: #ffffff;
+      --text2: #e0e0e0;
+      --text3: #aaaaaa;
+      --border-color: #ffffff;
+      --shadow-color: #FFD600;
+      /* Bright shadow for dark mode */
+      --overlay: rgba(0, 0, 0, 0.8);
+    }
+
+    :root {
+      --yellow: #FFD600;
+      --pink: #FF4081;
+      --orange: #FF8F00;
+      --blue: #2962FF;
+      --green: #00C853;
+      --purple: #B388FF;
+
+      --radius: 12px;
+      --brutal-border: 3px solid var(--border-color);
+      --brutal-shadow: 6px 6px 0px var(--shadow-color);
+      --brutal-shadow-hover: 2px 2px 0px var(--shadow-color);
+      --transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* ===== RESET & BASE ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--bg-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center;
+      background-attachment: fixed;
+      /* Parallax effect base */
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 1;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: 'Syne', sans-serif;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+      border-left: var(--brutal-border);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+    }
+
+    /* System Classes */
+    .page {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .page.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* Typography */
+    .hindi {
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* Fallback to standard if needed, or define a specific Hindi font */
+
+    /* ===== BRUTALIST COMPONENTS ===== */
+    .brutal-card {
+      background: var(--surface);
+      border: var(--brutal-border);
+      border-radius: var(--radius);
+      box-shadow: var(--brutal-shadow);
+      padding: 24px;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .brutal-card:hover {
+      transform: translate(2px, 2px);
+      box-shadow: var(--brutal-shadow-hover);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: var(--brutal-border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: var(--brutal-shadow);
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: var(--brutal-shadow-hover);
+    }
+
+    .btn:active {
+      transform: translate(4px, 4px);
+      box-shadow: 0 0 0 #000;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: #000;
+    }
+
+    .btn-primary[data-theme="dark"] {
+      background: var(--yellow);
+    }
+
+    .btn-secondary {
+      background: var(--pink);
+      color: #000;
+    }
+
+    .btn-accent {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-success {
+      background: var(--green);
+      color: #000;
+    }
+
+    .btn-danger {
+      background: #ff3333;
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .btn-lg {
+      padding: 16px 32px;
+      font-size: 18px;
+    }
+
+    .btn-icon {
+      padding: 10px;
+      border-radius: 50%;
+    }
+
+    /* Form Controls */
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px;
+      background: var(--surface);
+      border: var(--brutal-border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 600;
+      box-shadow: 4px 4px 0px var(--border-color);
+      transition: var(--transition);
+      outline: none;
+    }
+
+    .form-control:focus {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--border-color);
+      background: rgba(255, 214, 0, 0.1);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Logo */
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 24px;
+      color: var(--text);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--yellow);
+      border: var(--brutal-border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #000;
+      box-shadow: 3px 3px 0 #000;
+      transform: rotate(-5deg);
+      transition: var(--transition);
+    }
+
+    .logo:hover .logo-icon {
+      transform: rotate(5deg) scale(1.1);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .logo-en {
+      font-size: 24px;
+      letter-spacing: -1px;
+    }
+
+    .logo-hi {
+      font-size: 12px;
+      color: var(--pink);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Badges */
+    .badge {
+      padding: 4px 10px;
+      border: 2px solid var(--border-color);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 2px 2px 0 var(--border-color);
+      display: inline-block;
+    }
+
+    .badge-purple {
+      background: var(--purple);
+      color: #000;
+    }
+
+    .badge-green {
+      background: var(--green);
+      color: #000;
+    }
+
+    .badge-yellow {
+      background: var(--yellow);
+      color: #000;
+    }
+
+    .badge-red {
+      background: #ff3333;
+      color: #fff;
+    }
+
+    /* Toast */
+    #toastContainer {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      background: var(--surface);
+      border: var(--brutal-border);
+      color: var(--text);
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      font-weight: 700;
+      box-shadow: var(--brutal-shadow);
+      animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .toast-out {
+      animation: slideOutToast 0.3s forwards;
+    }
+
+    @keyframes slideInToast {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideOutToast {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      to {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--overlay);
+      backdrop-filter: blur(4px);
+      z-index: 5000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: var(--brutal-border);
+      border-radius: var(--radius);
+      padding: 32px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 12px 12px 0 var(--border-color);
+      animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .modal h3 {
+      font-size: 24px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 32px;
+    }
+
+    /* Table */
+    .table-wrap {
+      overflow-x: auto;
+      border: var(--brutal-border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 16px;
+      text-align: left;
+      border-bottom: var(--brutal-border);
+      background: var(--surface2);
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 2px solid var(--border-color);
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: var(--bg-grid);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-state .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* Loader */
+    #loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 800;
+      z-index: 99999;
+      position: fixed;
+      inset: 0;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--surface2);
+      border-top-color: var(--pink);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* ===== LANDING PAGE ===== */
+    #landingPage {
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .land-nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 20px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: var(--brutal-border);
+      box-shadow: 0 4px 0 var(--border-color);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      font-weight: 700;
+    }
+
+    .nav-links a {
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--pink);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Hero */
+    .land-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 20px 60px;
+      position: relative;
+      perspective: 1000px;
+    }
+
+    .hero-shapes {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      border: var(--brutal-border);
+      background: var(--yellow);
+      box-shadow: var(--brutal-shadow);
+    }
+
+    .shape-1 {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      top: 20%;
+      left: 15%;
+      background: var(--pink);
+      animation: float1 6s infinite alternate;
+    }
+
+    .shape-2 {
+      width: 100px;
+      height: 100px;
+      top: 60%;
+      right: 10%;
+      background: var(--blue);
+      animation: float2 8s infinite alternate;
+      transform: rotate(15deg);
+    }
+
+    .shape-3 {
+      width: 60px;
+      height: 60px;
+      top: 75%;
+      left: 20%;
+      background: var(--green);
+      border-radius: 10px;
+      animation: float1 7s infinite alternate-reverse;
+      transform: rotate(-20deg);
+    }
+
+    .shape-4 {
+      width: 0;
+      height: 0;
+      border-left: 40px solid transparent;
+      border-right: 40px solid transparent;
+      border-bottom: 70px solid var(--orange);
+      background: transparent;
+      top: 25%;
+      right: 25%;
+      animation: float2 5s infinite alternate-reverse;
+    }
+
+    @keyframes float1 {
+      to {
+        transform: translateY(-30px) rotate(10deg);
+      }
+    }
+
+    @keyframes float2 {
+      to {
+        transform: translateY(40px) rotate(-20deg);
+      }
+    }
+
+    .land-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+    }
+
+    .hero-hook {
+      display: inline-block;
+      background: var(--yellow);
+      color: #000;
+      padding: 8px 16px;
+      border: 2px solid #000;
+      font-weight: 700;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      box-shadow: 3px 3px 0 #000;
+      transform: rotate(-2deg);
+      font-size: 14px;
+    }
+
+    .hero-title {
+      font-size: clamp(60px, 10vw, 120px);
+      line-height: 1;
+      margin-bottom: 20px;
+      color: var(--text);
+      text-shadow: 6px 6px 0 var(--pink), -2px -2px 0 var(--border-color), 2px -2px 0 var(--border-color), -2px 2px 0 var(--border-color), 2px 2px 0 var(--border-color);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), text-shadow 0.3s;
+      animation: titleWobble 6s ease-in-out infinite, glowPulse 3s infinite alternate;
+    }
+
+    .hero-title:hover {
+      transform: rotate(-2deg) scale(1.05);
+      text-shadow: 10px 10px 0 var(--pink), -2px -2px 0 var(--border-color), 2px -2px 0 var(--border-color), -2px 2px 0 var(--border-color), 2px 2px 0 var(--border-color);
+    }
+
+    @keyframes titleWobble {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(1deg); }
+      75% { transform: rotate(-1deg); }
+    }
+
+    @keyframes glowPulse {
+      0% { filter: drop-shadow(0 0 5px rgba(255,214,0,0.5)); }
+      100% { filter: drop-shadow(0 0 20px rgba(255,64,129,0.8)); }
+    }
+
+    .hero-title-en {
+      font-size: clamp(30px, 5vw, 60px);
+      font-family: 'Space Grotesk';
+      font-weight: 800;
+      display: block;
+      margin-top: 10px;
+      text-shadow: 4px 4px 0 var(--blue);
+    }
+
+    .hero-tagline {
+      font-size: clamp(18px, 3vw, 24px);
+      margin-bottom: 40px;
+      font-weight: 600;
+      min-height: 60px;
+    }
+
+    /* Typing animation cursor */
+    .typing-cursor {
+      display: inline-block;
+      width: 12px;
+      height: 24px;
+      background: var(--text);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* Sponsors Carousel */
+    .sponsors {
+      padding: 60px 0;
+      border-top: var(--brutal-border);
+      border-bottom: var(--brutal-border);
+      background: var(--surface2);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .sponsor-track {
+      display: inline-block;
+      animation: scrollSponsors 20s linear infinite;
+    }
+
+    .sponsor-item {
+      display: inline-block;
+      margin: 0 40px;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text3);
+      font-family: 'Syne';
+      text-transform: uppercase;
+    }
+
+    @keyframes scrollSponsors {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* Features */
+    .features {
+      padding: 100px 20px;
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 48px;
+      margin-bottom: 60px;
+      text-shadow: 4px 4px 0 var(--yellow);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .feature-card {
+      text-align: left;
+      transform-style: preserve-3d;
+      transition: transform 0.1s;
+    }
+
+    .feature-icon {
+      font-size: 40px;
+      margin-bottom: 20px;
+      width: 80px;
+      height: 80px;
+      background: var(--surface2);
+      border: var(--brutal-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 4px 4px 0 var(--border-color);
+      border-radius: 16px;
+      transform: translateZ(20px);
+    }
+
+    .feature-card h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+      transform: translateZ(30px);
+    }
+
+    .feature-card p {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text2);
+      transform: translateZ(10px);
+    }
+
+    /* FAQ */
+    .faq {
+      padding: 100px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border: var(--brutal-border);
+      margin-bottom: 20px;
+      background: var(--surface);
+      box-shadow: var(--brutal-shadow);
+      border-radius: var(--radius);
+    }
+
+    .faq-q {
+      padding: 20px;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-q:hover {
+      background: var(--yellow);
+      color: #000;
+    }
+
+    .faq-a {
+      padding: 0 20px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .faq-item.active .faq-a {
+      display: block;
+    }
+
+    .faq-icon {
+      font-size: 24px;
+      font-weight: 800;
+      transition: transform 0.3s;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    /* Footer */
+    .land-footer {
+      border-top: var(--brutal-border);
+      padding: 40px;
+      text-align: center;
+      background: var(--surface);
+      font-weight: 700;
+    }
+
+    /* ===== AUTH PAGE ===== */
+    #authPage {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 450px;
+      background: var(--surface);
+      border: var(--brutal-border);
+      border-radius: var(--radius);
+      box-shadow: 12px 12px 0 var(--border-color);
+      padding: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      border: 2px solid var(--border-color);
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: var(--transition);
+      background: var(--surface2);
+    }
+
+    .auth-tab.active {
+      background: var(--pink);
+      color: #000;
+      box-shadow: 4px 4px 0 var(--border-color);
+      transform: translate(-2px, -2px);
+    }
+
+    .auth-form {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .auth-form.active {
+      display: block;
+    }
+
+    /* ===== APP LAYOUT ===== */
+    #appPage {
+      flex-direction: row;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: var(--surface);
+      border-right: var(--brutal-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 200;
+      box-shadow: 4px 0 0 var(--border-color);
+      transition: transform 0.3s;
+    }
+
+    .sidebar-logo {
+      padding: 24px;
+      border-bottom: var(--brutal-border);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+      background: transparent;
+      text-align: left;
+      width: 100%;
+    }
+
+    .nav-item:hover {
+      border-color: var(--border-color);
+      background: var(--surface2);
+      transform: translateX(4px);
+      box-shadow: 2px 2px 0 var(--border-color);
+    }
+
+    .nav-item.active {
+      background: var(--yellow);
+      color: #000;
+      border-color: var(--border-color);
+      box-shadow: 4px 4px 0 var(--border-color);
+      transform: translate(-2px, -2px);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: #ff3333;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+      border: 2px solid #000;
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .sidebar-bottom {
+      padding: 20px 16px;
+      border-top: var(--brutal-border);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 10px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--surface2);
+      box-shadow: 2px 2px 0 var(--border-color);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--pink);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #000;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .user-store {
+      font-size: 12px;
+      color: var(--text3);
+      font-weight: 600;
+    }
+
+    .app-content {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .app-topbar {
+      position: sticky;
+      top: 0;
+      padding: 16px 32px;
+      background: var(--surface);
+      border-bottom: var(--brutal-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      box-shadow: 0 4px 0 var(--border-color);
+    }
+
+    .topbar-title {
+      font-size: 24px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .app-main {
+      padding: 32px;
+      flex: 1;
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--overlay);
+      z-index: 199;
+      backdrop-filter: blur(4px);
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+
+    /* Dashboard */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: grab;
+    }
+
+    .stat-card:active {
+      cursor: grabbing;
+    }
+
+    .stat-card.ghost {
+      opacity: 0.4;
+    }
+
+    .stat-card.bg-yellow {
+      background: var(--yellow);
+      color: #000;
+    }
+
+    .stat-card.bg-pink {
+      background: var(--pink);
+      color: #000;
+    }
+
+    .stat-card.bg-blue {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .stat-card.bg-green {
+      background: var(--green);
+      color: #000;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      border-bottom: 2px solid currentColor;
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .stat-value {
+      font-family: 'Syne';
+      font-size: 36px;
+      font-weight: 800;
+    }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: var(--brutal-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--brutal-shadow);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      position: relative;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .search-bar input {
+      padding-left: 40px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      font-size: 18px;
+    }
+
+    /* Interactive Toggle */
+    .toggle-switch {
+      width: 60px;
+      height: 32px;
+      background: var(--surface2);
+      border: var(--brutal-border);
+      border-radius: 30px;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .toggle-switch.on {
+      background: var(--green);
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 22px;
+      background: var(--surface);
+      border: 2px solid var(--border-color);
+      border-radius: 50%;
+      transition: var(--transition);
+      box-shadow: 2px 2px 0 var(--border-color);
+    }
+
+    .toggle-switch.on::after {
+      transform: translateX(28px);
+      background: #fff;
+    }
+
+    /* Button Upgrades */
+    .btn-glow {
+      animation: btnGlowPulse 3s infinite;
+    }
+    @keyframes btnGlowPulse {
+      0%, 100% { box-shadow: var(--brutal-shadow); }
+      50% { box-shadow: 0 0 20px var(--yellow), var(--brutal-shadow); }
+    }
+    .btn-bounce:hover {
+      animation: btnHoverBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform: translate(2px, 2px) scale(1.05);
+    }
+    @keyframes btnHoverBounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1.05); }
+    }
+
+    /* Trust Strip */
+    .trust-strip {
+      margin-top: 40px;
+      padding: 12px 24px;
+      background: var(--surface);
+      border: 3px solid var(--border-color);
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 4px 4px 0 var(--border-color);
+      animation: slideUpFade 1s ease-out 0.5s both;
+    }
+
+    /* Scroll Reveal & Animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .psychology-triggers {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .trigger-item {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .story-strip {
+      background: var(--yellow);
+      color: #000;
+      padding: 60px 20px;
+      text-align: center;
+      border-top: var(--brutal-border);
+      border-bottom: var(--brutal-border);
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+    .story-strip-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media(max-width: 1024px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .app-content {
+        margin-left: 0;
+      }
+
+      .hamburger {
+        display: block;
+      }
+
+      .app-topbar {
+        padding: 16px;
+      }
+
+      .app-main {
+        padding: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      /* Hide landing nav links on mobile for simplicity */
+      .hero-title {
+        font-size: 60px;
+      }
+    }
+
+    /* Drag Drop Visuals */
+    .dropzone {
+      border: 2px dashed var(--border-color) !important;
+      background: var(--bg-grid) !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="toastContainer"></div>
+
+  <div id="loader" class="page active">
+    <div class="spinner"></div>
+    <div>Loading ArthSaathi...</div>
+  </div>
+  <!-- ===== MODALS ===== -->
+  <!-- Product Modal -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal">
+      <h3 id="productModalTitle">Add Product</h3>
+      <div class="form-grid">
+        <div class="form-group"><label>Name</label><input class="form-control" id="pm_name" placeholder="E.g. Rice">
+        </div>
+        <div class="form-group"><label>Category</label><input class="form-control" id="pm_category"
+            placeholder="E.g. Grocery"></div>
+        <div class="form-group"><label>Cost (₹)</label><input class="form-control" id="pm_cost" type="number"></div>
+        <div class="form-group"><label>Selling Price (₹)</label><input class="form-control" id="pm_sell" type="number">
+        </div>
+        <div class="form-group"><label>Quantity</label><input class="form-control" id="pm_qty" type="number"></div>
+        <div class="form-group"><label>Low Stock Alert</label><input class="form-control" id="pm_low" type="number"
+            value="5"></div>
+      </div>
+      <input type="hidden" id="pm_editIndex" value="-1">
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('productModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sale Modal -->
+  <div class="modal-overlay" id="saleModal">
+    <div class="modal">
+      <h3>🛒 New Sale</h3>
+      <div class="form-group">
+        <label>Select Product</label>
+        <select class="form-control" id="sm_product" onchange="updateSaleBill()"></select>
+      </div>
+      <div class="form-group">
+        <label>Quantity</label>
+        <input class="form-control" id="sm_qty" type="number" min="1" oninput="updateSaleBill()">
+      </div>
+      <div id="saleBillPreview" style="margin-top:20px; font-weight:700; font-size:18px;"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeModal('saleModal')">Cancel</button>
+        <button class="btn btn-success" onclick="confirmSale()">Confirm Sale</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bill Modal -->
+  <div class="modal-overlay" id="billModal">
+    <div class="modal" id="billContent" style="text-align:center;">
+      <!-- Content injected via JS -->
+    </div>
+  </div>
+
+  <!-- ===== LANDING PAGE ===== -->
+  <div class="page" id="landingPage">
+    <nav class="land-nav">
+      <div class="logo">
+        <div class="logo-icon">₹</div>
+        <div class="logo-text">
+          <span class="logo-en">ArthSaathi</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <button class="btn btn-icon" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="btn btn-primary" onclick="showPage('authPage')">START FREE</button>
+      </div>
+    </nav>
+
+    <section class="land-hero" id="heroSection">
+      <div class="hero-shapes" id="heroShapes">
+        <div class="shape shape-1" data-speed="2"></div>
+        <div class="shape shape-2" data-speed="-3"></div>
+        <div class="shape shape-3" data-speed="4"></div>
+        <div class="shape shape-4" data-speed="-2"></div>
+      </div>
+      <div class="land-hero-content reveal active">
+        <div class="hero-hook">छोटा व्यापार हो या बड़ा — अब हर फैसला होगा स्मार्ट</div>
+        <h1 class="hero-title hindi">अर्थसाथी<span class="hero-title-en">ArthSaathi</span></h1>
+        <div class="hero-tagline" style="min-height:90px;" id="typingText"></div>
+        <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-lg btn-glow btn-bounce" onclick="showPage('authPage')">Start Managing Smarter 🚀</button>
+          <button class="btn btn-secondary btn-lg btn-bounce"
+            onclick="document.getElementById('features').scrollIntoView()">See How It Works →</button>
+        </div>
+        <div class="trust-strip">
+          <span style="font-size: 20px;">🔥</span> 10,000+ shop owners ready for smarter business 🚀
+        </div>
+        <div class="psychology-triggers">
+          <div class="trigger-item"><span>✅</span> No technical skills needed</div>
+          <div class="trigger-item"><span>📱</span> Works on mobile</div>
+          <div class="trigger-item"><span>🔒</span> Your data stays private</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sponsors Carousel -->
+    <div class="sponsors">
+      <div class="sponsor-track" id="sponsorTrack">
+        <span class="sponsor-item">TRUSTED BY LOCAL SHOPS</span> •
+        <span class="sponsor-item">SMART BUSINESS PARTNER</span> •
+        <span class="sponsor-item">MANAGE PROFITS</span> •
+        <span class="sponsor-item">GROWTH TRACKER</span> •
+        <span class="sponsor-item">TRUSTED BY LOCAL SHOPS</span> •
+        <span class="sponsor-item">SMART BUSINESS PARTNER</span> •
+        <span class="sponsor-item">MANAGE PROFITS</span> •
+        <span class="sponsor-item">GROWTH TRACKER</span>
+      </div>
+    </div>
+
+    <!-- Mini Story Strip -->
+    <section class="story-strip reveal">
+      <div class="story-strip-content">
+        <div style="font-size: 16px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; color: #333;">👉 Built for real दुकानदार</div>
+        "Whether you run a grocery store, clothing shop, or electronics business — ArthSaathi works like your digital partner."
+      </div>
+    </section>
+
+    <section class="features" id="features" style="padding-top: 100px;">
+      <h2 class="section-title reveal">Why ArthSaathi?</h2>
+      <div class="features-grid">
+        <div class="brutal-card feature-card tilt-card reveal stagger-1">
+          <div class="feature-icon">📦</div>
+          <h3>Smart Inventory</h3>
+          <p>Never lose track of stock again. Get instant alerts before items run out.</p>
+        </div>
+        <div class="brutal-card feature-card tilt-card reveal stagger-2">
+          <div class="feature-icon">💰</div>
+          <h3>Instant Sales</h3>
+          <p>Bill customers in seconds with automatic profit calculation.</p>
+        </div>
+        <div class="brutal-card feature-card tilt-card reveal stagger-3">
+          <div class="feature-icon">📈</div>
+          <h3>Live Analytics</h3>
+          <p>See your business performance in bold, clear, visual charts.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="love" style="padding-top: 60px; padding-bottom: 120px;">
+      <h2 class="section-title reveal" style="text-shadow: 4px 4px 0 var(--pink);">Why shop owners LOVE ArthSaathi 💛</h2>
+      <div class="features-grid">
+        <div class="brutal-card feature-card tilt-card reveal stagger-1">
+          <div class="feature-icon">⚡</div>
+          <h3>Zero Confusion</h3>
+          <p>Simple interface designed for real shopkeepers, not engineers.</p>
+        </div>
+        <div class="brutal-card feature-card tilt-card reveal stagger-2">
+          <div class="feature-icon">📊</div>
+          <h3>Clear Decisions</h3>
+          <p>Know exactly what’s selling, what’s not, and where profit is coming from.</p>
+        </div>
+        <div class="brutal-card feature-card tilt-card reveal stagger-3">
+          <div class="feature-icon">🚀</div>
+          <h3>Growth Ready</h3>
+          <p>From small shop to big business — scale without chaos.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <h2 class="section-title" style="text-align:center;">FAQ</h2>
+      <div class="faq-item" onclick="this.classList.toggle('active')">
+        <div class="faq-q">Is ArthSaathi free to use? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes! Your data is stored locally on your device for absolute privacy and speed.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('active')">
+        <div class="faq-q">Can I use it on my mobile phone? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Absolutely. ArthSaathi is fully responsive and works beautifully on any device.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('active')">
+        <div class="faq-q">Is my business data secure? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Everything is saved in your browser's local storage. Nobody else can access it.</div>
+      </div>
+    </section>
+
+    <footer class="land-footer">
+      <div class="logo" style="justify-content:center; margin-bottom:20px;">
+        <div class="logo-icon" style="width:30px; height:30px; font-size:18px;">₹</div>
+        <div class="logo-text"><span class="logo-en" style="font-size:18px;">ArthSaathi</span></div>
+      </div>
+      <p>A smarter way to manage your business, profits, and growth.</p>
+      <p style="margin-top: 24px; font-weight: 800; font-size: 18px; color: var(--pink);">Made for Indian shopkeepers 🇮🇳</p>
+    </footer>
+  </div>
+
+  <!-- ===== AUTH PAGE ===== -->
+  <div class="page" id="authPage">
+    <button class="btn btn-icon" onclick="showPage('landingPage')"
+      style="position:absolute; top:20px; left:20px;">←</button>
+    <div class="auth-box tilt-card">
+      <div class="logo" style="justify-content:center; width:100%; margin-bottom:30px;">
+        <div class="logo-icon">₹</div>
+        <div class="logo-text"><span class="logo-en">ArthSaathi</span></div>
+      </div>
+
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tabLogin" onclick="switchAuth('login')">LOGIN</div>
+        <div class="auth-tab" id="tabSignup" onclick="switchAuth('signup')">SIGN UP</div>
+      </div>
+
+      <div class="auth-form active" id="formLogin">
+        <div class="form-group"><label>Email</label><input class="form-control" id="log_email" type="email"
+            placeholder="you@shop.com"></div>
+        <div class="form-group"><label>Password</label><input class="form-control" id="log_pass" type="password"></div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="login()">Enter
+          Dashboard</button>
+      </div>
+
+      <div class="auth-form" id="formSignup">
+        <div class="form-group"><label>Name</label><input class="form-control" id="reg_name"></div>
+        <div class="form-group"><label>Email</label><input class="form-control" id="reg_email" type="email"></div>
+        <div class="form-group"><label>Store Name</label><input class="form-control" id="reg_store"></div>
+        <div class="form-group"><label>Password</label><input class="form-control" id="reg_pass" type="password"></div>
+        <button class="btn btn-secondary" style="width:100%; justify-content:center;" onclick="register()">Create
+          Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== APP LAYOUT ===== -->
+  <div class="page" id="appPage">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo">
+          <div class="logo-icon" style="width:32px; height:32px; font-size:18px;">₹</div>
+          <div class="logo-text"><span class="logo-en" style="font-size:20px;">ArthSaathi</span></div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" onclick="navigateTo('dashboard')"><span class="nav-icon">🏠</span>
+          Dashboard</button>
+        <button class="nav-item" onclick="navigateTo('inventory')"><span class="nav-icon">📦</span> Inventory <span
+            class="nav-badge" id="lowStockBadge" style="display:none">0</span></button>
+        <button class="nav-item" onclick="navigateTo('sales')"><span class="nav-icon">💰</span> Sales</button>
+        <button class="nav-item" onclick="navigateTo('analytics')"><span class="nav-icon">📈</span> Analytics</button>
+        <button class="nav-item" onclick="navigateTo('settings')"><span class="nav-icon">⚙️</span> Settings</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="user-profile">
+          <div class="user-avatar" id="u_avatar">A</div>
+          <div class="user-info">
+            <span class="user-name" id="u_name">User</span>
+            <span class="user-store" id="u_store">Store</span>
+          </div>
+        </div>
+        <button class="nav-item" style="color:var(--pink);" onclick="logout()"><span class="nav-icon">🚪</span>
+          Logout</button>
+      </div>
+    </aside>
+
+    <div class="app-content">
+      <header class="app-topbar">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button class="hamburger" onclick="toggleSidebar()">☰</button>
+          <div class="topbar-title" id="pageTitle">Dashboard</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-icon" onclick="toggleTheme()" id="appThemeBtn"
+            style="border:var(--brutal-border); box-shadow:3px 3px 0 #000;">🌙</button>
+        </div>
+      </header>
+
+      <main class="app-main">
+
+        <!-- Dashboard -->
+        <div class="section active" id="sec-dashboard">
+          <div class="stats-grid" id="dragGrid">
+            <div class="brutal-card stat-card bg-yellow tilt-card" draggable="true">
+              <div class="stat-label">Sales <span class="nav-icon">💰</span></div>
+              <div class="stat-value" id="d_sales">₹0</div>
+            </div>
+            <div class="brutal-card stat-card bg-green tilt-card" draggable="true">
+              <div class="stat-label">Profit <span class="nav-icon">📈</span></div>
+              <div class="stat-value" id="d_profit">₹0</div>
+            </div>
+            <div class="brutal-card stat-card bg-blue tilt-card" draggable="true">
+              <div class="stat-label">Products <span class="nav-icon">📦</span></div>
+              <div class="stat-value" id="d_products">0</div>
+            </div>
+            <div class="brutal-card stat-card bg-pink tilt-card" draggable="true">
+              <div class="stat-label">Transactions <span class="nav-icon">🧾</span></div>
+              <div class="stat-value" id="d_txns">0</div>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+            <div class="chart-card tilt-card"><canvas id="chartSales" height="200"></canvas></div>
+            <div class="chart-card tilt-card"><canvas id="chartProducts" height="200"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Inventory -->
+        <div class="section" id="sec-inventory">
+          <div class="section-header">
+            <div class="search-bar">
+              <span class="search-icon">🔍</span>
+              <input class="form-control" id="invSearch" placeholder="Search inventory..." oninput="renderInventory()">
+            </div>
+            <button class="btn btn-primary"
+              onclick="openModal('productModal'); document.getElementById('pm_editIndex').value='-1';">+ Add
+              Product</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Category</th>
+                  <th>Cost</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="invBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sales -->
+        <div class="section" id="sec-sales">
+          <div class="section-header">
+            <div class="search-bar">
+              <span class="search-icon">🔍</span>
+              <input class="form-control" id="saleSearch" placeholder="Search sales..." oninput="renderSales()">
+            </div>
+            <button class="btn btn-success" onclick="openSaleModal()">+ Make Sale</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Amount</th>
+                  <th>Profit</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="saleBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="section" id="sec-analytics">
+          <div class="brutal-card" style="margin-bottom:30px; background:var(--pink); color:#000;">
+            <h2 style="font-size:32px;">Business Growth</h2>
+            <p style="font-weight:600; font-size:18px;">Track your performance with visual brutalist charts.</p>
+          </div>
+          <div class="charts-grid">
+            <div class="chart-card tilt-card"><canvas id="chartMonthly" height="250"></canvas></div>
+            <div class="chart-card tilt-card"><canvas id="chartCategory" height="250"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="section" id="sec-settings">
+          <div class="brutal-card tilt-card" style="max-width:600px;">
+            <h2 style="margin-bottom:20px;">Settings</h2>
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:20px; border-bottom:2px solid var(--border-color);">
+              <div>
+                <h3 style="margin-bottom:5px;">Dark Mode</h3>
+                <p style="font-weight:600; color:var(--text3);">Toggle brutalist dark theme</p>
+              </div>
+              <div class="toggle-switch" id="settingDarkToggle" onclick="toggleTheme()"></div>
+            </div>
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:20px; border-bottom:2px solid var(--border-color);">
+              <div>
+                <h3 style="margin-bottom:5px;">Clear Data</h3>
+                <p style="font-weight:600; color:var(--text3);">Delete all business data</p>
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="clearData()">WIPE DATA</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Firebase Compat JS SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // TODO: Replace with your actual Firebase config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    /* ===== CORE LOGIC & DB ===== */
+    window.appData = {
+      user: null,
+      products: [],
+      sales: []
+    };
+
+    const DB = {
+      getProducts: uid => window.appData.products,
+      setProducts: (uid, p) => {
+        window.appData.products = p;
+        if (uid) db.collection("users").doc(uid).collection("data").doc("products").set({ list: p });
+      },
+      getSales: uid => window.appData.sales,
+      setSales: (uid, s) => {
+        window.appData.sales = s;
+        if (uid) db.collection("users").doc(uid).collection("data").doc("sales").set({ list: s });
+      },
+      clearSession: () => {
+        window.appData = { user: null, products: [], sales: [] };
+      }
+    };
+
+    let currentTheme = localStorage.getItem('as_theme') || 'light';
+    function applyTheme(t) {
+      currentTheme = t;
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('as_theme', t);
+      const emoji = t === 'dark' ? '☀️' : '🌙';
+      document.querySelectorAll('#themeBtn, #appThemeBtn').forEach(b => b.textContent = emoji);
+      const st = document.getElementById('settingDarkToggle');
+      if (st) st.className = `toggle-switch ${t === 'dark' ? 'on' : ''}`;
+      if (window.myCharts) updateChartsTheme();
+    }
+    function toggleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+    applyTheme(currentTheme);
+
+    /* Routing & UI */
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if (id === 'appPage') { initApp(); document.getElementById('chatWidget').style.display = 'flex'; }
+      else { document.getElementById('chatWidget').style.display = 'none'; }
+    }
+    function navigateTo(sec) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + sec).classList.add('active');
+      document.getElementById('pageTitle').textContent = sec.toUpperCase();
+      toggleSidebar(true); // close on mobile
+      if (sec === 'dashboard') renderDashboard();
+      if (sec === 'inventory') renderInventory();
+      if (sec === 'sales') renderSales();
+      if (sec === 'analytics') renderAnalytics();
+    }
+    function toggleSidebar(forceClose = false) {
+      const sb = document.getElementById('sidebar');
+      const ov = document.getElementById('sidebarOverlay');
+      if (forceClose) { sb.classList.remove('open'); ov.classList.remove('active'); return; }
+      sb.classList.toggle('open'); ov.classList.toggle('active');
+    }
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function toast(msg, type = 'info') {
+      const el = document.createElement('div');
+      el.className = `toast`;
+      const icons = { success: '✅', error: '❌', info: '💡' };
+      el.innerHTML = `<span style="font-size:24px;">${icons[type] || '💡'}</span> <span>${msg}</span>`;
+      document.getElementById('toastContainer').appendChild(el);
+      setTimeout(() => { el.classList.add('toast-out'); setTimeout(() => el.remove(), 300); }, 3000);
+    }
+
+    /* Auth */
+    function switchAuth(tab) {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+      document.getElementById(tab === 'login' ? 'tabLogin' : 'tabSignup').classList.add('active');
+      document.getElementById(tab === 'login' ? 'formLogin' : 'formSignup').classList.add('active');
+    }
+    async function register() {
+      const name = document.getElementById('reg_name').value.trim() || 'Guest User';
+      const email = document.getElementById('reg_email').value.trim().toLowerCase();
+      const store = document.getElementById('reg_store').value.trim() || 'My Store';
+      const pass = document.getElementById('reg_pass').value;
+      
+      if (!email || !pass) return toast('Email and password required', 'error');
+
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+        const user = userCredential.user;
+        
+        await db.collection("users").doc(user.uid).set({
+          name, email, store
+        });
+        
+        await db.collection("users").doc(user.uid).collection("data").doc("products").set({ list: [] });
+        await db.collection("users").doc(user.uid).collection("data").doc("sales").set({ list: [] });
+        
+        toast('Welcome! 🎉', 'success');
+        confettiBurst();
+      } catch (error) {
+        toast(error.message, 'error');
+      }
+    }
+
+    async function login() {
+      const email = document.getElementById('log_email').value.trim().toLowerCase();
+      const pass = document.getElementById('log_pass').value;
+      
+      if (!email || !pass) return toast('Email and password required', 'error');
+
+      try {
+        await auth.signInWithEmailAndPassword(email, pass);
+        toast('Welcome back!', 'success');
+      } catch (error) {
+        toast(error.message, 'error');
+      }
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        DB.clearSession();
+        showPage('landingPage');
+      });
+    }
+
+    /* App Logic */
+    function uid() { 
+      return window.appData.user ? window.appData.user.uid : null; 
+    }
+
+    async function initApp() {
+      if (!window.appData.user) {
+        return showPage('authPage');
+      }
+      document.getElementById('u_name').textContent = window.appData.user.name || 'User';
+      document.getElementById('u_store').textContent = window.appData.user.store || 'Store';
+      document.getElementById('u_avatar').textContent = (window.appData.user.name || 'U').charAt(0).toUpperCase();
+      navigateTo('dashboard');
+      updateBadges();
+    }
+
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const docSnap = await db.collection("users").doc(user.uid).get();
+          let userData = { uid: user.uid, name: 'User', store: 'Store' };
+          if (docSnap.exists) {
+            userData = { ...userData, ...docSnap.data() };
+          }
+          window.appData.user = userData;
+
+          const prodSnap = await db.collection("users").doc(user.uid).collection("data").doc("products").get();
+          window.appData.products = prodSnap.exists ? (prodSnap.data().list || []) : [];
+
+          const salesSnap = await db.collection("users").doc(user.uid).collection("data").doc("sales").get();
+          window.appData.sales = salesSnap.exists ? (salesSnap.data().list || []) : [];
+
+          if (document.getElementById('authPage').classList.contains('active') || 
+              document.getElementById('landingPage').classList.contains('active')) {
+            showPage('appPage');
+          } else {
+            initApp();
+          }
+        } catch(e) {
+          console.error("Error fetching user data", e);
+          toast("Error loading user data", "error");
+        }
+      } else {
+        DB.clearSession();
+        if (document.getElementById('appPage').classList.contains('active')) {
+          showPage('landingPage');
+        }
+      }
+    });
+    function updateBadges() {
+      const p = DB.getProducts(uid());
+      const low = p.filter(x => x.qty <= x.lowStock).length;
+      const b = document.getElementById('lowStockBadge');
+      b.style.display = low > 0 ? 'inline-block' : 'none';
+      b.textContent = low;
+    }
+
+    /* Inventory */
+    function saveProduct() {
+      const name = document.getElementById('pm_name').value;
+      const cat = document.getElementById('pm_category').value || 'General';
+      const cost = Number(document.getElementById('pm_cost').value);
+      const sell = Number(document.getElementById('pm_sell').value);
+      const qty = Number(document.getElementById('pm_qty').value);
+      const low = Number(document.getElementById('pm_low').value) || 5;
+      if (!name || cost <= 0 || sell <= 0 || qty < 0) return toast('Invalid data', 'error');
+
+      const products = DB.getProducts(uid());
+      const idx = Number(document.getElementById('pm_editIndex').value);
+      if (idx >= 0) {
+        products[idx] = { ...products[idx], name, category: cat, cost, sell, qty, lowStock: low };
+        toast('Product updated', 'success');
+      } else {
+        products.push({ id: Date.now(), name, category: cat, cost, sell, qty, lowStock: low });
+        toast('Product added', 'success');
+      }
+      DB.setProducts(uid(), products);
+      closeModal('productModal');
+      renderInventory(); updateBadges();
+    }
+    function openEdit(id) {
+      const p = DB.getProducts(uid()).find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('productModalTitle').textContent = 'Edit Product';
+      document.getElementById('pm_name').value = p.name;
+      document.getElementById('pm_category').value = p.category;
+      document.getElementById('pm_cost').value = p.cost;
+      document.getElementById('pm_sell').value = p.sell;
+      document.getElementById('pm_qty').value = p.qty;
+      document.getElementById('pm_low').value = p.lowStock;
+      document.getElementById('pm_editIndex').value = DB.getProducts(uid()).findIndex(x => x.id === id);
+      openModal('productModal');
+    }
+    function delProduct(id) {
+      if (!confirm('Delete this product?')) return;
+      let p = DB.getProducts(uid());
+      p = p.filter(x => x.id !== id);
+      DB.setProducts(uid(), p);
+      renderInventory(); updateBadges();
+    }
+    function renderInventory() {
+      const q = document.getElementById('invSearch').value.toLowerCase();
+      const p = DB.getProducts(uid()).filter(x => x.name.toLowerCase().includes(q));
+      const html = p.map(x => `
+    <tr>
+      <td>${x.name}</td>
+      <td><span class="badge badge-purple">${x.category}</span></td>
+      <td>₹${x.cost}</td>
+      <td>₹${x.sell}</td>
+      <td><span style="color:${x.qty <= x.lowStock ? '#ff3333' : 'inherit'};font-weight:800;">${x.qty}</span></td>
+      <td>
+        <button class="btn btn-sm btn-icon" onclick="openEdit(${x.id})">✏️</button>
+        <button class="btn btn-sm btn-icon btn-danger" onclick="delProduct(${x.id})">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+      document.getElementById('invBody').innerHTML = html || '<tr><td colspan="6" class="empty-state">No products found</td></tr>';
+    }
+
+    /* Sales */
+    function openSaleModal() {
+      const p = DB.getProducts(uid()).filter(x => x.qty > 0);
+      if (!p.length) return toast('No products in stock', 'error');
+      const sel = document.getElementById('sm_product');
+      sel.innerHTML = '<option value="">Select...</option>' + p.map(x => `<option value="${x.id}">${x.name} (Stock: ${x.qty})</option>`).join('');
+      document.getElementById('sm_qty').value = '';
+      document.getElementById('saleBillPreview').innerHTML = '';
+      openModal('saleModal');
+    }
+    function updateSaleBill() {
+      const pid = Number(document.getElementById('sm_product').value);
+      const qty = Number(document.getElementById('sm_qty').value);
+      const p = DB.getProducts(uid()).find(x => x.id === pid);
+      if (!p || !qty || qty <= 0) { document.getElementById('saleBillPreview').innerHTML = ''; return; }
+      document.getElementById('saleBillPreview').innerHTML = `Total: ₹${p.sell * qty} <br><span style="color:var(--green);font-size:14px;">Profit: ₹${(p.sell - p.cost) * qty}</span>`;
+    }
+    function confirmSale() {
+      const pid = Number(document.getElementById('sm_product').value);
+      const qty = Number(document.getElementById('sm_qty').value);
+      if (!pid || !qty || qty <= 0) return;
+      const products = DB.getProducts(uid());
+      const pIdx = products.findIndex(x => x.id === pid);
+      const p = products[pIdx];
+      if (qty > p.qty) return toast('Not enough stock', 'error');
+
+      // Deduct
+      products[pIdx].qty -= qty;
+      DB.setProducts(uid(), products);
+
+      // Record
+      const sales = DB.getSales(uid());
+      const txn = { id: Date.now(), pid, name: p.name, qty, amt: p.sell * qty, profit: (p.sell - p.cost) * qty, date: new Date().toISOString() };
+      sales.push(txn);
+      DB.setSales(uid(), sales);
+
+      closeModal('saleModal');
+      toast('Sale Successful!', 'success');
+      confettiBurst();
+      updateBadges();
+
+      // Show Bill
+      document.getElementById('billContent').innerHTML = `
+    <h3 style="margin-bottom:10px;">🧾 RECEIPT</h3>
+    <p style="font-weight:800;font-size:24px;">₹${txn.amt}</p>
+    <p>${txn.name} × ${txn.qty}</p>
+    <button class="btn btn-primary" style="margin-top:20px;" onclick="closeModal('billModal')">DONE</button>
+  `;
+      openModal('billModal');
+      if (document.getElementById('sec-sales').classList.contains('active')) renderSales();
+    }
+    function renderSales() {
+      const q = document.getElementById('saleSearch').value.toLowerCase();
+      const s = DB.getSales(uid()).slice().reverse().filter(x => x.name.toLowerCase().includes(q));
+      const html = s.map(x => `
+    <tr>
+      <td>${x.name}</td>
+      <td>${x.qty}</td>
+      <td style="font-weight:800;">₹${x.amt}</td>
+      <td style="color:var(--green);font-weight:800;">+₹${x.profit}</td>
+      <td style="font-size:14px;">${new Date(x.date).toLocaleDateString()}</td>
+    </tr>
+  `).join('');
+      document.getElementById('saleBody').innerHTML = html || '<tr><td colspan="5" class="empty-state">No sales yet</td></tr>';
+    }
+
+    /* Dashboard & Analytics */
+    function renderDashboard() {
+      const s = DB.getSales(uid());
+      const p = DB.getProducts(uid());
+      document.getElementById('d_sales').textContent = '₹' + s.reduce((a, x) => a + x.amt, 0).toLocaleString();
+      document.getElementById('d_profit').textContent = '₹' + s.reduce((a, x) => a + x.profit, 0).toLocaleString();
+      document.getElementById('d_products').textContent = p.length;
+      document.getElementById('d_txns').textContent = s.length;
+
+      // Render Charts
+      const ctxS = document.getElementById('chartSales');
+      const ctxP = document.getElementById('chartProducts');
+
+      // Simple grouping by date (last 7 days)
+      const dmap = {};
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        dmap[d.toLocaleDateString()] = 0;
+      }
+      s.forEach(x => {
+        const d = new Date(x.date).toLocaleDateString();
+        if (dmap[d] !== undefined) dmap[d] += x.amt;
+      });
+
+      createChart(ctxS, 'bar', Object.keys(dmap), Object.values(dmap), 'Sales (7 Days)', '#2962FF');
+
+      // Top products
+      const pmap = {};
+      s.forEach(x => { pmap[x.name] = (pmap[x.name] || 0) + x.amt; });
+      const sorted = Object.entries(pmap).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      createChart(ctxP, 'doughnut', sorted.map(x => x[0]), sorted.map(x => x[1]), 'Top Products', ['#FFD600', '#FF4081', '#00C853', '#2962FF', '#FF8F00']);
+    }
+
+    function renderAnalytics() {
+      const s = DB.getSales(uid());
+      // Monthly Revenue & Profit
+      const ctxM = document.getElementById('chartMonthly');
+      const ctxC = document.getElementById('chartCategory');
+
+      // Group by product category
+      const p = DB.getProducts(uid());
+      const cmap = {};
+      s.forEach(txn => {
+        const prod = p.find(x => x.id === txn.pid);
+        const cat = prod ? prod.category : 'General';
+        cmap[cat] = (cmap[cat] || 0) + txn.amt;
+      });
+
+      createChart(ctxC, 'pie', Object.keys(cmap), Object.values(cmap), 'Revenue by Category', ['#FF4081', '#FFD600', '#00C853', '#B388FF', '#FF8F00']);
+
+      // Fake 30 day line chart
+      const dmapRev = {}, dmapProf = {};
+      for (let i = 14; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i * 2);
+        const lbl = d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+        dmapRev[lbl] = 0; dmapProf[lbl] = 0;
+      }
+      s.forEach(x => {
+        // map to nearest bin for simplicity in this demo
+        const d = new Date(x.date).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+        if (dmapRev[d] !== undefined) { dmapRev[d] += x.amt; dmapProf[d] += x.profit; }
+      });
+
+      if (window.myCharts && window.myCharts[ctxM.id]) window.myCharts[ctxM.id].destroy();
+      if (!window.myCharts) window.myCharts = {};
+      window.myCharts[ctxM.id] = new Chart(ctxM, {
+        type: 'line',
+        data: {
+          labels: Object.keys(dmapRev),
+          datasets: [
+            { label: 'Revenue', data: Object.values(dmapRev), borderColor: '#2962FF', backgroundColor: 'rgba(41,98,255,0.1)', borderWidth: 4, tension: 0.3, fill: true },
+            { label: 'Profit', data: Object.values(dmapProf), borderColor: '#00C853', backgroundColor: 'transparent', borderWidth: 4, tension: 0.3 }
+          ]
+        },
+        options: getChartOptions()
+      });
+    }
+
+    function createChart(ctx, type, labels, data, title, color) {
+      if (!window.myCharts) window.myCharts = {};
+      if (window.myCharts[ctx.id]) window.myCharts[ctx.id].destroy();
+      window.myCharts[ctx.id] = new Chart(ctx, {
+        type: type,
+        data: {
+          labels,
+          datasets: [{
+            label: title, data,
+            backgroundColor: color,
+            borderColor: currentTheme === 'dark' ? '#ffffff' : '#000000',
+            borderWidth: 2,
+            hoverOffset: 4
+          }]
+        },
+        options: getChartOptions(type)
+      });
+    }
+    function getChartOptions(type = 'bar') {
+      const isDark = currentTheme === 'dark';
+      const c = isDark ? '#fff' : '#000';
+      return {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: c, font: { family: 'Space Grotesk', weight: 'bold' } } }
+        },
+        scales: type === 'pie' || type === 'doughnut' ? {} : {
+          x: { ticks: { color: c, font: { family: 'Space Grotesk', weight: 'bold' } }, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' } },
+          y: { ticks: { color: c, font: { family: 'Space Grotesk', weight: 'bold' } }, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' } }
+        }
+      };
+    }
+    function updateChartsTheme() {
+      if (currentSection === 'dashboard') renderDashboard();
+      if (currentSection === 'analytics') renderAnalytics();
+    }
+
+    function clearData() {
+      if (!confirm('Delete ALL products and sales?')) return;
+      DB.setProducts(uid(), []);
+      DB.setSales(uid(), []);
+      toast('Data wiped completely.', 'info');
+      navigateTo('dashboard');
+    }
+
+    /* Extras: Typing Effect & Confetti */
+    const linesToType = [
+      "Run your entire business smarter, faster, and stress-free.",
+      "<span style='font-family:\"Syne\"; color:var(--pink); font-size: 1.2em; text-shadow: 2px 2px 0 #000;'>Track. Sell. Profit. Grow.</span>"
+    ];
+    let typeLine = 0;
+    let typeChar = 0;
+    let currentText = "";
+
+    function typeWriter() {
+      if (typeLine < linesToType.length) {
+        let line = linesToType[typeLine];
+        if (line.startsWith("<span")) {
+           currentText += "<br><br>" + line;
+           document.getElementById("typingText").innerHTML = currentText + '<span class="typing-cursor"></span>';
+           typeLine++;
+           setTimeout(typeWriter, 30);
+        } else {
+           if (typeChar < line.length) {
+             currentText += line.charAt(typeChar);
+             document.getElementById("typingText").innerHTML = currentText + '<span class="typing-cursor"></span>';
+             typeChar++;
+             setTimeout(typeWriter, 20);
+           } else {
+             typeLine++;
+             typeChar = 0;
+             setTimeout(typeWriter, 300);
+           }
+        }
+      } else {
+        document.getElementById("typingText").innerHTML = currentText + '<span class="typing-cursor"></span>';
+      }
+    }
+
+    function confettiBurst() {
+      if (typeof confetti !== 'undefined') {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#FFD600', '#FF4081', '#00C853', '#2962FF'] });
+      }
+    }
+
+    /* 3D Tilt Effect & Parallax Background */
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      
+      // Subtle background shift
+      document.body.style.backgroundPosition = `${x * 40}px ${y * 40}px`;
+
+      // Hero Shapes Parallax
+      document.querySelectorAll('.shape').forEach(shape => {
+        const speed = shape.getAttribute('data-speed') || 2;
+        const xOffset = (window.innerWidth / 2 - e.clientX) * speed / 50;
+        const yOffset = (window.innerHeight / 2 - e.clientY) * speed / 50;
+        shape.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+      });
+
+      document.querySelectorAll('.tilt-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const cardX = e.clientX - rect.left;
+        const cardY = e.clientY - rect.top;
+        if (cardX > 0 && cardX < rect.width && cardY > 0 && cardY < rect.height) {
+          const xRot = ((cardY / rect.height) - 0.5) * -10;
+          const yRot = ((cardX / rect.width) - 0.5) * 10;
+          card.style.transform = `perspective(1000px) rotateX(${xRot}deg) rotateY(${yRot}deg) translateZ(10px)`;
+        } else {
+          card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) translateZ(0)`;
+        }
+      });
+    });
+
+    /* Scroll Reveal */
+    function reveal() {
+      var reveals = document.querySelectorAll(".reveal");
+      for (var i = 0; i < reveals.length; i++) {
+        var windowHeight = window.innerHeight;
+        var elementTop = reveals[i].getBoundingClientRect().top;
+        var elementVisible = 100;
+        if (elementTop < windowHeight - elementVisible) {
+          reveals[i].classList.add("active");
+        }
+      }
+    }
+    window.addEventListener("scroll", reveal);
+    reveal(); // Initial check
+
+    /* Drag and Drop for Stats Grid */
+    let dragSrcEl = null;
+    function handleDragStart(e) {
+      this.style.opacity = '0.4';
+      dragSrcEl = this;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.innerHTML);
+    }
+    function handleDragOver(e) { e.preventDefault(); return false; }
+    function handleDragEnter(e) { this.classList.add('dropzone'); }
+    function handleDragLeave(e) { this.classList.remove('dropzone'); }
+    function handleDrop(e) {
+      e.stopPropagation();
+      if (dragSrcEl !== this) {
+        const srcClass = [...dragSrcEl.classList].find(c => c.startsWith('bg-'));
+        const dstClass = [...this.classList].find(c => c.startsWith('bg-'));
+        dragSrcEl.classList.remove(srcClass); dragSrcEl.classList.add(dstClass);
+        this.classList.remove(dstClass); this.classList.add(srcClass);
+
+        dragSrcEl.innerHTML = this.innerHTML;
+        this.innerHTML = e.dataTransfer.getData('text/html');
+      }
+      return false;
+    }
+    function handleDragEnd(e) {
+      this.style.opacity = '1';
+      document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('dropzone'));
+    }
+    document.querySelectorAll('.stat-card').forEach(c => {
+      c.addEventListener('dragstart', handleDragStart, false);
+      c.addEventListener('dragenter', handleDragEnter, false);
+      c.addEventListener('dragover', handleDragOver, false);
+      c.addEventListener('dragleave', handleDragLeave, false);
+      c.addEventListener('drop', handleDrop, false);
+      c.addEventListener('dragend', handleDragEnd, false);
+    });
+
+    /* Chat UI Toggle */
+    function toggleChat() {
+      const msg = document.querySelector('.chat-bubble');
+      msg.style.display = msg.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    /* Init */
+    window.onload = () => {
+      if (DB.getSession()) showPage('appPage'); else showPage('landingPage');
+      setTimeout(typeWriter, 500);
+
+      // Seed demo data if totally empty
+      if (!DB.getUsers().length) {
+        DB.setUsers([{ uid: 'u_demo', name: 'Demo User', email: 'demo@shop.com', pass: '123456', store: 'Demo Store' }]);
+      }
+    };
+  </script>
+
+</body>
+
+</html>
