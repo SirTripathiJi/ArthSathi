@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", sans-serif;
+  --font-display: "Syne", sans-serif;
+  
+  /* Neo-Brutalist Palette */
+  --color-brand: #FFD600;
+  --color-primary: #FFD600;
+  --color-secondary: #FF4081;
+  --color-accent: #00E5FF;
+  --color-success: #00C853;
+  --color-warning: #FFD600;
+  --color-error: #FF5252;
+}
+
+@layer base {
+  :root[data-theme="light"] {
+    --bg: #F4F4F4;
+    --surface: #FFFFFF;
+    --surface2: #EEEEEE;
+    --text: #000000;
+    --text2: #333333;
+    --text3: #666666;
+    --border-color: #000000;
+    --shadow: 4px 4px 0px #000000;
+    --shadow-hover: 6px 6px 0px #000000;
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #000000;
+    --surface: #111111;
+    --surface2: #222222;
+    --text: #FFFFFF;
+    --text2: #CCCCCC;
+    --text3: #999999;
+    --border-color: #FFFFFF;
+    --shadow: 4px 4px 0px rgba(255, 255, 255, 0.5);
+    --shadow-hover: 6px 6px 0px rgba(255, 255, 255, 0.7);
+  }
+
+  :root {
+    --radius: 0px; /* Sharp corners for Brutalism */
+    --transition: all 0.1s ease-in-out;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+}
+
+@layer components {
+  /* Brutalist Card */
+  .brutalist-card {
+    background: var(--surface);
+    border: 3px solid var(--border-color);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    padding: 20px;
+  }
+  .brutalist-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  /* Brutalist Input */
+  .brutalist-input {
+    width: 100%;
+    background: var(--surface);
+    border: 2px solid var(--border-color);
+    padding: 12px;
+    font-weight: 600;
+    outline: none;
+    transition: var(--transition);
+  }
+  .brutalist-input:focus {
+    box-shadow: 3px 3px 0px var(--color-brand);
+    transform: translate(-1px, -1px);
+  }
+
+  /* Brutalist Button */
+  .brutalist-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border: 3px solid var(--border-color);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    cursor: pointer;
+    background: var(--color-brand);
+    color: #000;
+  }
+  .brutalist-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-hover);
+  }
+  .brutalist-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px transparent;
+  }
+
+  .brutalist-btn-secondary {
+    background: var(--color-secondary);
+    color: #fff;
+  }
+
+  /* Brutalist Table */
+  .brutalist-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 4px solid #000;
+    box-shadow: 6px 6px 0px #000;
+    background: #fff;
+  }
+  .brutalist-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .brutalist-table th {
+    background: #000;
+    color: #fff;
+    padding: 16px;
+    text-align: left;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border: 1px solid #333;
+  }
+  .brutalist-table td {
+    padding: 16px;
+    border: 2px solid #000;
+    font-weight: 700;
+    color: #000;
+  }
+  .brutalist-table tr:hover td {
+    background: var(--color-brand);
+  }
+
+  /* Sidebar/Nav */
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 font-bold border-2 border-transparent transition-all;
+  }
+  .nav-item.active {
+    @apply bg-brand text-black border-black shadow-[4px_4px_0px_#000];
+  }
+  .nav-item:hover:not(.active) {
+    @apply bg-white/10 translate-x-1;
+  }
+}
+
+/* Animations */
+@keyframes bounce-brutal {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes brutal-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-brutal-bounce {
+  animation: bounce-brutal 0.5s infinite;
+}
+
+.animate-brutal-fade-in {
+  animation: brutal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
