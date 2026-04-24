@@ -179,3 +179,12 @@
 .animate-brutal-fade-in {
   animation: brutal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+@keyframes brutal-modal-enter {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.animate-modal-enter {
+  animation: brutal-modal-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
