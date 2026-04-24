@@ -180,11 +180,22 @@
   animation: brutal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes brutal-modal-enter {
-  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+/* Float animation for landing page shapes */
+@keyframes float-slow {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-18px) rotate(4deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+.animate-float-slow {
+  animation: float-slow 9s ease-in-out infinite;
 }
 
+/* Modal portal entry */
+@keyframes brutal-modal-enter {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
 .animate-modal-enter {
   animation: brutal-modal-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+

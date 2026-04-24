@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowRight, LineChart,
   Package, Receipt, ShieldCheck, Sun, Moon,
+  Sparkles, Mic, TrendingUp, Users,
 } from 'lucide-react';
 import { Logo } from '../components/UI/Logo';
 import { useAuth } from '../context/AuthContext';
@@ -18,104 +18,157 @@ export function LandingPage() {
   const go = () => navigate(user ? '/dashboard' : '/auth');
 
   const features = [
-    { icon: Package, title: 'Smart Inventory', text: 'Real-time tracking with intelligent stock alerts and expiry notifications.', color: 'var(--color-brand)' },
-    { icon: Receipt, title: 'Seamless Billing', text: 'Automated sales recording with instant profit calculations and analytics.', color: 'var(--color-secondary)' },
-    { icon: LineChart, title: 'Growth Analytics', text: 'Data-driven insights into your business performance and top-performing assets.', color: 'var(--color-accent)' },
-    { icon: ShieldCheck, title: 'Privacy-First', text: 'Enterprise-grade security with 100% local data storage. No cloud required.', color: 'var(--color-success)' },
+    { icon: Package,     title: 'Inventory Control',  text: 'Stay accurate, avoid losses, and never miss a restock.',     color: 'var(--color-brand)' },
+    { icon: Receipt,     title: 'Billing Made Simple', text: 'Fast entries with instant, real profit visibility.',          color: 'var(--color-secondary)' },
+    { icon: LineChart,   title: 'Business Insights',   text: 'Understand performance clearly. No noise, just useful data.', color: 'var(--color-accent)' },
+    { icon: ShieldCheck, title: 'Privacy-First',       text: '100% local data storage. No cloud, no subscriptions.',       color: 'var(--color-success)' },
+    { icon: Sparkles,    title: 'Smart Assistant',     text: 'Simple business guidance based on your data.',               color: 'var(--text3)', comingSoon: true },
+    { icon: Mic,         title: 'Voice Entries',       text: 'Add transactions by speaking naturally.',                    color: 'var(--text3)', comingSoon: true },
+    { icon: TrendingUp,  title: 'Profit Intelligence', text: 'See true profit after cost and expenses.',                   color: 'var(--text3)', comingSoon: true },
+    { icon: Users,       title: 'Customer Insights',   text: 'Identify reliable and risky customers.',                    color: 'var(--text3)', comingSoon: true },
+  ];
+
+  const trustItems = [
+    { title: 'Reliable by Design',    text: 'Built for real daily shop operations.',   color: 'var(--color-brand)' },
+    { title: 'Complete Data Control', text: 'Your data stays private and accessible.', color: 'var(--color-secondary)' },
+    { title: 'Flexible & Scalable',   text: 'Grows as your business grows.',           color: 'var(--color-accent)' },
+    { title: 'Daily-Use Ready',       text: 'Fast, clear, and dependable every day.',  color: 'var(--color-success)' },
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-black">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] font-sans" style={{ overflowX: 'hidden' }}>
 
-      {/* ── Navbar ── */}
-      <nav className="fixed top-0 inset-x-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 bg-white border-b-4 border-black">
+      {/* Navbar */}
+      <nav className="fixed top-0 inset-x-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 bg-[var(--surface)] border-b-4 border-[var(--border-color)]">
         <Logo />
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <select value={lang} onChange={e => changeLanguage(e.target.value)}
-            className="text-xs font-black bg-white border-2 border-black text-black px-3 py-1.5 focus:outline-none cursor-pointer shadow-[2px_2px_0_#000]">
+            className="text-xs font-black bg-[var(--surface)] border-2 border-[var(--border-color)] text-[var(--text)] px-3 py-1.5 focus:outline-none cursor-pointer shadow-[2px_2px_0_var(--border-color)]">
             {LANGS.map(l => <option key={l} value={l}>{l.toUpperCase()}</option>)}
           </select>
-          <button onClick={toggleTheme} className="w-10 h-10 flex items-center justify-center border-2 border-black bg-white shadow-[2px_2px_0_#000] hover:bg-[var(--color-brand)] transition-all">
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          <button onClick={toggleTheme}
+            className="w-10 h-10 flex items-center justify-center border-2 border-[var(--border-color)] bg-[var(--surface)] shadow-[2px_2px_0_var(--border-color)] hover:bg-[var(--color-brand)] hover:text-[#000] transition-all">
+            {theme === 'dark' ? <Sun className="w-5 h-5 text-inherit" /> : <Moon className="w-5 h-5 text-inherit" />}
           </button>
           <button onClick={go} className="brutalist-btn hidden sm:flex">Launch App</button>
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section className="relative pt-40 pb-20 md:pt-56 md:pb-32 px-6 flex flex-col items-center text-center overflow-hidden">
-        {/* Floating Shapes Background */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-[var(--color-secondary)] border-4 border-black -rotate-12 opacity-20 hidden md:block"></div>
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-[var(--color-accent)] border-4 border-black rotate-12 opacity-20 hidden md:block rounded-full"></div>
+      {/* Hero */}
+      <section className="relative flex flex-col items-center text-center animate-brutal-fade-in"
+        style={{ paddingTop: 160, paddingBottom: 100, paddingLeft: 24, paddingRight: 24, overflow: 'hidden' }}>
+        {/* Background shapes — corners only, no text overlap */}
+        <div className="absolute top-24 left-[4%] rounded-full bg-[var(--color-secondary)] border-4 border-[var(--border-color)] animate-float-slow hidden md:block pointer-events-none"
+          style={{ width: 70, height: 70, opacity: 0.11, animationDelay: '0s' }} />
+        <div className="absolute top-56 right-[4%] bg-[var(--color-accent)] border-4 border-[var(--border-color)] rotate-12 animate-float-slow hidden md:block pointer-events-none"
+          style={{ width: 96, height: 96, opacity: 0.11, animationDelay: '2s' }} />
+        <div className="absolute bottom-12 left-[16%] bg-[var(--color-brand)] border-4 border-[var(--border-color)] rotate-45 animate-float-slow hidden md:block pointer-events-none"
+          style={{ width: 50, height: 50, opacity: 0.11, animationDelay: '4s' }} />
 
-        <div className="max-w-[1000px] space-y-10 relative z-10">
-          <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] text-black uppercase italic">
-            RUN YOUR<br />
-            <span className="text-[var(--color-brand)] bg-black px-4 shadow-[10px_10px_0_var(--color-secondary)]">BUSINESS</span><br />
-            SMARTER.
+        <div className="relative z-10 w-full" style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
+          {/* Headline */}
+          <h1 className="font-black text-[var(--text)] uppercase italic w-full"
+            style={{ fontSize: 'clamp(2.4rem, 6.5vw, 5rem)', lineHeight: 1.08, letterSpacing: '-0.04em', wordBreak: 'break-word' }}>
+            Run your business
+            <br />
+            <span className="text-[var(--color-brand)] inline-block"
+              style={{ background: 'var(--text)', padding: '6px 22px', marginTop: 14, boxShadow: '8px 8px 0 var(--color-secondary)', wordBreak: 'break-word', maxWidth: '100%' }}>
+              with clarity.
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl font-bold text-black max-w-2xl mx-auto leading-tight border-l-8 border-black pl-6 text-left">
-            Eliminate the guesswork. Track every unit, capture every margin, and scale your operations with the most advanced offline ledger.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mt-16">
-            <button onClick={go} className="brutalist-btn text-2xl px-12 py-6 bg-[var(--color-brand)]">
-              Get Started <ArrowRight className="ml-3 w-6 h-6" />
+
+          {/* Sub-copy */}
+          <div style={{ maxWidth: 660, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <p className="font-bold text-[var(--text2)]" style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', lineHeight: 1.55 }}>
+              Track inventory, record sales, and know your exact profit — without confusion.
+            </p>
+            <p className="font-bold text-[var(--text3)]" style={{ fontSize: 'clamp(0.875rem, 1.6vw, 1.05rem)', lineHeight: 1.5 }}>
+              Built for real shopkeepers. Fast. Offline. Reliable.
+            </p>
+          </div>
+
+          {/* CTA */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, marginTop: 8 }}>
+            <button onClick={go}
+              className="brutalist-btn bg-[var(--color-brand)] text-[#000] hover:-translate-y-1 hover:shadow-[8px_8px_0_var(--border-color)] transition-all"
+              style={{ fontSize: '1.2rem', padding: '16px 44px' }}>
+              Get Started <ArrowRight className="ml-3 w-5 h-5" />
             </button>
-            <div className="text-xl font-black uppercase tracking-widest text-black underline decoration-4 underline-offset-8">
-              100% Local. 0% Cloud.
-            </div>
+            <span className="font-black uppercase tracking-widest text-[var(--text3)]" style={{ fontSize: '0.7rem' }}>
+              No cloud. No subscriptions. 100% yours.
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── Feature Grid ── */}
-      <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      {/* Feature Grid */}
+      <section id="features" className="border-t-4 border-[var(--border-color)] bg-[var(--surface2)]"
+        style={{ padding: '90px 24px' }}>
+        <div className="mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ maxWidth: 1120, gap: 24 }}>
           {features.map((f, i) => {
             const Icon = f.icon;
             return (
-              <div key={i} className="brutalist-card group hover:-rotate-1">
-                <div className="w-16 h-16 border-4 border-black flex items-center justify-center mb-8 shadow-[4px_4px_0_#000] group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1 transition-all"
-                  style={{ backgroundColor: f.color }}>
-                  <Icon className="w-8 h-8 text-black" />
+              <div key={i}
+                className="brutalist-card flex flex-col items-start hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--border-color)] transition-all animate-brutal-fade-in"
+                style={{ overflow: 'hidden', wordBreak: 'break-word', animationDelay: `${i * 0.07}s` }}>
+                {/* Icon */}
+                <div className="flex-shrink-0 border-4 border-[var(--border-color)] flex items-center justify-center shadow-[3px_3px_0_var(--border-color)]"
+                  style={{ width: 52, height: 52, marginBottom: 16, backgroundColor: f.color }}>
+                  <Icon className="w-6 h-6 text-[#000]" />
                 </div>
-                <h3 className="text-2xl font-black mb-4 uppercase tracking-tighter">{f.title}</h3>
-                <p className="text-base font-bold text-gray-800 leading-tight">{f.text}</p>
+                {/* Title */}
+                <h3 className="font-black uppercase text-[var(--text)]"
+                  style={{ fontSize: f.comingSoon ? '0.95rem' : '1.1rem', lineHeight: 1.15, letterSpacing: '-0.02em', wordBreak: 'break-word', marginBottom: 8 }}>
+                  {f.title}
+                </h3>
+                {/* Badge */}
+                {f.comingSoon && (
+                  <span className="inline-block bg-[var(--surface)] border-2 border-[var(--border-color)] text-[var(--text3)] uppercase font-black tracking-widest"
+                    style={{ fontSize: '8px', padding: '2px 6px', margin: '6px 0' }}>
+                    Coming Soon
+                  </span>
+                )}
+                {/* Description */}
+                <p className="text-[var(--text2)] font-bold flex-1"
+                  style={{ fontSize: '0.85rem', lineHeight: 1.55, marginTop: 8, wordBreak: 'break-word' }}>
+                  {f.text}
+                </p>
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* ── Stats ── */}
-      <section className="py-32 px-6 border-y-4 border-black bg-black text-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
-          <div>
-            <div className="text-7xl font-black text-[var(--color-brand)] mb-2 tracking-tighter">10K+</div>
-            <div className="text-xl font-black uppercase tracking-widest">Active Stores</div>
-          </div>
-          <div>
-            <div className="text-7xl font-black text-[var(--color-secondary)] mb-2 tracking-tighter">100%</div>
-            <div className="text-xl font-black uppercase tracking-widest">Data Privacy</div>
-          </div>
-          <div>
-            <div className="text-7xl font-black text-[var(--color-accent)] mb-2 tracking-tighter">0$</div>
-            <div className="text-xl font-black uppercase tracking-widest">Cloud Cost</div>
-          </div>
+      {/* Trust Section */}
+      <section className="border-y-4 border-[var(--border-color)]" style={{ padding: '100px 24px', background: 'var(--text)' }}>
+        <div className="mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 text-center" style={{ maxWidth: 1120, gap: 40 }}>
+          {trustItems.map((item, i) => (
+            <div key={i} style={{ wordBreak: 'break-word' }}>
+              <div className="font-black uppercase tracking-tighter"
+                style={{ color: item.color, fontSize: '1.35rem', lineHeight: 1.15, marginBottom: 10 }}>
+                {item.title}
+              </div>
+              <div className="font-bold" style={{ color: 'var(--bg)', opacity: 0.88, fontSize: '0.95rem', lineHeight: 1.5 }}>
+                {item.text}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer className="px-6 py-20 bg-white border-t-4 border-black text-center md:text-left">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+      {/* Footer */}
+      <footer className="bg-[var(--surface)] border-t-4 border-[var(--border-color)]" style={{ padding: '52px 24px' }}>
+        <div className="mx-auto flex flex-col md:flex-row justify-between items-center" style={{ maxWidth: 1120, gap: 28 }}>
           <Logo />
-          <div className="flex gap-10 text-sm font-black uppercase tracking-widest text-black underline decoration-2 underline-offset-4">
-            <a href="#" className="hover:text-[var(--color-secondary)]">Privacy</a>
-            <a href="#" className="hover:text-[var(--color-brand)]">Terms</a>
-            <a href="mailto:tripathiakshat2604@gmail.com" className="hover:text-[var(--color-accent)]">Support</a>
+          <div className="flex flex-wrap justify-center gap-8 text-sm font-black uppercase tracking-widest text-[var(--text)] underline decoration-2 underline-offset-4">
+            <a href="#" className="hover:text-[var(--color-secondary)] transition-colors">Privacy</a>
+            <a href="#" className="hover:text-[var(--color-brand)] transition-colors">Terms</a>
+            <a href="mailto:tripathiakshat2604@gmail.com" className="hover:text-[var(--color-accent)] transition-colors">Support</a>
           </div>
-          <p className="text-sm font-black uppercase tracking-widest">© 2026 ArthSaathi. Built for the bold.</p>
+          <p className="text-[var(--text3)] font-black uppercase tracking-widest text-center md:text-right"
+            style={{ fontSize: '0.7rem', maxWidth: 260 }}>
+            Built for business owners who value clarity today and smarter growth tomorrow.
+          </p>
         </div>
       </footer>
     </div>

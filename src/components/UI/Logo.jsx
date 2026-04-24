@@ -1,18 +1,25 @@
 import { cn } from '../../lib/utils';
 
-export function Logo({ className, variant = 'full' }) {
+export function Logo({ className, variant = 'full', size = 'md' }) {
+  const sm = size === 'sm';
   return (
-    <div className={cn('flex items-center gap-3 select-none group', className)}>
-      {/* Boxy Logo Symbol */}
-      <div className="relative flex items-center justify-center w-10 h-10 bg-[#FFD600] text-black border-3 border-black shadow-[3px_3px_0_#000] -rotate-3 transition-transform group-hover:rotate-0 flex-shrink-0">
-        <span className="font-display font-black text-2xl">A</span>
+    <div className={cn('flex items-center select-none group min-w-0', sm ? 'gap-2' : 'gap-3', className)}>
+      {/* Icon box */}
+      <div className={cn(
+        'relative flex items-center justify-center bg-[#FFD600] border-black -rotate-3 transition-transform group-hover:rotate-0 flex-shrink-0',
+        sm ? 'w-8 h-8 border-2 shadow-[2px_2px_0_#000]' : 'w-11 h-11 border-[3px] shadow-[3px_3px_0_#000]'
+      )}>
+        <span className={cn('font-display font-black text-[#000]', sm ? 'text-base' : 'text-xl')}>A</span>
       </div>
 
       {/* Wordmark */}
       {variant === 'full' && (
-        <span className="font-display font-black text-2xl tracking-tight text-[var(--text)] uppercase italic">
+        <div className={cn(
+          'font-display font-black text-[var(--text)] uppercase italic truncate min-w-0 flex-1',
+          sm ? 'text-base tracking-tight' : 'text-xl tracking-tight'
+        )}>
           Arth<span className="text-[var(--color-secondary)]">Saathi</span>
-        </span>
+        </div>
       )}
     </div>
   );

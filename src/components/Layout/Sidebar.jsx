@@ -39,7 +39,7 @@ export function Sidebar({ isOpen, toggleSidebar }) {
       >
         {/* Logo */}
         <div className="h-20 flex items-center px-6 border-b-4 border-black bg-[var(--color-brand)]/10">
-          <Logo />
+          <Logo size="sm" />
         </div>
 
         {/* Nav */}
