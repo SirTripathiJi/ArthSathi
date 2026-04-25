@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "Overview",
+    "inventory": "Inventory",
+    "billing": "Billing",
+    "insights": "Insights",
+    "settings": "Settings",
+    "signout": "Sign Out"
+  },
+  "dashboard": {
+    "totalSales": "Total Sales",
+    "netProfit": "Net Profit",
+    "productsInStock": "Products in Stock",
+    "transactionsToday": "Transactions Today",
+    "salesLast7Days": "Sales — Last 7 Days",
+    "topProducts": "Top Products by Revenue",
+    "noSalesData": "Record your first sale to see charts here.",
+    "user": "User",
+    "myStore": "My Store"
+  },
+  "inventory": {
+    "addProduct": "Add Product",
+    "search": "Search products...",
+    "product": "Product",
+    "category": "Category",
+    "costPrice": "Cost Price",
+    "sellingPrice": "Selling Price",
+    "stock": "Stock",
+    "expiryDate": "Expiry Date",
+    "action": "Action",
+    "editProduct": "Edit Product",
+    "saveProduct": "Save Product",
+    "cancel": "Cancel",
+    "name": "Name",
+    "sellingPriceRs": "Selling Price (₹)",
+    "stockQty": "Stock Qty",
+    "lowStockAlert": "Low Stock Alert (qty)",
+    "noProducts": "Add your first product to begin.",
+    "outOfStock": "Out of Stock",
+    "expiringSoon": "Expiring Soon",
+    "expired": "Expired",
+    "intelligenceAlert": "INTELLIGENCE: Some products need attention."
+  },
+  "sales": {
+    "newSale": "New Sale",
+    "searchReceipts": "Search receipts...",
+    "receipt": "Receipt",
+    "product": "Product",
+    "qty": "Qty",
+    "amount": "Amount",
+    "profit": "Profit",
+    "date": "Date",
+    "actions": "Actions",
+    "noSales": "Record your first sale to get started.",
+    "selectProduct": "Select Product",
+    "saleQty": "Quantity",
+    "confirmSale": "Confirm Sale",
+    "done": "Done",
+    "recordSale": "Record Sale"
+  },
+  "analytics": {
+    "businessPerformance": "Business Performance",
+    "revenueVsProfit": "Revenue vs. Profit (15 Days)",
+    "revenueByCategory": "Revenue by Category",
+    "noAnalyticsData": "No sales data yet."
+  },
+  "settings": {
+    "settings": "Settings",
+    "manageAccount": "Manage your account preferences and global data security.",
+    "darkMode": "Dark Mode",
+    "darkModeDesc": "Switch between light and dark interface.",
+    "language": "Language",
+    "languageDesc": "Localized interface settings",
+    "resetData": "Reset Business Data",
+    "resetDataDesc": "Permanently delete all products and sales records.",
+    "deleteAll": "Delete All Data",
+    "deleteConfirmTitle": "Delete Enterprise Data?",
+    "deleteConfirmDesc": "This action will permanently wipe all product records, transactional history, and business metrics. This cannot be undone.",
+    "cancel": "Cancel",
+    "trust": "Private · Secure · Works Offline",
+    "support": "Support: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "Loading ArthSaathi…"
+  },
+  "insights": {
+    "headerDescription": "Advanced predictive analysis and transactional history tracking for the last 14 operative days.",
+    "intelligenceLabel": "INTELLIGENCE:",
+    "intelligenceMessage": "Transactional patterns indicate high volume during mid-week cycles. Optimize inventory restocking accordingly."
+  }
+}

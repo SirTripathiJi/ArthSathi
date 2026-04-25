@@ -13,7 +13,7 @@ export function Settings() {
   const { theme, toggleTheme } = useTheme();
   const toast = useToast();
   const navigate = useNavigate();
-  const { t, lang, changeLanguage, LANGS } = useLanguage();
+  const { t, lang, changeLanguage, LANGS, LANG_NAMES } = useLanguage();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const clearData = () => {
@@ -28,8 +28,8 @@ export function Settings() {
   return (
     <div className="max-w-3xl space-y-12">
       <div className="space-y-4 border-l-8 border-[var(--border-color)] pl-8">
-        <h2 className="text-5xl font-black tracking-tighter uppercase italic leading-none text-[var(--text-primary)]">{t('settings')}</h2>
-        <p className="text-lg font-bold text-[var(--text-secondary)]">Manage your account preferences and global data security.</p>
+        <h2 className="text-5xl font-black tracking-tighter uppercase italic leading-none text-[var(--text-primary)]">{t('nav.settings')}</h2>
+        <p className="text-lg font-bold text-[var(--text-secondary)]">{t('settings.manageAccount')}</p>
       </div>
 
       <div className="space-y-8">
@@ -41,8 +41,8 @@ export function Settings() {
                 {theme === 'dark' ? <Moon className="w-8 h-8" /> : <Sun className="w-8 h-8" />}
               </div>
               <div>
-                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('dark_mode')}</h4>
-                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('dark_mode_desc')}</p>
+                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('settings.darkMode')}</h4>
+                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('settings.darkModeDesc')}</p>
               </div>
             </div>
             <button onClick={toggleTheme} className={`relative w-16 h-8 border-4 border-[var(--border-color)] transition-colors ${theme === 'dark' ? 'bg-[var(--color-brand)]' : 'bg-[var(--card-bg)]'}`}>
@@ -59,13 +59,13 @@ export function Settings() {
                 <Globe className="w-8 h-8 text-[#111111]" />
               </div>
               <div>
-                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">Language</h4>
-                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">Localized interface settings</p>
+                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('settings.language')}</h4>
+                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('settings.languageDesc')}</p>
               </div>
             </div>
             <select value={lang} onChange={(e) => changeLanguage(e.target.value)}
-              className="brutalist-input !w-auto !py-4 !px-8 bg-[var(--card-bg)] text-[var(--text-primary)] font-black uppercase text-sm tracking-widest shadow-[5px_5px_0_var(--shadow-color)]">
-              {LANGS.map(l => <option key={l} value={l}>{l}</option>)}
+              className="brutalist-input !w-auto !py-4 !px-8 bg-[var(--card-bg)] text-[var(--text-primary)] font-black text-sm shadow-[5px_5px_0_var(--shadow-color)] cursor-pointer">
+              {LANGS.map(l => <option key={l} value={l}>{LANG_NAMES[l]} ({l.toUpperCase()})</option>)}
             </select>
           </div>
         </div>
@@ -78,12 +78,12 @@ export function Settings() {
                 <Trash2 className="w-8 h-8" />
               </div>
               <div>
-                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('reset_data')}</h4>
-                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('reset_data_desc')}</p>
+                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('settings.resetData')}</h4>
+                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('settings.resetDataDesc')}</p>
               </div>
             </div>
             <button className="brutalist-btn bg-red-500 text-[#ffffff] px-8 hover:shadow-[6px_6px_0_var(--shadow-color)] hover:-translate-y-1" onClick={() => setShowConfirm(true)}>
-              {t('delete_all')}
+              {t('settings.deleteAll')}
             </button>
           </div>
         </div>
@@ -95,25 +95,25 @@ export function Settings() {
           <ShieldCheck className="w-12 h-12" />
         </div>
         <div>
-          <h4 className="font-black text-2xl uppercase italic tracking-tighter mb-3">{t('trust')}</h4>
-          <p className="text-base font-bold opacity-80 leading-tight">{t('support')}</p>
+          <h4 className="font-black text-2xl uppercase italic tracking-tighter mb-3">{t('settings.trust')}</h4>
+          <p className="text-base font-bold opacity-80 leading-tight">{t('settings.support')}</p>
         </div>
       </div>
 
       {/* Confirm Modal */}
-      <Modal isOpen={showConfirm} onClose={() => setShowConfirm(false)} title={t('reset_data')}
+      <Modal isOpen={showConfirm} onClose={() => setShowConfirm(false)} title={t('settings.resetData')}
         actions={
           <div className="flex gap-6">
-            <button className="text-sm font-black uppercase underline decoration-2" onClick={() => setShowConfirm(false)}>{t('cancel')}</button>
-            <button className="brutalist-btn bg-red-500 text-white px-10" onClick={clearData}>{t('delete_all')}</button>
+            <button className="text-sm font-black uppercase underline decoration-2" onClick={() => setShowConfirm(false)}>{t('settings.cancel')}</button>
+            <button className="brutalist-btn bg-red-500 text-white px-10" onClick={clearData}>{t('settings.deleteAll')}</button>
           </div>
         }>
         <div className="flex flex-col items-center text-center py-8">
           <div className="w-24 h-24 border-4 border-[var(--border-color)] bg-[var(--card-bg)] flex items-center justify-center text-red-500 mb-8 shadow-[6px_6px_0_var(--shadow-color)]">
             <AlertTriangle className="w-12 h-12" />
           </div>
-          <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-4 text-[var(--text-primary)]">Delete Enterprise Data?</h3>
-          <p className="text-[var(--text-secondary)] font-bold text-xl leading-tight">This action will permanently wipe all product records, transactional history, and business metrics. This cannot be undone.</p>
+          <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-4 text-[var(--text-primary)]">{t('settings.deleteConfirmTitle')}</h3>
+          <p className="text-[var(--text-secondary)] font-bold text-xl leading-tight">{t('settings.deleteConfirmDesc')}</p>
         </div>
       </Modal>
     </div>

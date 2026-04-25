@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "ओवरव्यू",
+    "inventory": "इन्वेंटरी",
+    "billing": "बिलिंग",
+    "insights": "इनसाइट्स",
+    "settings": "सेटिंग्स",
+    "signout": "लॉग आउट"
+  },
+  "dashboard": {
+    "totalSales": "कुल बिक्री",
+    "netProfit": "शुद्ध लाभ",
+    "productsInStock": "स्टॉक में उत्पाद",
+    "transactionsToday": "आज के लेन-देन",
+    "salesLast7Days": "बिक्री — पिछले 7 दिन",
+    "topProducts": "शीर्ष उत्पाद",
+    "noSalesData": "चार्ट देखने के लिए पहली बिक्री दर्ज करें।",
+    "user": "यूज़र",
+    "myStore": "मेरा स्टोर"
+  },
+  "inventory": {
+    "addProduct": "उत्पाद जोड़ें",
+    "search": "खोजें...",
+    "product": "उत्पाद",
+    "category": "श्रेणी",
+    "costPrice": "लागत मूल्य",
+    "sellingPrice": "विक्रय मूल्य",
+    "stock": "स्टॉक",
+    "expiryDate": "समाप्ति तिथि",
+    "action": "कार्रवाई",
+    "editProduct": "संपादित करें",
+    "saveProduct": "सहेजें",
+    "cancel": "रद्द करें",
+    "name": "नाम",
+    "sellingPriceRs": "विक्रय मूल्य (₹)",
+    "stockQty": "स्टॉक मात्रा",
+    "lowStockAlert": "कम स्टॉक अलर्ट",
+    "noProducts": "शुरुआत करने के लिए पहला उत्पाद जोड़ें।",
+    "outOfStock": "स्टॉक खत्म",
+    "expiringSoon": "जल्द समाप्त",
+    "expired": "समाप्त",
+    "intelligenceAlert": "इनसाइट्स: कुछ उत्पादों पर ध्यान दें।"
+  },
+  "sales": {
+    "newSale": "नया सेल",
+    "searchReceipts": "रसीदें खोजें...",
+    "receipt": "रसीद",
+    "product": "उत्पाद",
+    "qty": "मात्रा",
+    "amount": "राशि",
+    "profit": "लाभ",
+    "date": "तारीख",
+    "actions": "कार्रवाई",
+    "noSales": "शुरुआत करने के लिए पहली बिक्री दर्ज करें।",
+    "selectProduct": "उत्पाद चुनें",
+    "saleQty": "मात्रा",
+    "confirmSale": "बिक्री की पुष्टि करें",
+    "done": "हो गया",
+    "recordSale": "बिक्री दर्ज करें"
+  },
+  "analytics": {
+    "businessPerformance": "व्यापार प्रदर्शन",
+    "revenueVsProfit": "राजस्व बनाम लाभ (15 दिन)",
+    "revenueByCategory": "श्रेणी अनुसार राजस्व",
+    "noAnalyticsData": "अभी कोई बिक्री डेटा नहीं।"
+  },
+  "settings": {
+    "settings": "सेटिंग्स",
+    "manageAccount": "अपनी प्राथमिकताओं और वैश्विक डेटा सुरक्षा को प्रबंधित करें।",
+    "darkMode": "डार्क मोड",
+    "darkModeDesc": "लाइट और डार्क इंटरफेस के बीच स्विच करें।",
+    "language": "भाषा",
+    "languageDesc": "स्थानीयकृत इंटरफ़ेस सेटिंग्स",
+    "resetData": "बिज़नेस डेटा रीसेट करें",
+    "resetDataDesc": "सभी उत्पाद और बिक्री रिकॉर्ड स्थायी रूप से हटाएं।",
+    "deleteAll": "सभी डेटा हटाएं",
+    "deleteConfirmTitle": "एंटरप्राइज़ डेटा हटाएं?",
+    "deleteConfirmDesc": "यह कार्रवाई सभी उत्पाद रिकॉर्ड, इतिहास और व्यावसायिक मेट्रिक्स को स्थायी रूप से मिटा देगी। इसे पूर्ववत नहीं किया जा सकता।",
+    "cancel": "रद्द करें",
+    "trust": "निजी · सुरक्षित · ऑफलाइन काम करता है",
+    "support": "सहायता: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "ArthSaathi लोड हो रहा है…"
+  },
+  "insights": {
+    "headerDescription": "पिछले 14 दिनों के लिए उन्नत पूर्वानुमान विश्लेषण और लेन-देन इतिहास ट्रैकिंग।",
+    "intelligenceLabel": "इनसाइट्स:",
+    "intelligenceMessage": "लेन-देन के पैटर्न सप्ताह के मध्य चक्रों के दौरान उच्च मात्रा का संकेत देते हैं। तदनुसार इन्वेंट्री रीस्टॉकिंग को अनुकूलित करें।"
+  }
+}

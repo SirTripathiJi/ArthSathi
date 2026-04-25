@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "అవలోకనం",
+    "inventory": "ఇన్వెంటరీ",
+    "billing": "బిల్లింగ్",
+    "insights": "అంతర్దృష్టులు",
+    "settings": "సెట్టింగ్‌లు",
+    "signout": "లాగ్అవుట్"
+  },
+  "dashboard": {
+    "totalSales": "మొత్తం అమ్మకాలు",
+    "netProfit": "నికర లాభం",
+    "productsInStock": "స్టాక్‌లో ఉత్పత్తులు",
+    "transactionsToday": "ఈరోజు లావాదేవీలు",
+    "salesLast7Days": "అమ్మకాలు — గత 7 రోజులు",
+    "topProducts": "టాప్ ఉత్పత్తులు",
+    "noSalesData": "చార్టులు చూడటానికి మొదటి అమ్మకం నమోదు చేయండి.",
+    "user": "వినియోగదారు",
+    "myStore": "నా స్టోర్"
+  },
+  "inventory": {
+    "addProduct": "ఉత్పత్తి జోడించు",
+    "search": "శోధించండి...",
+    "product": "ఉత్పత్తి",
+    "category": "వర్గం",
+    "costPrice": "ఖరీదు",
+    "sellingPrice": "అమ్మకం ధర",
+    "stock": "స్టాక్",
+    "expiryDate": "గడువు తేదీ",
+    "action": "చర్య",
+    "editProduct": "సవరించు",
+    "saveProduct": "సేవ్ చేయండి",
+    "cancel": "రద్దు",
+    "name": "పేరు",
+    "sellingPriceRs": "అమ్మకం ధర (₹)",
+    "stockQty": "స్టాక్ పరిమాణం",
+    "lowStockAlert": "తక్కువ స్టాక్ అలర్ట్",
+    "noProducts": "ప్రారంభించడానికి మొదటి ఉత్పత్తిని జోడించండి.",
+    "outOfStock": "స్టాక్ లేదు",
+    "expiringSoon": "త్వరలో గడువు",
+    "expired": "గడువు ముగిసింది",
+    "intelligenceAlert": "అలర్ట్: కొన్ని ఉత్పత్తుల స్టాక్ తక్కువగా ఉంది."
+  },
+  "sales": {
+    "newSale": "కొత్త అమ్మకం",
+    "searchReceipts": "రశీదులు శోధించండి...",
+    "receipt": "రశీదు",
+    "product": "ఉత్పత్తి",
+    "qty": "పరిమాణం",
+    "amount": "మొత్తం",
+    "profit": "లాభం",
+    "date": "తేదీ",
+    "actions": "చర్య",
+    "noSales": "ప్రారంభించడానికి మొదటి అమ్మకం నమోదు చేయండి.",
+    "selectProduct": "ఉత్పత్తి ఎంచుకోండి",
+    "saleQty": "పరిమాణం",
+    "confirmSale": "అమ్మకం నిర్ధారించు",
+    "done": "పూర్తయింది",
+    "recordSale": "అమ్మకం నమోదు"
+  },
+  "analytics": {
+    "businessPerformance": "వ్యాపార పనితీరు",
+    "revenueVsProfit": "రాబడి vs లాభం (15 రోజులు)",
+    "revenueByCategory": "వర్గం వారీగా రాబడి",
+    "noAnalyticsData": "డేటా లేదు."
+  },
+  "settings": {
+    "settings": "సెట్టింగ్‌లు",
+    "manageAccount": "ఖాతా ప్రాధాన్యతలను మరియు డేటా భద్రతను నిర్వహించండి.",
+    "darkMode": "డార్క్ మోడ్",
+    "darkModeDesc": "లైట్ మరియు డార్క్ మోడ్ మార్చండి.",
+    "language": "భాష",
+    "languageDesc": "స్థానిక భాష సెట్టింగ్‌లు",
+    "resetData": "వ్యాపార డేటా రీసెట్",
+    "resetDataDesc": "అన్ని ఉత్పత్తులు మరియు అమ్మకాల రికార్డులను తొలగించండి.",
+    "deleteAll": "అన్ని డేటా తొలగించు",
+    "deleteConfirmTitle": "ఎంటర్‌ప్రైజ్ డేటా తొలగించాలా?",
+    "deleteConfirmDesc": "ఈ చర్య అన్ని రికార్డులను శాశ్వతంగా తొలగిస్తుంది. తిరిగి పొందలేరు.",
+    "cancel": "రద్దు",
+    "trust": "సురక్షితమైనది · ఆఫ్‌లైన్‌లో పనిచేస్తుంది",
+    "support": "మద్దతు: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "లోడ్ అవుతోంది…"
+  },
+  "insights": {
+    "headerDescription": "గత 14 రోజులుగా అధునాతన అంచనా విశ్లేషణ మరియు లావాదేవీ చరిత్ర ట్రాకింగ్.",
+    "intelligenceLabel": "ఇంటెలిజెన్స్:",
+    "intelligenceMessage": "లావాదేవీల నమూనాలు వారం మధ్యలో అధిక వాల్యూమ్‌ను సూచిస్తున్నాయి. తదనుగుణంగా ఇన్వెంటరీని రీస్టాక్ చేయండి."
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "ਓਵਰਵਿਊ",
+    "inventory": "ਵਸਤੂ ਸੂਚੀ",
+    "billing": "ਬਿਲਿੰਗ",
+    "insights": "ਇਨਸਾਈਟਸ",
+    "settings": "ਸੈਟਿੰਗਜ਼",
+    "signout": "ਲਾਗ ਆਉਟ"
+  },
+  "dashboard": {
+    "totalSales": "ਕੁੱਲ ਵਿਕਰੀ",
+    "netProfit": "ਸ਼ੁੱਧ ਮੁਨਾਫ਼ਾ",
+    "productsInStock": "ਸਟਾਕ ਵਿੱਚ ਉਤਪਾਦ",
+    "transactionsToday": "ਅੱਜ ਦੇ ਲੈਣ-ਦੇਣ",
+    "salesLast7Days": "ਵਿਕਰੀ — ਪਿਛਲੇ 7 ਦਿਨ",
+    "topProducts": "ਚੋਟੀ ਦੇ ਉਤਪਾਦ",
+    "noSalesData": "ਚਾਰਟ ਦੇਖਣ ਲਈ ਪਹਿਲੀ ਵਿਕਰੀ ਦਰਜ ਕਰੋ।",
+    "user": "ਯੂਜ਼ਰ",
+    "myStore": "ਮੇਰਾ ਸਟੋਰ"
+  },
+  "inventory": {
+    "addProduct": "ਉਤਪਾਦ ਜੋੜੋ",
+    "search": "ਖੋਜੋ...",
+    "product": "ਉਤਪਾਦ",
+    "category": "ਸ਼੍ਰੇਣੀ",
+    "costPrice": "ਖਰੀਦ ਮੁੱਲ",
+    "sellingPrice": "ਵੇਚਣ ਦਾ ਮੁੱਲ",
+    "stock": "ਸਟਾਕ",
+    "expiryDate": "ਮਿਆਦ ਪੁੱਗਣ ਦੀ ਮਿਤੀ",
+    "action": "ਕਾਰਵਾਈ",
+    "editProduct": "ਸੋਧੋ",
+    "saveProduct": "ਸੰਭਾਲੋ",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "name": "ਨਾਮ",
+    "sellingPriceRs": "ਵੇਚਣ ਦਾ ਮੁੱਲ (₹)",
+    "stockQty": "ਸਟਾਕ ਮਾਤਰਾ",
+    "lowStockAlert": "ਘੱਟ ਸਟਾਕ ਅਲਰਟ",
+    "noProducts": "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਪਹਿਲਾ ਉਤਪਾਦ ਜੋੜੋ।",
+    "outOfStock": "ਸਟਾਕ ਖਤਮ",
+    "expiringSoon": "ਜਲਦੀ ਮਿਆਦ ਖਤਮ",
+    "expired": "ਮਿਆਦ ਖਤਮ",
+    "intelligenceAlert": "ਇਨਸਾਈਟਸ: ਕੁਝ ਉਤਪਾਦਾਂ 'ਤੇ ਧਿਆਨ ਦਿਓ।"
+  },
+  "sales": {
+    "newSale": "ਨਵੀਂ ਵਿਕਰੀ",
+    "searchReceipts": "ਰਸੀਦਾਂ ਖੋਜੋ...",
+    "receipt": "ਰਸੀਦ",
+    "product": "ਉਤਪਾਦ",
+    "qty": "ਮਾਤਰਾ",
+    "amount": "ਰਕਮ",
+    "profit": "ਮੁਨਾਫ਼ਾ",
+    "date": "ਮਿਤੀ",
+    "actions": "ਕਾਰਵਾਈ",
+    "noSales": "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਪਹਿਲੀ ਵਿਕਰੀ ਦਰਜ ਕਰੋ।",
+    "selectProduct": "ਉਤਪਾਦ ਚੁਣੋ",
+    "saleQty": "ਮਾਤਰਾ",
+    "confirmSale": "ਵਿਕਰੀ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+    "done": "ਹੋ ਗਿਆ",
+    "recordSale": "ਵਿਕਰੀ ਦਰਜ ਕਰੋ"
+  },
+  "analytics": {
+    "businessPerformance": "ਕਾਰੋਬਾਰੀ ਪ੍ਰਦਰਸ਼ਨ",
+    "revenueVsProfit": "ਆਮਦਨ ਬਨਾਮ ਮੁਨਾਫ਼ਾ (15 ਦਿਨ)",
+    "revenueByCategory": "ਸ਼੍ਰੇਣੀ ਅਨੁਸਾਰ ਆਮਦਨ",
+    "noAnalyticsData": "ਅਜੇ ਕੋਈ ਵਿਕਰੀ ਡੇਟਾ ਨਹੀਂ ਹੈ।"
+  },
+  "settings": {
+    "settings": "ਸੈਟਿੰਗਜ਼",
+    "manageAccount": "ਆਪਣੀਆਂ ਤਰਜੀਹਾਂ ਅਤੇ ਗਲੋਬਲ ਡੇਟਾ ਸੁਰੱਖਿਆ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ।",
+    "darkMode": "ਡਾਰਕ ਮੋਡ",
+    "darkModeDesc": "ਲਾਈਟ ਅਤੇ ਡਾਰਕ ਇੰਟਰਫੇਸ ਬਦਲੋ।",
+    "language": "ਭਾਸ਼ਾ",
+    "languageDesc": "ਸਥਾਨਕ ਇੰਟਰਫੇਸ ਸੈਟਿੰਗਜ਼",
+    "resetData": "ਕਾਰੋਬਾਰੀ ਡੇਟਾ ਰੀਸੈੱਟ ਕਰੋ",
+    "resetDataDesc": "ਸਾਰੇ ਉਤਪਾਦ ਅਤੇ ਵਿਕਰੀ ਰਿਕਾਰਡ ਪੱਕੇ ਤੌਰ 'ਤੇ ਮਿਟਾਓ।",
+    "deleteAll": "ਸਾਰਾ ਡੇਟਾ ਮਿਟਾਓ",
+    "deleteConfirmTitle": "ਕੀ ਐਂਟਰਪ੍ਰਾਈਜ਼ ਡੇਟਾ ਮਿਟਾਉਣਾ ਹੈ?",
+    "deleteConfirmDesc": "ਇਹ ਕਾਰਵਾਈ ਸਾਰੇ ਰਿਕਾਰਡ ਪੱਕੇ ਤੌਰ 'ਤੇ ਮਿਟਾ ਦੇਵੇਗੀ। ਇਸਨੂੰ ਵਾਪਸ ਨਹੀਂ ਲਿਆ ਜਾ ਸਕਦਾ।",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "trust": "ਪ੍ਰਾਈਵੇਟ · ਸੁਰੱਖਿਅਤ · ਆਫ਼ਲਾਈਨ ਕੰਮ ਕਰਦਾ ਹੈ",
+    "support": "ਸਹਾਇਤਾ: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ…"
+  },
+  "insights": {
+    "headerDescription": "ਪਿਛਲੇ 14 ਦਿਨਾਂ ਲਈ ਉੱਨਤ ਭਵਿੱਖਬਾਣੀ ਵਿਸ਼ਲੇਸ਼ਣ ਅਤੇ ਲੈਣ-ਦੇਣ ਇਤਿਹਾਸ ਟਰੈਕਿੰਗ।",
+    "intelligenceLabel": "ਇਨਸਾਈਟਸ:",
+    "intelligenceMessage": "ਲੈਣ-ਦੇਣ ਦੇ ਪੈਟਰਨ ਹਫ਼ਤੇ ਦੇ ਮੱਧ ਵਿੱਚ ਉੱਚ ਵਾਲੀਅਮ ਨੂੰ ਦਰਸਾਉਂਦੇ ਹਨ। ਉਸ ਅਨੁਸਾਰ ਇਨਵੈਂਟਰੀ ਨੂੰ ਰੀਸਟਾਕ ਕਰੋ।"
+  }
+}

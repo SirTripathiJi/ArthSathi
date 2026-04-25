@@ -94,7 +94,7 @@ export function Analytics() {
       labels: Object.keys(dmapRev),
       datasets: [
         {
-          label: t('total_sales'),
+          label: t('dashboard.totalSales'),
           data: Object.values(dmapRev),
           borderColor: '#FFD600',
           backgroundColor: 'rgba(255, 214, 0, 0.1)',
@@ -107,7 +107,7 @@ export function Analytics() {
           pointBorderWidth: 2,
         },
         {
-          label: t('net_profit'),
+          label: t('dashboard.netProfit'),
           data: Object.values(dmapProf),
           borderColor: '#FF4081',
           backgroundColor: 'transparent',
@@ -146,7 +146,7 @@ export function Analytics() {
   const renderEmptyState = (msg) => (
     <div className="h-full flex flex-col items-center justify-center gap-6 text-[var(--text-secondary)] opacity-30 py-20 text-center">
       <LineChartIcon className="w-16 h-16" />
-      <p className="text-xl font-black uppercase tracking-widest">{msg || t('no_analytics_data')}</p>
+      <p className="text-xl font-black uppercase tracking-widest">{msg || t('analytics.noAnalyticsData')}</p>
     </div>
   );
 
@@ -154,8 +154,8 @@ export function Analytics() {
     <div className="space-y-12">
       <div className="brutalist-card bg-[var(--color-brand)] border-[var(--border-color)] flex flex-col md:flex-row justify-between items-start md:items-center gap-8 p-12">
         <div className="max-w-xl">
-          <h2 className="text-5xl font-black tracking-tighter mb-4 uppercase italic leading-none text-[#111111]">{t('business_growth')}</h2>
-          <p className="text-lg font-bold text-[#111111]/80 leading-tight">Advanced predictive analysis and transactional history tracking for the last 14 operative days.</p>
+          <h2 className="text-5xl font-black tracking-tighter mb-4 uppercase italic leading-none text-[#111111]">{t('analytics.businessPerformance')}</h2>
+          <p className="text-lg font-bold text-[#111111]/80 leading-tight">{t("insights.headerDescription", "Advanced predictive analysis and transactional history tracking for the last 14 operative days.")}</p>
         </div>
         <div className="p-6 bg-[var(--card-bg)] border-4 border-[var(--border-color)] shadow-[6px_6px_0_var(--shadow-color)]">
           <TrendingUp className="w-12 h-12 text-[var(--text-primary)]" />
@@ -168,7 +168,7 @@ export function Analytics() {
             <div className="w-10 h-10 border-2 border-[var(--border-color)] bg-[var(--color-accent)] flex items-center justify-center shadow-[2px_2px_0_var(--shadow-color)]">
               <LineChartIcon className="w-5 h-5 text-[#111111]" />
             </div>
-            <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('revenue_vs_profit')}</p>
+            <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('analytics.revenueVsProfit')}</p>
           </div>
           <div className="h-[400px] flex-1">
             {salesData.length > 0 ? <Line data={lineData} options={lineOptions} /> : renderEmptyState()}
@@ -180,7 +180,7 @@ export function Analytics() {
             <div className="w-10 h-10 border-2 border-[var(--border-color)] bg-[var(--color-secondary)] flex items-center justify-center shadow-[2px_2px_0_var(--shadow-color)] text-[#ffffff]">
               <PieChart className="w-5 h-5" />
             </div>
-            <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('revenue_by_category')}</p>
+            <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('analytics.revenueByCategory')}</p>
           </div>
           <div className="h-[400px] flex-1">
             {pieData.labels.length > 0 ? <Pie data={pieData} options={pieOptions} /> : renderEmptyState('No category data')}
@@ -193,8 +193,8 @@ export function Analytics() {
           <Info className="w-8 h-8" />
         </div>
         <p className="text-lg font-bold leading-tight">
-          <span className="text-[var(--color-accent)] font-black uppercase tracking-widest mr-4">Intelligence:</span> 
-          Transactional patterns indicate high volume during mid-week cycles. Optimize inventory restocking accordingly.
+          <span className="text-[var(--color-accent)] font-black uppercase tracking-widest mr-4">{t("insights.intelligenceLabel", "INTELLIGENCE:")}</span> 
+          {t("insights.intelligenceMessage", "Transactional patterns indicate high volume during mid-week cycles. Optimize inventory restocking accordingly.")}
         </p>
       </div>
     </div>

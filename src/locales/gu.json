@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "ઓવરવ્યૂ",
+    "inventory": "ઇન્વેન્ટરી",
+    "billing": "બિલિંગ",
+    "insights": "ઇનસાઇટ્સ",
+    "settings": "સેટિંગ્સ",
+    "signout": "લૉગઆઉટ"
+  },
+  "dashboard": {
+    "totalSales": "કુલ વેચાણ",
+    "netProfit": "ચોખ્ખો નફો",
+    "productsInStock": "સ્ટોકમાં ઉત્પાદનો",
+    "transactionsToday": "આજના વ્યવહારો",
+    "salesLast7Days": "વેચાણ — છેલ્લા 7 દિવસ",
+    "topProducts": "ટોચના ઉત્પાદનો",
+    "noSalesData": "ચાર્ટ જોવા માટે પ્રથમ વેચાણ નોંધો.",
+    "user": "વપરાશકર્તા",
+    "myStore": "મારો સ્ટોર"
+  },
+  "inventory": {
+    "addProduct": "ઉત્પાદન ઉમેરો",
+    "search": "શોધો...",
+    "product": "ઉત્પાદન",
+    "category": "શ્રેણી",
+    "costPrice": "ખરીદ કિંમત",
+    "sellingPrice": "વેચાણ કિંમત",
+    "stock": "સ્ટોક",
+    "expiryDate": "સમાપ્તિ તારીખ",
+    "action": "ક્રિયા",
+    "editProduct": "સંપાદિત કરો",
+    "saveProduct": "સાચવો",
+    "cancel": "રદ કરો",
+    "name": "નામ",
+    "sellingPriceRs": "વેચાણ કિંમત (₹)",
+    "stockQty": "સ્ટોક જથ્થો",
+    "lowStockAlert": "લો સ્ટોક એલર્ટ",
+    "noProducts": "શરૂ કરવા માટે પ્રથમ ઉત્પાદન ઉમેરો.",
+    "outOfStock": "સ્ટોક ખત્મ",
+    "expiringSoon": "ટૂંક સમયમાં સમાપ્ત",
+    "expired": "સમાપ્ત",
+    "intelligenceAlert": "ઇનસાઇટ્સ: કેટલાક ઉત્પાદનો પર ધ્યાન આપો."
+  },
+  "sales": {
+    "newSale": "નવું વેચાણ",
+    "searchReceipts": "રસીદો શોધો...",
+    "receipt": "રસીદ",
+    "product": "ઉત્પાદન",
+    "qty": "જથ્થો",
+    "amount": "રકમ",
+    "profit": "નફો",
+    "date": "તારીખ",
+    "actions": "ક્રિયા",
+    "noSales": "શરૂ કરવા માટે પ્રથમ વેચાણ નોંધો.",
+    "selectProduct": "ઉત્પાદન પસંદ કરો",
+    "saleQty": "જથ્થો",
+    "confirmSale": "વેચાણ ની પુષ્ટિ કરો",
+    "done": "થઈ ગયું",
+    "recordSale": "વેચાણ નોંધો"
+  },
+  "analytics": {
+    "businessPerformance": "વ્યાપાર કામગીરી",
+    "revenueVsProfit": "આવક vs નફો (15 દિવસ)",
+    "revenueByCategory": "શ્રેણી મુજબ આવક",
+    "noAnalyticsData": "હજી કોઈ વેચાણ ડેટા નથી."
+  },
+  "settings": {
+    "settings": "સેટિંગ્સ",
+    "manageAccount": "તમારા એકાઉન્ટ અને ડેટા સુરક્ષાનું સંચાલન કરો.",
+    "darkMode": "ડાર્ક મોડ",
+    "darkModeDesc": "લાઇટ અને ડાર્ક ઇન્ટરફેસ બદલો.",
+    "language": "ભાષા",
+    "languageDesc": "સ્થાનિક ઇન્ટરફેસ સેટિંગ્સ",
+    "resetData": "બિઝનેસ ડેટા રીસેટ કરો",
+    "resetDataDesc": "બધા ઉત્પાદન અને વેચાણ રેકોર્ડ કાયમી ધોરણે કાઢી નાખો.",
+    "deleteAll": "બધો ડેટા ડિલીટ કરો",
+    "deleteConfirmTitle": "એન્ટરપ્રાઇઝ ડેટા કાઢી નાખો?",
+    "deleteConfirmDesc": "આ ક્રિયા બધા રેકોર્ડ કાયમી ધોરણે ભૂંસી નાખશે. આને પૂર્વવત્ કરી શકાતું નથી.",
+    "cancel": "રદ કરો",
+    "trust": "ખાનગી · સુરક્ષિત · ઑફલાઇન કાર્ય કરે છે",
+    "support": "સપોર્ટ: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "લોડ થઈ રહ્યું છે…"
+  },
+  "insights": {
+    "headerDescription": "છેલ્લા 14 દિવસો માટે અદ્યતન અનુમાનિત વિશ્લેષણ અને વ્યવહાર ઇતિહાસ ટ્રેકિંગ.",
+    "intelligenceLabel": "ઇન્ટેલિજન્સ:",
+    "intelligenceMessage": "વ્યવહારની પેટર્ન સપ્તાહના મધ્યમાં ઉચ્ચ વેચાણ સૂચવે છે. તે મુજબ ઇન્વેન્ટરી ફરી ભરો."
+  }
+}

@@ -4,16 +4,16 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 
 const PAGE_KEYS = {
-  dashboard: 'overview', inventory: 'inventory', sales: 'billing',
-  analytics: 'insights', settings: 'settings',
+  dashboard: 'nav.overview', inventory: 'nav.inventory', sales: 'nav.billing',
+  analytics: 'nav.insights', settings: 'nav.settings',
 };
 
 export function Topbar({ toggleSidebar }) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
-  const { lang, changeLanguage, t, LANGS } = useLanguage();
+  const { t } = useLanguage();
   const path = location.pathname.split('/')[1] || 'dashboard';
-  const titleKey = PAGE_KEYS[path] || 'overview';
+  const titleKey = PAGE_KEYS[path] || 'nav.overview';
 
   return (
     <header className="sticky top-0 z-[100] h-20 bg-[var(--card-bg)] border-b-4 border-[var(--border-color)] px-8 flex items-center justify-between gap-4">
@@ -26,12 +26,6 @@ export function Topbar({ toggleSidebar }) {
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="flex items-center border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[4px_4px_0_var(--shadow-color)]">
-          <select value={lang} onChange={(e) => changeLanguage(e.target.value)}
-            className="text-sm font-black uppercase bg-transparent text-[var(--text-primary)] px-5 py-2.5 cursor-pointer focus:outline-none border-none">
-            {LANGS.map((l) => <option key={l} value={l}>{l}</option>)}
-          </select>
-        </div>
         <button onClick={toggleTheme} aria-label="Toggle theme"
           className="w-12 h-12 flex items-center justify-center border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[4px_4px_0_var(--shadow-color)] hover:bg-[var(--color-brand)] hover:text-[#111111] transition-all active:shadow-none active:translate-x-0.5 active:translate-y-0.5">
           {theme === 'dark' ? <Sun className="w-6 h-6 text-inherit" /> : <Moon className="w-6 h-6 text-inherit" />}

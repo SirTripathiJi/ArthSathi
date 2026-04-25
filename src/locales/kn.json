@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "ಅವಲೋಕನ",
+    "inventory": "ದಾಸ್ತಾನು",
+    "billing": "ಬಿಲ್ಲಿಂಗ್",
+    "insights": "ಒಳನೋಟಗಳು",
+    "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "signout": "ಲಾಗ್ ಔಟ್"
+  },
+  "dashboard": {
+    "totalSales": "ಒಟ್ಟು ಮಾರಾಟ",
+    "netProfit": "ನಿವ್ವಳ ಲಾಭ",
+    "productsInStock": "ದಾಸ್ತಾನಿನಲ್ಲಿ ಉತ್ಪನ್ನಗಳು",
+    "transactionsToday": "ಇಂದಿನ ವಹಿವಾಟುಗಳು",
+    "salesLast7Days": "ಮಾರಾಟ — ಕಳೆದ 7 ದಿನಗಳು",
+    "topProducts": "ಉನ್ನತ ಉತ್ಪನ್ನಗಳು",
+    "noSalesData": "ಚಾರ್ಟ್ ನೋಡಲು ಮೊದಲ ಮಾರಾಟ ದಾಖಲಿಸಿ.",
+    "user": "ಬಳಕೆದಾರ",
+    "myStore": "ನನ್ನ ಸ್ಟೋರ್"
+  },
+  "inventory": {
+    "addProduct": "ಉತ್ಪನ್ನ ಸೇರಿಸಿ",
+    "search": "ಹುಡುಕಿ...",
+    "product": "ಉತ್ಪನ್ನ",
+    "category": "ವರ್ಗ",
+    "costPrice": "ಖರೀದಿ ಬೆಲೆ",
+    "sellingPrice": "ಮಾರಾಟ ಬೆಲೆ",
+    "stock": "ಸ್ಟಾಕ್",
+    "expiryDate": "ಅವಧಿ ಮುಗಿಯುವ ದಿನಾಂಕ",
+    "action": "ಕ್ರಿಯೆ",
+    "editProduct": "ಎಡಿಟ್ ಮಾಡಿ",
+    "saveProduct": "ಉಳಿಸಿ",
+    "cancel": "ರದ್ದು",
+    "name": "ಹೆಸರು",
+    "sellingPriceRs": "ಮಾರಾಟ ಬೆಲೆ (₹)",
+    "stockQty": "ಸ್ಟಾಕ್ ಪ್ರಮಾಣ",
+    "lowStockAlert": "ಕಡಿಮೆ ಸ್ಟಾಕ್ ಅಲರ್ಟ್",
+    "noProducts": "ಪ್ರಾರಂಭಿಸಲು ಮೊದಲ ಉತ್ಪನ್ನ ಸೇರಿಸಿ.",
+    "outOfStock": "ಸ್ಟಾಕ್ ಇಲ್ಲ",
+    "expiringSoon": "ಶೀಘ್ರ ಮುಕ್ತಾಯ",
+    "expired": "ಮುಕ್ತಾಯ",
+    "intelligenceAlert": "ಅಲರ್ಟ್: ಕೆಲವು ಉತ್ಪನ್ನಗಳಿಗೆ ಗಮನ ಬೇಕು."
+  },
+  "sales": {
+    "newSale": "ಹೊಸ ಮಾರಾಟ",
+    "searchReceipts": "ರಸೀದಿಗಳನ್ನು ಹುಡುಕಿ...",
+    "receipt": "ರಸೀದಿ",
+    "product": "ಉತ್ಪನ್ನ",
+    "qty": "ಪ್ರಮಾಣ",
+    "amount": "ಮೊತ್ತ",
+    "profit": "ಲಾಭ",
+    "date": "ದಿನಾಂಕ",
+    "actions": "ಕ್ರಿಯೆ",
+    "noSales": "ಪ್ರಾರಂಭಿಸಲು ಮೊದಲ ಮಾರಾಟ ದಾಖಲಿಸಿ.",
+    "selectProduct": "ಉತ್ಪನ್ನ ಆಯ್ಕೆಮಾಡಿ",
+    "saleQty": "ಪ್ರಮಾಣ",
+    "confirmSale": "ಮಾರಾಟ ದೃಢಪಡಿಸಿ",
+    "done": "ಮುಗಿದಿದೆ",
+    "recordSale": "ಮಾರಾಟ ದಾಖಲಿಸಿ"
+  },
+  "analytics": {
+    "businessPerformance": "ವ್ಯಾಪಾರ ಕಾರ್ಯಕ್ಷಮತೆ",
+    "revenueVsProfit": "ಆದಾಯ vs ಲಾಭ (15 ದಿನಗಳು)",
+    "revenueByCategory": "ವರ್ಗವಾರು ಆದಾಯ",
+    "noAnalyticsData": "ಯಾವುದೇ ಡೇಟಾ ಇಲ್ಲ."
+  },
+  "settings": {
+    "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "manageAccount": "ನಿಮ್ಮ ಖಾತೆ ಮತ್ತು ಡೇಟಾ ಭದ್ರತೆಯನ್ನು ನಿರ್ವಹಿಸಿ.",
+    "darkMode": "ಡಾರ್ಕ್ ಮೋಡ್",
+    "darkModeDesc": "ಬೆಳಕು ಮತ್ತು ಗಾಢ ಇಂಟರ್ಫೇಸ್ ಬದಲಾಯಿಸಿ.",
+    "language": "ಭಾಷೆ",
+    "languageDesc": "ಸ್ಥಳೀಯ ಇಂಟರ್ಫೇಸ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "resetData": "ವ್ಯಾಪಾರ ಡೇಟಾ ರೀಸೆಟ್",
+    "resetDataDesc": "ಎಲ್ಲಾ ಉತ್ಪನ್ನ ಮತ್ತು ಮಾರಾಟ ದಾಖಲೆಗಳನ್ನು ಅಳಿಸಿ.",
+    "deleteAll": "ಎಲ್ಲಾ ಡೇಟಾ ಅಳಿಸಿ",
+    "deleteConfirmTitle": "ಎಂಟರ್‌ಪ್ರೈಸ್ ಡೇಟಾ ಅಳಿಸಬೇಕೆ?",
+    "deleteConfirmDesc": "ಈ ಕ್ರಿಯೆಯು ಎಲ್ಲಾ ದಾಖಲೆಗಳನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸುತ್ತದೆ. ಇದನ್ನು ಮರುಪಡೆಯಲಾಗುವುದಿಲ್ಲ.",
+    "cancel": "ರದ್ದು",
+    "trust": "ಖಾಸಗಿ · ಸುರಕ್ಷಿತ · ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ",
+    "support": "ಬೆಂಬಲ: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ…"
+  },
+  "insights": {
+    "headerDescription": "ಕಳೆದ 14 ದಿನಗಳ ಸುಧಾರಿತ ಮುನ್ಸೂಚಕ ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ವಹಿವಾಟು ಇತಿಹಾಸ ಟ್ರ್ಯಾಕಿಂಗ್.",
+    "intelligenceLabel": "ಇಂಟೆಲಿಜೆನ್ಸ್:",
+    "intelligenceMessage": "ವಹಿವಾಟಿನ ನಮೂನೆಗಳು ವಾರದ ಮಧ್ಯದಲ್ಲಿ ಹೆಚ್ಚಿನ ಪ್ರಮಾಣವನ್ನು ಸೂಚಿಸುತ್ತವೆ. ಅದಕ್ಕೆ ತಕ್ಕಂತೆ ದಾಸ್ತಾನು ಮರುಸ್ಥಾಪಿಸಿ."
+  }
+}

@@ -3,343 +3,34 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const LanguageContext = createContext();
 export const useLanguage = () => useContext(LanguageContext);
 
-// ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
-const EN = {
-  // Nav
-  overview: 'Overview',
-  inventory: 'Inventory',
-  billing: 'Billing',
-  insights: 'Insights',
-  settings: 'Settings',
-  logout: 'Logout',
-  // Dashboard
-  total_sales: 'Total Sales',
-  net_profit: 'Net Profit',
-  products_in_stock: 'Products in Stock',
-  transactions_today: 'Transactions Today',
-  sales_7_days: 'Sales — Last 7 Days',
-  top_products: 'Top Products by Revenue',
-  no_sales_data: 'Record your first sale to see charts here.',
-  // Inventory
-  add_product: 'Add Product',
-  search_placeholder: 'Search…',
-  search_products: 'Search products...',
-  item: 'Item',
-  category: 'Category',
-  cost: 'Cost Price',
-  price: 'Selling Price',
-  stock: 'Stock',
-  expiry_date: 'Expiry Date',
-  action: 'Action',
-  edit_product: 'Edit Product',
-  save_product: 'Save Product',
-  cancel: 'Cancel',
-  name: 'Name',
-  selling_price: 'Selling Price (₹)',
-  quantity: 'Stock Qty',
-  low_stock_alert: 'Low Stock Alert (qty)',
-  no_products: 'Add your first product to begin.',
-  out_of_stock: 'Out of Stock',
-  expiring_soon: 'Expiring Soon',
-  expired: 'Expired',
-  // Sales
-  make_sale: 'Record Sale',
-  new_sale: 'New Sale',
-  search_receipts: 'Search receipts...',
-  select_product: 'Select Product',
-  sale_qty: 'Quantity',
-  confirm_sale: 'Confirm Sale',
-  no_sales: 'Record your first sale to get started.',
-  product: 'Product',
-  qty: 'Qty',
-  amount: 'Amount',
-  profit: 'Profit',
-  date: 'Date',
-  receipt: 'Receipt',
-  done: 'Done',
-  // Analytics
-  business_growth: 'Business Performance',
-  revenue_vs_profit: 'Revenue vs. Profit (15 Days)',
-  revenue_by_category: 'Revenue by Category',
-  no_analytics_data: 'No sales data yet.',
-  // Settings
-  dark_mode: 'Dark Mode',
-  dark_mode_desc: 'Switch between light and dark interface.',
-  reset_data: 'Reset Business Data',
-  reset_data_desc: 'Permanently delete all products and sales records.',
-  delete_all: 'Delete All Data',
-  // Misc
-  loading: 'Loading ArthSaathi…',
-  trust: 'Private · Secure · Works Offline',
-  support: 'Support: +91 7066863550 | tripathiakshat2604@gmail.com',
+// Dynamically import all JSON locales
+const modules = import.meta.glob('../locales/*.json', { eager: true });
+const ALL = {};
+for (const path in modules) {
+  const lang = path.match(/\/([^/]+)\.json$/)[1];
+  ALL[lang] = modules[path].default || modules[path];
+}
+
+export const LANG_NAMES = {
+  en: 'English',
+  hi: 'हिंदी',
+  bn: 'বাংলা',
+  mr: 'मराठी',
+  ta: 'தமிழ்',
+  te: 'తెలుగు',
+  kn: 'ಕನ್ನಡ',
+  gu: 'ગુજરાતી',
+  pa: 'ਪੰਜਾਬੀ',
+  ur: 'اردو'
 };
 
-const HI = {
-  overview: 'ओवरव्यू',
-  inventory: 'इन्वेंटरी',
-  billing: 'बिलिंग',
-  insights: 'इनसाइट्स',
-  settings: 'सेटिंग्स',
-  logout: 'लॉग आउट',
-  total_sales: 'कुल बिक्री',
-  net_profit: 'शुद्ध लाभ',
-  products_in_stock: 'स्टॉक में उत्पाद',
-  transactions_today: 'आज के लेन-देन',
-  sales_7_days: 'बिक्री — पिछले 7 दिन',
-  top_products: 'शीर्ष उत्पाद',
-  no_sales_data: 'चार्ट देखने के लिए पहली बिक्री दर्ज करें।',
-  add_product: 'उत्पाद जोड़ें',
-  search_placeholder: 'खोजें…',
-  item: 'आइटम',
-  category: 'श्रेणी',
-  cost: 'लागत मूल्य',
-  price: 'विक्रय मूल्य',
-  stock: 'स्टॉक',
-  expiry_date: 'समाप्ति तिथि',
-  action: 'कार्रवाई',
-  edit_product: 'उत्पाद संपादित करें',
-  save_product: 'सहेजें',
-  cancel: 'रद्द करें',
-  name: 'नाम',
-  selling_price: 'विक्रय मूल्य (₹)',
-  quantity: 'स्टॉक मात्रा',
-  low_stock_alert: 'कम स्टॉक अलर्ट',
-  no_products: 'शुरुआत करने के लिए पहला उत्पाद जोड़ें।',
-  out_of_stock: 'स्टॉक खत्म',
-  expiring_soon: 'जल्द समाप्त',
-  expired: 'समाप्त',
-  make_sale: 'बिक्री दर्ज करें',
-  select_product: 'उत्पाद चुनें',
-  sale_qty: 'मात्रा',
-  confirm_sale: 'बिक्री की पुष्टि करें',
-  no_sales: 'शुरुआत करने के लिए पहली बिक्री दर्ज करें।',
-  product: 'उत्पाद',
-  qty: 'मात्रा',
-  amount: 'राशि',
-  profit: 'लाभ',
-  date: 'तारीख',
-  receipt: 'रसीद',
-  done: 'हो गया',
-  business_growth: 'व्यापार प्रदर्शन',
-  revenue_vs_profit: 'राजस्व बनाम लाभ (15 दिन)',
-  revenue_by_category: 'श्रेणी अनुसार राजस्व',
-  no_analytics_data: 'अभी कोई बिक्री डेटा नहीं।',
-  dark_mode: 'डार्क मोड',
-  dark_mode_desc: 'लाइट और डार्क इंटरफेस के बीच स्विच करें।',
-  reset_data: 'बिज़नेस डेटा रीसेट करें',
-  reset_data_desc: 'सभी उत्पाद और बिक्री रिकॉर्ड स्थायी रूप से हटाएं।',
-  delete_all: 'सभी डेटा हटाएं',
-  loading: 'ArthSaathi लोड हो रहा है…',
-  trust: 'निजी · सुरक्षित · ऑफलाइन काम करता है',
-  support: 'सहायता: +91 7066863550 | tripathiakshat2604@gmail.com',
+// Helper to resolve nested keys like "nav.inventory"
+const resolvePath = (obj, path) => {
+  return path.split('.').reduce((prev, curr) => (prev ? prev[curr] : null), obj);
 };
-
-// BN, MR, TA, TE, GU, KN, ML, PA — minimal overrides, fall through to EN
-const BN = {
-  ...EN,
-  overview: 'ওভারভিউ',
-  inventory: 'ইনভেন্টরি',
-  billing: 'বিলিং',
-  insights: 'ইনসাইট',
-  settings: 'সেটিংস',
-  logout: 'লগআউট',
-  total_sales: 'মোট বিক্রয়',
-  net_profit: 'নিট লাভ',
-  products_in_stock: 'স্টকে পণ্য',
-  transactions_today: 'আজকের লেনদেন',
-  add_product: 'পণ্য যোগ করুন',
-  search_placeholder: 'অনুসন্ধান করুন…',
-  no_products: 'শুরু করতে প্রথম পণ্য যোগ করুন।',
-  out_of_stock: 'স্টক নেই',
-  expiring_soon: 'শীঘ্রই মেয়াদ শেষ',
-  expired: 'মেয়াদ শেষ',
-  make_sale: 'বিক্রয় নথিভুক্ত',
-  confirm_sale: 'বিক্রয় নিশ্চিত করুন',
-  no_sales: 'শুরু করতে প্রথম বিক্রয় নথিভুক্ত করুন।',
-  reset_data: 'ব্যবসার ডেটা রিসেট করুন',
-  delete_all: 'সমস্ত ডেটা মুছুন',
-  loading: 'লোড হচ্ছে…',
-};
-const MR = {
-  ...EN,
-  overview: 'ओव्हरव्यू',
-  inventory: 'इन्व्हेंटरी',
-  billing: 'बिलिंग',
-  insights: 'इनसाइट्स',
-  settings: 'सेटिंग्ज',
-  logout: 'लॉगआउट',
-  total_sales: 'एकूण विक्री',
-  net_profit: 'निव्वळ नफा',
-  products_in_stock: 'साठ्यातील उत्पादने',
-  transactions_today: 'आजचे व्यवहार',
-  add_product: 'उत्पादन जोडा',
-  search_placeholder: 'शोधा…',
-  no_products: 'सुरू करण्यासाठी पहिले उत्पादन जोडा.',
-  out_of_stock: 'स्टॉक संपला',
-  expiring_soon: 'लवकरच कालबाह्य',
-  expired: 'कालबाह्य',
-  make_sale: 'विक्री नोंदवा',
-  confirm_sale: 'विक्री निश्चित करा',
-  no_sales: 'सुरू करण्यासाठी पहिली विक्री नोंदवा.',
-  reset_data: 'बिझनेस डेटा रीसेट करा',
-  delete_all: 'सर्व डेटा हटवा',
-  loading: 'लोड होत आहे…',
-};
-const TA = {
-  ...EN,
-  overview: 'கண்ணோட்டம்',
-  inventory: 'சரக்கு',
-  billing: 'பில்லிங்',
-  insights: 'நுண்ணறிவு',
-  settings: 'அமைப்புகள்',
-  logout: 'வெளியேறு',
-  total_sales: 'மொத்த விற்பனை',
-  net_profit: 'நிகர லாபம்',
-  products_in_stock: 'கையிருப்பு',
-  transactions_today: 'இன்றைய பரிவர்த்தனைகள்',
-  add_product: 'தயாரிப்பு சேர்',
-  search_placeholder: 'தேடு…',
-  no_products: 'தொடங்க முதல் தயாரிப்பை சேர்க்கவும்.',
-  out_of_stock: 'கையிருப்பு இல்லை',
-  expiring_soon: 'விரைவில் காலாவதி',
-  expired: 'காலாவதி',
-  make_sale: 'விற்பனை பதிவு',
-  confirm_sale: 'விற்பனை உறுதிப்படுத்து',
-  no_sales: 'தொடங்க முதல் விற்பனை பதிவு செய்யவும்.',
-  reset_data: 'வணிக தரவு மீட்டமை',
-  delete_all: 'அனைத்து தரவும் நீக்கு',
-  loading: 'ஏற்றுகிறது…',
-};
-const TE = {
-  ...EN,
-  overview: 'అవలోకనం',
-  inventory: 'ఇన్వెంటరీ',
-  billing: 'బిల్లింగ్',
-  insights: 'అంతర్దృష్టులు',
-  settings: 'సెట్టింగ్‌లు',
-  logout: 'లాగ్అవుట్',
-  total_sales: 'మొత్తం అమ్మకాలు',
-  net_profit: 'నికర లాభం',
-  products_in_stock: 'స్టాక్‌లో ఉత్పత్తులు',
-  transactions_today: 'ఈరోజు లావాదేవీలు',
-  add_product: 'ఉత్పత్తి జోడించు',
-  search_placeholder: 'శోధించు…',
-  no_products: 'ప్రారంభించడానికి మొదటి ఉత్పత్తిని జోడించండి.',
-  out_of_stock: 'స్టాక్ లేదు',
-  expiring_soon: 'త్వరలో గడువు',
-  expired: 'గడువు ముగిసింది',
-  make_sale: 'అమ్మకం నమోదు',
-  confirm_sale: 'అమ్మకం నిర్ధారించు',
-  no_sales: 'ప్రారంభించడానికి మొదటి అమ్మకం నమోదు చేయండి.',
-  reset_data: 'వ్యాపార డేటా రీసెట్',
-  delete_all: 'అన్ని డేటా తొలగించు',
-  loading: 'లోడ్ అవుతోంది…',
-};
-const GU = {
-  ...EN,
-  overview: 'ઓવરવ્યૂ',
-  inventory: 'ઇન્વેન્ટરી',
-  billing: 'બિલિંગ',
-  insights: 'ઇનસાઇટ્સ',
-  settings: 'સેટિંગ્સ',
-  logout: 'લૉગઆઉટ',
-  total_sales: 'કુલ વેચાણ',
-  net_profit: 'ચોખ્ખો નફો',
-  products_in_stock: 'સ્ટોકમાં ઉત્પાદનો',
-  transactions_today: 'આજના વ્યવહારો',
-  add_product: 'ઉત્પાદન ઉમેરો',
-  search_placeholder: 'શોધો…',
-  no_products: 'શરૂ કરવા માટે પ્રથમ ઉત્પાદન ઉમેરો.',
-  out_of_stock: 'સ્ટોક ખત્મ',
-  expiring_soon: 'ટૂંક સમયમાં સમાપ્ત',
-  expired: 'સમાપ્ત',
-  make_sale: 'વેચાણ નોંધો',
-  confirm_sale: 'વેચાણ ની પુષ્ટિ કરો',
-  no_sales: 'શરૂ કરવા માટે પ્રથમ વેચાણ નોંધો.',
-  reset_data: 'બિઝનેસ ડેટા રીસેટ કરો',
-  delete_all: 'બધો ડેટા ડિલીટ કરો',
-  loading: 'લોડ થઈ રહ્યું છે…',
-};
-const KN = {
-  ...EN,
-  overview: 'ಅವಲೋಕನ',
-  inventory: 'ದಾಸ್ತಾನು',
-  billing: 'ಬಿಲ್ಲಿಂಗ್',
-  insights: 'ಒಳನೋಟಗಳು',
-  settings: 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
-  logout: 'ಲಾಗ್ ಔಟ್',
-  total_sales: 'ಒಟ್ಟು ಮಾರಾಟ',
-  net_profit: 'ನಿವ್ವಳ ಲಾಭ',
-  products_in_stock: 'ದಾಸ್ತಾನಿನಲ್ಲಿ ಉತ್ಪನ್ನಗಳು',
-  transactions_today: 'ಇಂದಿನ ವಹಿವಾಟುಗಳು',
-  add_product: 'ಉತ್ಪನ್ನ ಸೇರಿಸಿ',
-  search_placeholder: 'ಹುಡುಕಿ…',
-  no_products: 'ಪ್ರಾರಂಭಿಸಲು ಮೊದಲ ಉತ್ಪನ್ನ ಸೇರಿಸಿ.',
-  out_of_stock: 'ಸ್ಟಾಕ್ ಇಲ್ಲ',
-  expiring_soon: 'ಶೀಘ್ರ ಮುಕ್ತಾಯ',
-  expired: 'ಮುಕ್ತಾಯ',
-  make_sale: 'ಮಾರಾಟ ದಾಖಲಿಸಿ',
-  confirm_sale: 'ಮಾರಾಟ ದೃಢಪಡಿಸಿ',
-  no_sales: 'ಪ್ರಾರಂಭಿಸಲು ಮೊದಲ ಮಾರಾಟ ದಾಖಲಿಸಿ.',
-  reset_data: 'ವ್ಯಾಪಾರ ಡೇಟಾ ರೀಸೆಟ್',
-  delete_all: 'ಎಲ್ಲ ಡೇಟಾ ಅಳಿಸಿ',
-  loading: 'ಲೋಡ್ ಆಗುತ್ತಿದೆ…',
-};
-const ML = {
-  ...EN,
-  overview: 'ഓവർവ്യൂ',
-  inventory: 'ഇൻവെന്ററി',
-  billing: 'ബില്ലിംഗ്',
-  insights: 'ഉൾക്കാഴ്ചകൾ',
-  settings: 'ക്രമീകരണങ്ങൾ',
-  logout: 'ലോഗൗട്ട്',
-  total_sales: 'ആകെ വിൽപ്പന',
-  net_profit: 'അറ്റ ലാഭം',
-  products_in_stock: 'സ്റ്റോക്കിലെ ഉൽപ്പന്നങ്ങൾ',
-  transactions_today: 'ഇന്നത്തെ ഇടപാടുകൾ',
-  add_product: 'ഉൽപ്പന്നം ചേർക്കുക',
-  search_placeholder: 'തിരയുക…',
-  no_products: 'ആരംഭിക്കാൻ ആദ്യ ഉൽപ്പന്നം ചേർക്കുക.',
-  out_of_stock: 'സ്റ്റോക്ക് ഇല്ല',
-  expiring_soon: 'ഉടൻ കാലാവധി',
-  expired: 'കാലാവധി കഴിഞ്ഞു',
-  make_sale: 'വിൽപ്പന രേഖപ്പെടുത്തുക',
-  confirm_sale: 'വിൽപ്പന സ്ഥിരീകരിക്കുക',
-  no_sales: 'ആരംഭിക്കാൻ ആദ്യ വിൽപ്പന രേഖപ്പെടുത്തുക.',
-  reset_data: 'ബിസിനസ് ഡാറ്റ റീസെറ്റ്',
-  delete_all: 'എല്ലാ ഡാറ്റയും ഇല്ലാതാക്കുക',
-  loading: 'ലോഡ് ചെയ്യുന്നു…',
-};
-const PA = {
-  ...EN,
-  overview: 'ਓਵਰਵਿਊ',
-  inventory: 'ਵਸਤੂ ਸੂਚੀ',
-  billing: 'ਬਿਲਿੰਗ',
-  insights: 'ਇਨਸਾਈਟਸ',
-  settings: 'ਸੈਟਿੰਗਜ਼',
-  logout: 'ਲਾਗ ਆਉਟ',
-  total_sales: 'ਕੁੱਲ ਵਿਕਰੀ',
-  net_profit: 'ਸ਼ੁੱਧ ਮੁਨਾਫ਼ਾ',
-  products_in_stock: 'ਸਟਾਕ ਵਿੱਚ ਉਤਪਾਦ',
-  transactions_today: 'ਅੱਜ ਦੇ ਲੈਣ-ਦੇਣ',
-  add_product: 'ਉਤਪਾਦ ਜੋੜੋ',
-  search_placeholder: 'ਖੋਜੋ…',
-  no_products: 'ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਪਹਿਲਾ ਉਤਪਾਦ ਜੋੜੋ।',
-  out_of_stock: 'ਸਟਾਕ ਖਤਮ',
-  expiring_soon: 'ਜਲਦੀ ਮਿਆਦ ਖਤਮ',
-  expired: 'ਮਿਆਦ ਖਤਮ',
-  make_sale: 'ਵਿਕਰੀ ਦਰਜ ਕਰੋ',
-  confirm_sale: 'ਵਿਕਰੀ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ',
-  no_sales: 'ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਪਹਿਲੀ ਵਿਕਰੀ ਦਰਜ ਕਰੋ।',
-  reset_data: 'ਕਾਰੋਬਾਰੀ ਡੇਟਾ ਰੀਸੈੱਟ',
-  delete_all: 'ਸਾਰਾ ਡੇਟਾ ਮਿਟਾਓ',
-  loading: 'ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ…',
-};
-
-const ALL = { EN, HI, BN, MR, TA, TE, GU, KN, ML, PA };
 
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState('EN');
+  const [lang, setLang] = useState('en');
 
   useEffect(() => {
     const saved = localStorage.getItem('arth_lang');
@@ -347,13 +38,18 @@ export function LanguageProvider({ children }) {
   }, []);
 
   const changeLanguage = (l) => {
+    if (!ALL[l]) return;
     setLang(l);
     localStorage.setItem('arth_lang', l);
   };
-  const t = (key) => ALL[lang]?.[key] ?? ALL['EN']?.[key] ?? key;
+
+  const t = (key, defaultText) => {
+    const translation = resolvePath(ALL[lang], key) ?? resolvePath(ALL['en'], key);
+    return translation ?? defaultText ?? key;
+  };
 
   return (
-    <LanguageContext.Provider value={{ lang, changeLanguage, t, LANGS: Object.keys(ALL) }}>
+    <LanguageContext.Provider value={{ lang, changeLanguage, t, LANGS: Object.keys(ALL), LANG_NAMES }}>
       {children}
     </LanguageContext.Provider>
   );

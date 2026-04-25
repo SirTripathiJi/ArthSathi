@@ -19,11 +19,11 @@ export function Sidebar({ isOpen, toggleSidebar }) {
   }, [user]);
 
   const nav = [
-    { to: '/dashboard', icon: LayoutDashboard, label: t('overview') },
-    { to: '/inventory', icon: Package, label: t('inventory'), badge: lowStockCount },
-    { to: '/sales', icon: Receipt, label: t('billing') },
-    { to: '/analytics', icon: LineChart, label: t('insights') },
-    { to: '/settings', icon: Settings, label: t('settings') },
+    { to: '/dashboard', icon: LayoutDashboard, label: t('nav.overview') },
+    { to: '/inventory', icon: Package, label: t('nav.inventory'), badge: lowStockCount },
+    { to: '/sales', icon: Receipt, label: t('nav.billing') },
+    { to: '/analytics', icon: LineChart, label: t('nav.insights') },
+    { to: '/settings', icon: Settings, label: t('nav.settings') },
   ];
 
   return (
@@ -71,8 +71,8 @@ export function Sidebar({ isOpen, toggleSidebar }) {
               {user?.name?.charAt(0) || 'U'}
             </div>
             <div className="min-w-0">
-              <p className="font-black text-base text-[var(--text-primary)] truncate uppercase leading-tight">{user?.name || 'User'}</p>
-              <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-tight">{user?.store || 'My Store'}</p>
+              <p className="font-black text-base text-[var(--text-primary)] truncate uppercase leading-tight">{user?.name || t('dashboard.user')}</p>
+              <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-tight">{user?.store || t('dashboard.myStore')}</p>
             </div>
           </div>
           <button
@@ -80,7 +80,7 @@ export function Sidebar({ isOpen, toggleSidebar }) {
             className="flex items-center justify-center gap-4 px-5 py-4 border-2 border-[var(--border-color)] font-black text-base w-full bg-[var(--card-bg)] hover:bg-[var(--color-error)] hover:text-[#ffffff] text-[var(--text-primary)] transition-all shadow-[5px_5px_0_var(--shadow-color)] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
           >
             <LogOut className="w-5 h-5" />
-            <span className="uppercase">Sign Out</span>
+            <span className="uppercase">{t('nav.signout')}</span>
           </button>
         </div>
       </aside>

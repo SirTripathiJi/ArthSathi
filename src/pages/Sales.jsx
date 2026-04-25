@@ -95,10 +95,10 @@ export function Sales() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="relative w-full md:w-[400px]">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-primary)]" />
-          <input className="brutalist-input !pl-16 text-base py-4" placeholder={t('search_receipts')} value={search} onChange={(e) => setSearch(e.target.value)} />
+          <input className="brutalist-input !pl-16 text-base py-4" placeholder={t('sales.searchReceipts')} value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         <button className="brutalist-btn gap-4 w-full md:w-auto px-10 py-5 text-base bg-[var(--color-secondary)] text-[#ffffff]" onClick={openSaleModal}>
-          <Plus className="w-7 h-7" /> <span className="uppercase">{t('new_sale')}</span>
+          <Plus className="w-7 h-7" /> <span className="uppercase">{t('sales.newSale')}</span>
         </button>
       </div>
 
@@ -106,12 +106,12 @@ export function Sales() {
         <table className="brutalist-table">
           <thead>
             <tr>
-              <th>{t('product')}</th>
-              <th>{t('qty')}</th>
-              <th>{t('amount')}</th>
-              <th>{t('profit')}</th>
-              <th>{t('date')}</th>
-              <th className="text-right">ACTIONS</th>
+              <th>{t('sales.product')}</th>
+              <th>{t('sales.qty')}</th>
+              <th>{t('sales.amount')}</th>
+              <th>{t('sales.profit')}</th>
+              <th>{t('sales.date')}</th>
+              <th className="text-right">{t('sales.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -137,7 +137,7 @@ export function Sales() {
                 <td colSpan="6" className="text-center py-32 bg-[var(--bg-secondary)]">
                   <div className="flex flex-col items-center justify-center gap-6 opacity-30">
                     <Receipt className="w-20 h-20" />
-                    <p className="text-xl font-black uppercase tracking-widest">{t('no_sales')}</p>
+                    <p className="text-xl font-black uppercase tracking-widest">{t('sales.noSales')}</p>
                   </div>
                 </td>
               </tr>
@@ -146,19 +146,19 @@ export function Sales() {
         </table>
       </div>
 
-      <Modal isOpen={isSaleModalOpen} onClose={() => setIsSaleModalOpen(false)} title={t('make_sale')}
+      <Modal isOpen={isSaleModalOpen} onClose={() => setIsSaleModalOpen(false)} title={t('sales.recordSale')}
         actions={
           <div className="flex gap-4">
-            <button className="text-sm font-black uppercase underline decoration-2" onClick={() => setIsSaleModalOpen(false)}>{t('cancel')}</button>
+            <button className="text-sm font-black uppercase underline decoration-2" onClick={() => setIsSaleModalOpen(false)}>{t('inventory.cancel')}</button>
             <button className="brutalist-btn px-10" onClick={confirmSale}>
-              {t('confirm_sale')}
+              {t('sales.confirmSale')}
             </button>
           </div>
         }
       >
         <div className="space-y-8">
           <div>
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('select_product')}</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('sales.selectProduct')}</label>
             <select className="brutalist-input bg-[var(--card-bg)] text-[var(--text-primary)] text-base py-4" value={selProductId} onChange={(e) => setSelProductId(e.target.value)}>
               <option value="">Choose item…</option>
               {products.filter((x) => x.qty > 0).map((p) => (
@@ -167,7 +167,7 @@ export function Sales() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('sale_qty')}</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('sales.saleQty')}</label>
             <input className="brutalist-input text-base py-4" type="number" min="1" placeholder="0" value={selQty} onChange={(e) => setSelQty(e.target.value)} />
           </div>
           {preview && (

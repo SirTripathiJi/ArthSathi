@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "கண்ணோட்டம்",
+    "inventory": "சரக்கு",
+    "billing": "பில்லிங்",
+    "insights": "நுண்ணறிவு",
+    "settings": "அமைப்புகள்",
+    "signout": "வெளியேறு"
+  },
+  "dashboard": {
+    "totalSales": "மொத்த விற்பனை",
+    "netProfit": "நிகர லாபம்",
+    "productsInStock": "கையிருப்பு",
+    "transactionsToday": "இன்றைய பரிவர்த்தனைகள்",
+    "salesLast7Days": "விற்பனை — கடந்த 7 நாட்கள்",
+    "topProducts": "முன்னணி தயாரிப்புகள்",
+    "noSalesData": "விவரங்களை காண முதல் விற்பனையை பதிவு செய்யவும்.",
+    "user": "பயனர்",
+    "myStore": "என் கடை"
+  },
+  "inventory": {
+    "addProduct": "தயாரிப்பு சேர்",
+    "search": "தேடு...",
+    "product": "தயாரிப்பு",
+    "category": "வகை",
+    "costPrice": "அடக்க விலை",
+    "sellingPrice": "விற்பனை விலை",
+    "stock": "கையிருப்பு",
+    "expiryDate": "காலாவதி தேதி",
+    "action": "செயல்",
+    "editProduct": "தொகு",
+    "saveProduct": "சேமி",
+    "cancel": "ரத்து",
+    "name": "பெயர்",
+    "sellingPriceRs": "விற்பனை விலை (₹)",
+    "stockQty": "அளவு",
+    "lowStockAlert": "குறைந்த கையிருப்பு எச்சரிக்கை",
+    "noProducts": "தொடங்க முதல் தயாரிப்பை சேர்க்கவும்.",
+    "outOfStock": "கையிருப்பு இல்லை",
+    "expiringSoon": "விரைவில் காலாவதி",
+    "expired": "காலாவதி",
+    "intelligenceAlert": "எச்சரிக்கை: சில தயாரிப்புகளுக்கு கவனம் தேவை."
+  },
+  "sales": {
+    "newSale": "புதிய விற்பனை",
+    "searchReceipts": "ரசீது தேடு...",
+    "receipt": "ரசீது",
+    "product": "தயாரிப்பு",
+    "qty": "அளவு",
+    "amount": "தொகை",
+    "profit": "லாபம்",
+    "date": "தேதி",
+    "actions": "செயல்",
+    "noSales": "தொடங்க முதல் விற்பனையை பதிவு செய்யவும்.",
+    "selectProduct": "தயாரிப்பு தேர்ந்தெடு",
+    "saleQty": "அளவு",
+    "confirmSale": "விற்பனையை உறுதிசெய்",
+    "done": "முடிந்தது",
+    "recordSale": "விற்பனை பதிவு"
+  },
+  "analytics": {
+    "businessPerformance": "வணிக செயல்திறன்",
+    "revenueVsProfit": "வருவாய் மற்றும் லாபம்",
+    "revenueByCategory": "வகை வாரியான வருவாய்",
+    "noAnalyticsData": "விற்பனை தரவு இல்லை."
+  },
+  "settings": {
+    "settings": "அமைப்புகள்",
+    "manageAccount": "உங்கள் கணக்கு மற்றும் தரவு பாதுகாப்பை நிர்வகிக்கவும்.",
+    "darkMode": "டார்க் மோட்",
+    "darkModeDesc": "இருண்ட மற்றும் வெளிச்சமான திரை மாற்றவும்.",
+    "language": "மொழி",
+    "languageDesc": "உள்ளூர் மொழி அமைப்புகள்",
+    "resetData": "வணிக தரவு மீட்டமை",
+    "resetDataDesc": "அனைத்து தயாரிப்பு மற்றும் விற்பனை தரவையும் நீக்கு.",
+    "deleteAll": "அனைத்து தரவும் நீக்கு",
+    "deleteConfirmTitle": "முழு தரவையும் நீக்கவா?",
+    "deleteConfirmDesc": "இந்த செயல்முறையை மாற்ற முடியாது. அனைத்து தரவுகளும் நிரந்தரமாக நீக்கப்படும்.",
+    "cancel": "ரத்து",
+    "trust": "பாதுகாப்பானது · ஆஃப்லைனில் வேலை செய்யும்",
+    "support": "உதவி: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "ஏற்றுகிறது…"
+  },
+  "insights": {
+    "headerDescription": "கடந்த 14 நாட்களுக்கான மேம்பட்ட முன்கணிப்பு பகுப்பாய்வு மற்றும் பரிவர்த்தனை வரலாறு.",
+    "intelligenceLabel": "நுண்ணறிவு:",
+    "intelligenceMessage": "பரிவர்த்தனை முறைகள் வாரத்தின் மத்தியில் அதிக விற்பனையைக் காட்டுகின்றன. அதற்கேற்ப சரக்குகளை நிரப்பவும்."
+  }
+}

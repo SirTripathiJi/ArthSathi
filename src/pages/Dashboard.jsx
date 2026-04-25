@@ -90,14 +90,14 @@ export function Dashboard() {
     return {
       labels: Object.keys(dmap),
       datasets: [{
-        label: t('total_sales'), data: Object.values(dmap),
+        label: t('dashboard.totalSales'), data: Object.values(dmap),
         backgroundColor: '#FFD600',
         borderColor: isDark ? '#ffffff' : '#000000',
         borderWidth: 2,
         barThickness: 30,
       }],
     };
-  }, [salesData, t]);
+  }, [salesData, t, isDark]);
 
   const topProductsData = useMemo(() => {
     const pmap = {};
@@ -113,13 +113,13 @@ export function Dashboard() {
         hoverOffset: 10 
       }],
     };
-  }, [salesData]);
+  }, [salesData, isDark]);
 
   const cardsData = {
-    sales:    { id: 'sales',    label: t('total_sales'),        icon: <Receipt className="w-5 h-5" />,    value: `₹${totalSales.toLocaleString()}`, bgAccent: '#FFD600' },
-    profit:   { id: 'profit',   label: t('net_profit'),         icon: <TrendingUp className="w-5 h-5" />, value: `₹${totalProfit.toLocaleString()}`, bgAccent: '#00C853' },
-    products: { id: 'products', label: t('products_in_stock'),  icon: <Package className="w-5 h-5" />,    value: totalProducts,                      bgAccent: '#00E5FF' },
-    txns:     { id: 'txns',     label: t('transactions_today'), icon: <Activity className="w-5 h-5" />,   value: totalTxns,                          bgAccent: '#FF4081' },
+    sales:    { id: 'sales',    label: t('dashboard.totalSales'),        icon: <Receipt className="w-5 h-5" />,    value: `₹${totalSales.toLocaleString()}`, bgAccent: '#FFD600' },
+    profit:   { id: 'profit',   label: t('dashboard.netProfit'),         icon: <TrendingUp className="w-5 h-5" />, value: `₹${totalProfit.toLocaleString()}`, bgAccent: '#00C853' },
+    products: { id: 'products', label: t('dashboard.productsInStock'),  icon: <Package className="w-5 h-5" />,    value: totalProducts,                      bgAccent: '#00E5FF' },
+    txns:     { id: 'txns',     label: t('dashboard.transactionsToday'), icon: <Activity className="w-5 h-5" />,   value: totalTxns,                          bgAccent: '#FF4081' },
   };
 
   const handleDragStart = (id) => setDraggedId(id);
@@ -149,7 +149,7 @@ export function Dashboard() {
               <div className="w-10 h-10 border-2 border-[var(--border-color)] bg-[var(--color-brand)] flex items-center justify-center shadow-[2px_2px_0_var(--shadow-color)]">
                 <BarChart3 className="w-5 h-5 text-[#111111]" />
               </div>
-              <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('sales_7_days')}</p>
+              <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('dashboard.salesLast7Days')}</p>
             </div>
             <div className="text-xs font-black text-[#111111] border-2 border-[var(--border-color)] bg-[var(--color-brand)] px-4 py-1.5 shadow-[3px_3px_0_var(--shadow-color)]">WEEKLY</div>
           </div>
@@ -162,7 +162,7 @@ export function Dashboard() {
               <div className="w-10 h-10 border-2 border-[var(--border-color)] bg-[var(--color-secondary)] flex items-center justify-center shadow-[2px_2px_0_var(--shadow-color)] text-[#ffffff]">
                 <TrendingUp className="w-5 h-5" />
               </div>
-              <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('top_products')}</p>
+              <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('dashboard.topProducts')}</p>
             </div>
             <div className="text-xs font-black text-[var(--bg-primary)] border-2 border-[var(--border-color)] bg-[var(--border-color)] px-4 py-1.5 shadow-[3px_3px_0_var(--shadow-color)]">MARKET</div>
           </div>
@@ -172,7 +172,7 @@ export function Dashboard() {
             ) : (
               <div className="h-full flex flex-col items-center justify-center gap-6 text-[var(--text-secondary)] opacity-50">
                 <Package className="w-16 h-16" />
-                <p className="font-black uppercase tracking-widest">{t('no_sales_data')}</p>
+                <p className="font-black uppercase tracking-widest">{t('dashboard.noSalesData')}</p>
               </div>
             )}
           </div>

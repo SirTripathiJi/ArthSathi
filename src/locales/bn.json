@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "ওভারভিউ",
+    "inventory": "ইনভেন্টরি",
+    "billing": "বিলিং",
+    "insights": "ইনসাইট",
+    "settings": "সেটিংস",
+    "signout": "লগআউট"
+  },
+  "dashboard": {
+    "totalSales": "মোট বিক্রয়",
+    "netProfit": "নিট লাভ",
+    "productsInStock": "স্টকে পণ্য",
+    "transactionsToday": "আজকের লেনদেন",
+    "salesLast7Days": "বিক্রয় — গত ৭ দিন",
+    "topProducts": "শীর্ষ পণ্য",
+    "noSalesData": "চার্ট দেখতে প্রথম বিক্রয় নথিভুক্ত করুন।",
+    "user": "ইউজার",
+    "myStore": "আমার স্টোর"
+  },
+  "inventory": {
+    "addProduct": "পণ্য যোগ করুন",
+    "search": "অনুসন্ধান করুন...",
+    "product": "পণ্য",
+    "category": "বিভাগ",
+    "costPrice": "ক্রয় মূল্য",
+    "sellingPrice": "বিক্রয় মূল্য",
+    "stock": "স্টক",
+    "expiryDate": "মেয়াদ উত্তীর্ণের তারিখ",
+    "action": "পদক্ষেপ",
+    "editProduct": "পণ্য সম্পাদনা করুন",
+    "saveProduct": "সংরক্ষণ করুন",
+    "cancel": "বাতিল",
+    "name": "নাম",
+    "sellingPriceRs": "বিক্রয় মূল্য (₹)",
+    "stockQty": "স্টক পরিমাণ",
+    "lowStockAlert": "কম স্টক সতর্কতা",
+    "noProducts": "শুরু করতে প্রথম পণ্য যোগ করুন।",
+    "outOfStock": "স্টক নেই",
+    "expiringSoon": "শীঘ্রই মেয়াদ শেষ",
+    "expired": "মেয়াদ শেষ",
+    "intelligenceAlert": "সতর্কতা: কিছু পণ্যের স্টক কম।"
+  },
+  "sales": {
+    "newSale": "নতুন বিক্রয়",
+    "searchReceipts": "রসিদ খুঁজুন...",
+    "receipt": "রসিদ",
+    "product": "পণ্য",
+    "qty": "পরিমাণ",
+    "amount": "পরিমাণ",
+    "profit": "লাভ",
+    "date": "তারিখ",
+    "actions": "পদক্ষেপ",
+    "noSales": "শুরু করতে প্রথম বিক্রয় নথিভুক্ত করুন।",
+    "selectProduct": "পণ্য নির্বাচন করুন",
+    "saleQty": "পরিমাণ",
+    "confirmSale": "বিক্রয় নিশ্চিত করুন",
+    "done": "সম্পন্ন",
+    "recordSale": "বিক্রয় নথিভুক্ত করুন"
+  },
+  "analytics": {
+    "businessPerformance": "ব্যবসা পারফরম্যান্স",
+    "revenueVsProfit": "রাজস্ব বনাম লাভ (১৫ দিন)",
+    "revenueByCategory": "বিভাগ অনুযায়ী রাজস্ব",
+    "noAnalyticsData": "কোন বিক্রয় তথ্য নেই।"
+  },
+  "settings": {
+    "settings": "সেটিংস",
+    "manageAccount": "আপনার অ্যাকাউন্ট পছন্দ এবং গ্লোবাল ডেটা সুরক্ষা পরিচালনা করুন।",
+    "darkMode": "ডার্ক মোড",
+    "darkModeDesc": "লাইট এবং ডার্ক ইন্টারফেস পরিবর্তন করুন।",
+    "language": "ভাষা",
+    "languageDesc": "স্থানীয় ইন্টারফেস সেটিংস",
+    "resetData": "ব্যবসার ডেটা রিসেট করুন",
+    "resetDataDesc": "স্থায়ীভাবে সমস্ত পণ্য এবং বিক্রয় রেকর্ড মুছুন।",
+    "deleteAll": "সমস্ত ডেটা মুছুন",
+    "deleteConfirmTitle": "এন্টারপ্রাইজ ডেটা মুছবেন?",
+    "deleteConfirmDesc": "এই পদক্ষেপটি স্থায়ীভাবে সমস্ত রেকর্ড মুছে ফেলবে। এটি পূর্বাবস্থায় ফিরিয়ে আনা যাবে না।",
+    "cancel": "বাতিল",
+    "trust": "ব্যক্তিগত · সুরক্ষিত · অফলাইনে কাজ করে",
+    "support": "সাপোর্ট: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "লোড হচ্ছে…"
+  },
+  "insights": {
+    "headerDescription": "গত ১৪ দিনের জন্য উন্নত ভবিষ্যদ্বাণীমূলক বিশ্লেষণ এবং লেনদেনের ইতিহাস ট্র্যাকিং।",
+    "intelligenceLabel": "ইনসাইটস:",
+    "intelligenceMessage": "লেনদেনের ধরণগুলি সপ্তাহের মধ্যবর্তী চক্রে উচ্চ পরিমাণ নির্দেশ করে। সেই অনুযায়ী ইনভেন্টরি পুনরায় স্টক করা অপ্টিমাইজ করুন।"
+  }
+}

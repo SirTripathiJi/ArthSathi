@@ -77,14 +77,14 @@ export function Inventory() {
         <div className="relative w-full md:w-[400px]">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-primary)]" />
           <input 
-            placeholder={t('search_products')} 
+            placeholder={t('inventory.search')} 
             className="brutalist-input !pl-16 text-base py-4" 
             value={search} 
             onChange={(e) => setSearch(e.target.value)} 
           />
         </div>
         <button className="brutalist-btn gap-4 w-full md:w-auto px-10 py-5 text-base" onClick={openAddModal}>
-          <Plus className="w-7 h-7" /> <span className="uppercase">{t('add_product')}</span>
+          <Plus className="w-7 h-7" /> <span className="uppercase">{t('inventory.addProduct')}</span>
         </button>
       </div>
 
@@ -92,13 +92,13 @@ export function Inventory() {
         <table className="brutalist-table">
           <thead>
             <tr>
-              <th>{t('item')}</th>
-              <th>{t('category')}</th>
-              <th>{t('cost')}</th>
-              <th>{t('price')}</th>
-              <th>{t('stock')}</th>
-              <th>{t('expiry')}</th>
-              <th className="text-right">ACTIONS</th>
+              <th>{t('inventory.product')}</th>
+              <th>{t('inventory.category')}</th>
+              <th>{t('inventory.costPrice')}</th>
+              <th>{t('inventory.sellingPrice')}</th>
+              <th>{t('inventory.stock')}</th>
+              <th>{t('inventory.expiryDate')}</th>
+              <th className="text-right">{t('inventory.action')}</th>
             </tr>
           </thead>
           <tbody>
@@ -128,7 +128,7 @@ export function Inventory() {
                       <div className="flex flex-col gap-2">
                         <span className="text-xl font-black">{p.qty}</span>
                         {p.qty <= 0 ? (
-                          <span className="text-xs font-black uppercase bg-red-500 text-[#ffffff] px-2.5 py-1 border-2 border-[var(--border-color)]">{t('out_of_stock')}</span>
+                          <span className="text-xs font-black uppercase bg-red-500 text-[#ffffff] px-2.5 py-1 border-2 border-[var(--border-color)]">{t('inventory.outOfStock')}</span>
                         ) : p.qty <= p.lowStock ? (
                           <span className="text-xs font-black uppercase bg-[var(--color-brand)] text-[#111111] px-2.5 py-1 border-2 border-[var(--border-color)]">Low Stock</span>
                         ) : null}
@@ -138,8 +138,8 @@ export function Inventory() {
                       {p.expiry ? (
                         <div className="flex flex-col gap-1">
                           <span className="text-sm font-bold">{new Date(p.expiry).toLocaleDateString()}</span>
-                          {isExpired && <span className="text-xs font-black uppercase bg-red-500 text-[#ffffff] px-2.5 py-1 border-2 border-[var(--border-color)]">Expired</span>}
-                          {isExpiringSoon && <span className="text-xs font-black uppercase bg-[var(--color-brand)] text-[#111111] px-2.5 py-1 border-2 border-[var(--border-color)]">Soon</span>}
+                          {isExpired && <span className="text-xs font-black uppercase bg-red-500 text-[#ffffff] px-2.5 py-1 border-2 border-[var(--border-color)]">{t('inventory.expired')}</span>}
+                          {isExpiringSoon && <span className="text-xs font-black uppercase bg-[var(--color-brand)] text-[#111111] px-2.5 py-1 border-2 border-[var(--border-color)]">{t('inventory.expiringSoon')}</span>}
                         </div>
                       ) : (
                         <span className="opacity-30">—</span>
@@ -159,7 +159,7 @@ export function Inventory() {
                 <td colSpan="7" className="text-center py-32 bg-[var(--bg-secondary)]">
                   <div className="flex flex-col items-center justify-center gap-6 opacity-30">
                     <PackageOpen className="w-20 h-20" />
-                    <p className="text-xl font-black uppercase tracking-widest">{t('no_products')}</p>
+                    <p className="text-xl font-black uppercase tracking-widest">{t('inventory.noProducts')}</p>
                   </div>
                 </td>
               </tr>
@@ -168,40 +168,40 @@ export function Inventory() {
         </table>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editIndex >= 0 ? t('edit_product') : t('add_product')}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editIndex >= 0 ? t('inventory.editProduct') : t('inventory.addProduct')}
         actions={
           <div className="flex gap-4">
-            <button className="text-sm font-black uppercase underline decoration-2" onClick={() => setIsModalOpen(false)}>{t('cancel')}</button>
-            <button className="brutalist-btn px-10" onClick={handleSave}>{t('save_product')}</button>
+            <button className="text-sm font-black uppercase underline decoration-2" onClick={() => setIsModalOpen(false)}>{t('inventory.cancel')}</button>
+            <button className="brutalist-btn px-10" onClick={handleSave}>{t('inventory.saveProduct')}</button>
           </div>
         }>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="md:col-span-2">
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('name')}</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('inventory.name')}</label>
             <input className="brutalist-input text-base py-4" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('category')}</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('inventory.category')}</label>
             <input className="brutalist-input text-base py-4" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('cost')}</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('inventory.costPrice')}</label>
             <input type="number" className="brutalist-input text-base py-4" value={formData.cost} onChange={(e) => setFormData({ ...formData, cost: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('selling_price')}</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('inventory.sellingPriceRs')}</label>
             <input type="number" className="brutalist-input text-base py-4" value={formData.sell} onChange={(e) => setFormData({ ...formData, sell: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('quantity')}</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('inventory.stockQty')}</label>
             <input type="number" className="brutalist-input text-base py-4" value={formData.qty} onChange={(e) => setFormData({ ...formData, qty: e.target.value })} />
           </div>
           <div>
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">Low Stock Alert</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('inventory.lowStockAlert')}</label>
             <input type="number" className="brutalist-input text-base py-4" value={formData.low} onChange={(e) => setFormData({ ...formData, low: e.target.value })} />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('expiry_date')}</label>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('inventory.expiryDate')}</label>
             <input type="date" className="brutalist-input text-base py-4" value={formData.expiry} onChange={(e) => setFormData({ ...formData, expiry: e.target.value })} />
           </div>
         </div>

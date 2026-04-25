@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "جائزہ",
+    "inventory": "اسٹاک",
+    "billing": "بلنگ",
+    "insights": "معلومات",
+    "settings": "ترتیبات",
+    "signout": "لاگ آؤٹ"
+  },
+  "dashboard": {
+    "totalSales": "کل فروخت",
+    "netProfit": "خالص منافع",
+    "productsInStock": "اسٹاک میں مصنوعات",
+    "transactionsToday": "آج کے لین دین",
+    "salesLast7Days": "فروخت — پچھلے 7 دن",
+    "topProducts": "بہترین مصنوعات",
+    "noSalesData": "چارٹ دیکھنے کے لیے پہلی فروخت درج کریں۔",
+    "user": "صارف",
+    "myStore": "میرا اسٹور"
+  },
+  "inventory": {
+    "addProduct": "مصنوعات شامل کریں",
+    "search": "تلاش کریں...",
+    "product": "مصنوعات",
+    "category": "زمرہ",
+    "costPrice": "قیمت خرید",
+    "sellingPrice": "قیمت فروخت",
+    "stock": "اسٹاک",
+    "expiryDate": "تاریخ تنسیخ",
+    "action": "عمل",
+    "editProduct": "ترمیم کریں",
+    "saveProduct": "محفوظ کریں",
+    "cancel": "منسوخ کریں",
+    "name": "نام",
+    "sellingPriceRs": "قیمت فروخت (₹)",
+    "stockQty": "اسٹاک کی مقدار",
+    "lowStockAlert": "کم اسٹاک الرٹ",
+    "noProducts": "شروع کرنے کے لیے پہلی مصنوعات شامل کریں۔",
+    "outOfStock": "اسٹاک ختم",
+    "expiringSoon": "جلد ختم",
+    "expired": "ختم شدہ",
+    "intelligenceAlert": "الرٹ: کچھ مصنوعات پر توجہ درکار ہے۔"
+  },
+  "sales": {
+    "newSale": "نئی فروخت",
+    "searchReceipts": "رسیدیں تلاش کریں...",
+    "receipt": "رسید",
+    "product": "مصنوعات",
+    "qty": "مقدار",
+    "amount": "رقم",
+    "profit": "منافع",
+    "date": "تاریخ",
+    "actions": "عمل",
+    "noSales": "شروع کرنے کے لیے پہلی فروخت درج کریں۔",
+    "selectProduct": "مصنوعات منتخب کریں",
+    "saleQty": "مقدار",
+    "confirmSale": "فروخت کی تصدیق کریں",
+    "done": "ہو گیا",
+    "recordSale": "فروخت درج کریں"
+  },
+  "analytics": {
+    "businessPerformance": "کاروباری کارکردگی",
+    "revenueVsProfit": "آمدنی بمقابلہ منافع (15 دن)",
+    "revenueByCategory": "زمرہ کے لحاظ سے آمدنی",
+    "noAnalyticsData": "ابھی تک کوئی فروخت کا ڈیٹا نہیں ہے۔"
+  },
+  "settings": {
+    "settings": "ترتیبات",
+    "manageAccount": "اپنی ترجیحات اور عالمی ڈیٹا سیکیورٹی کا نظم کریں۔",
+    "darkMode": "ڈارک موڈ",
+    "darkModeDesc": "لائٹ اور ڈارک انٹرفیس تبدیل کریں۔",
+    "language": "زبان",
+    "languageDesc": "مقامی انٹرفیس کی ترتیبات",
+    "resetData": "کاروباری ڈیٹا ری سیٹ کریں",
+    "resetDataDesc": "تمام مصنوعات اور فروخت کے ریکارڈ کو مستقل طور پر حذف کریں۔",
+    "deleteAll": "تمام ڈیٹا حذف کریں",
+    "deleteConfirmTitle": "انٹرپرائز ڈیٹا حذف کریں؟",
+    "deleteConfirmDesc": "یہ عمل تمام ریکارڈ کو مستقل طور پر مٹا دے گا۔ اسے واپس نہیں لایا جا سکتا۔",
+    "cancel": "منسوخ کریں",
+    "trust": "نجی · محفوظ · آف لائن کام کرتا ہے",
+    "support": "سپورٹ: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "لوڈ ہو رہا ہے…"
+  },
+  "insights": {
+    "headerDescription": "پچھلے 14 دنوں کے لیے اعلیٰ پیشین گوئی کا تجزیہ اور لین دین کی تاریخ کی ٹریکنگ۔",
+    "intelligenceLabel": "انٹیلی جنس:",
+    "intelligenceMessage": "لین دین کے پیٹرن ہفتے کے وسط میں زیادہ فروخت کی نشاندہی کرتے ہیں۔ اس کے مطابق انوینٹری کو دوبارہ بھریں۔"
+  }
+}

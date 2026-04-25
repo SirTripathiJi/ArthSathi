@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "overview": "ओव्हरव्यू",
+    "inventory": "इन्व्हेंटरी",
+    "billing": "बिलिंग",
+    "insights": "इनसाइट्स",
+    "settings": "सेटिंग्ज",
+    "signout": "लॉगआउट"
+  },
+  "dashboard": {
+    "totalSales": "एकूण विक्री",
+    "netProfit": "निव्वळ नफा",
+    "productsInStock": "साठ्यातील उत्पादने",
+    "transactionsToday": "आजचे व्यवहार",
+    "salesLast7Days": "विक्री — मागील 7 दिवस",
+    "topProducts": "उत्पन्नानुसार शीर्ष उत्पादने",
+    "noSalesData": "चार्ट पाहण्यासाठी पहिली विक्री नोंदवा.",
+    "user": "वापरकर्ता",
+    "myStore": "माझे स्टोअर"
+  },
+  "inventory": {
+    "addProduct": "उत्पादन जोडा",
+    "search": "शोधा...",
+    "product": "उत्पादन",
+    "category": "श्रेणी",
+    "costPrice": "मूळ किंमत",
+    "sellingPrice": "विक्री किंमत",
+    "stock": "स्टॉक",
+    "expiryDate": "अंतिम तारीख",
+    "action": "कृती",
+    "editProduct": "उत्पादन संपादित करा",
+    "saveProduct": "जतन करा",
+    "cancel": "रद्द करा",
+    "name": "नाव",
+    "sellingPriceRs": "विक्री किंमत (₹)",
+    "stockQty": "स्टॉक प्रमाण",
+    "lowStockAlert": "कमी स्टॉक अलर्ट",
+    "noProducts": "सुरू करण्यासाठी पहिले उत्पादन जोडा.",
+    "outOfStock": "स्टॉक संपला",
+    "expiringSoon": "लवकरच कालबाह्य",
+    "expired": "कालबाह्य",
+    "intelligenceAlert": "अलर्ट: काही उत्पादनांचा साठा कमी आहे."
+  },
+  "sales": {
+    "newSale": "नवीन विक्री",
+    "searchReceipts": "पावत्या शोधा...",
+    "receipt": "पावती",
+    "product": "उत्पादन",
+    "qty": "प्रमाण",
+    "amount": "रक्कम",
+    "profit": "नफा",
+    "date": "तारीख",
+    "actions": "कृती",
+    "noSales": "सुरू करण्यासाठी पहिली विक्री नोंदवा.",
+    "selectProduct": "उत्पादन निवडा",
+    "saleQty": "प्रमाण",
+    "confirmSale": "विक्री निश्चित करा",
+    "done": "पूर्ण",
+    "recordSale": "विक्री नोंदवा"
+  },
+  "analytics": {
+    "businessPerformance": "व्यवसाय कामगिरी",
+    "revenueVsProfit": "महसूल विरुद्ध नफा (१५ दिवस)",
+    "revenueByCategory": "श्रेणीनुसार महसूल",
+    "noAnalyticsData": "अद्याप विक्री डेटा नाही."
+  },
+  "settings": {
+    "settings": "सेटिंग्ज",
+    "manageAccount": "तुमची खाती प्राधान्ये आणि जागतिक डेटा सुरक्षा व्यवस्थापित करा.",
+    "darkMode": "डार्क मोड",
+    "darkModeDesc": "लाईट आणि डार्क इंटरफेसमध्ये स्विच करा.",
+    "language": "भाषा",
+    "languageDesc": "स्थानिक इंटरफेस सेटिंग्ज",
+    "resetData": "बिझनेस डेटा रीसेट करा",
+    "resetDataDesc": "सर्व उत्पादने आणि विक्री रेकॉर्ड कायमस्वरूपी हटवा.",
+    "deleteAll": "सर्व डेटा हटवा",
+    "deleteConfirmTitle": "एंटरप्राईज डेटा हटवायचा?",
+    "deleteConfirmDesc": "ही कृती सर्व उत्पादने, इतिहास कायमस्वरूपी नष्ट करेल. हे पूर्ववत केले जाऊ शकत नाही.",
+    "cancel": "रद्द करा",
+    "trust": "खाजगी · सुरक्षित · ऑफलाइन कार्य करते",
+    "support": "सपोर्ट: +91 7066863550 | tripathiakshat2604@gmail.com"
+  },
+  "misc": {
+    "loading": "लोड होत आहे…"
+  },
+  "insights": {
+    "headerDescription": "गेल्या 14 दिवसांसाठी प्रगत अंदाजात्मक विश्लेषण आणि व्यवहार इतिहास ट्रॅकिंग.",
+    "intelligenceLabel": "इनसाइट्स:",
+    "intelligenceMessage": "व्यवहाराचे नमुने आठवड्याच्या मध्यभागी उच्च खप दर्शवतात. त्यानुसार इन्व्हेंटरी रिस्टॉकिंग ऑप्टिमाइझ करा."
+  }
+}
