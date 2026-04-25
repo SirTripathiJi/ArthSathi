@@ -22,6 +22,9 @@ const Dashboard = lazy(() =>
 const Inventory = lazy(() =>
   import('./pages/Inventory').then((module) => ({ default: module.Inventory }))
 );
+const Customers = lazy(() =>
+  import('./pages/Customers').then((module) => ({ default: module.Customers }))
+);
 const Sales = lazy(() => import('./pages/Sales').then((module) => ({ default: module.Sales })));
 const Analytics = lazy(() =>
   import('./pages/Analytics').then((module) => ({ default: module.Analytics }))
@@ -48,6 +51,7 @@ function AppContent() {
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/inventory" element={<Inventory />} />
+            <Route path="/customers" element={<Customers />} />
             <Route path="/sales" element={<Sales />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/settings" element={<Settings />} />

@@ -86,7 +86,7 @@ export function Analytics() {
       labels: Object.keys(dmapRev),
       datasets: [
         {
-          label: 'Revenue',
+          label: t('analytics.revenue'),
           data: Object.values(dmapRev),
           borderColor: '#FFD600',
           backgroundColor: 'rgba(255, 214, 0, 0.1)',
@@ -99,7 +99,7 @@ export function Analytics() {
           pointBorderWidth: 2,
         },
         {
-          label: 'Profit',
+          label: t('analytics.profit'),
           data: Object.values(dmapProf),
           borderColor: '#00E5FF',
           backgroundColor: 'transparent',
@@ -112,7 +112,7 @@ export function Analytics() {
         },
       ],
     };
-  }, [salesData, timeRange, isDark]);
+  }, [salesData, timeRange, isDark, t, lang]);
 
   const lineOptions = {
     responsive: true,
@@ -151,14 +151,14 @@ export function Analytics() {
       labels,
       datasets: [
         {
-          label: 'Profit',
+          label: t('analytics.profit'),
           data: labels.map(l => dmap[l].profit),
           backgroundColor: '#00C853',
           borderColor: isDark ? '#ffffff' : '#000000',
           borderWidth: 2,
         },
         {
-          label: 'Cost',
+          label: t('analytics.cost'),
           data: labels.map(l => dmap[l].cost),
           backgroundColor: '#FF4081',
           borderColor: isDark ? '#ffffff' : '#000000',
@@ -166,7 +166,7 @@ export function Analytics() {
         }
       ]
     };
-  }, [salesData, isDark]);
+  }, [salesData, isDark, t, lang]);
 
   const stackedBarOptions = {
     responsive: true,
@@ -186,9 +186,19 @@ export function Analytics() {
   const donutData = useMemo(() => {
     const cmap = {};
     salesData.forEach((txn) => {
-      const prod = productsData.find((x) => x.id === txn.pid);
-      const cat = prod ? prod.category : 'General';
-      cmap[cat] = (cmap[cat] || 0) + (donutToggle === 'revenue' ? txn.amt : txn.qty);
+      if (txn.items) {
+        txn.items.forEach(item => {
+          const prod = productsData.find((x) => x.id === item.pid);
+          let rawCat = prod && prod.category ? prod.category.trim() : '';
+          let cat = rawCat ? rawCat.charAt(0).toUpperCase() + rawCat.slice(1).toLowerCase() : t('analytics.uncategorized');
+          cmap[cat] = (cmap[cat] || 0) + (donutToggle === 'revenue' ? (item.price * item.qty) : item.qty);
+        });
+      } else {
+        const prod = productsData.find((x) => x.id === txn.pid);
+        let rawCat = prod && prod.category ? prod.category.trim() : '';
+        let cat = rawCat ? rawCat.charAt(0).toUpperCase() + rawCat.slice(1).toLowerCase() : t('analytics.uncategorized');
+        cmap[cat] = (cmap[cat] || 0) + (donutToggle === 'revenue' ? txn.amt : txn.qty);
+      }
     });
     return {
       labels: Object.keys(cmap),
@@ -202,14 +212,22 @@ export function Analytics() {
         },
       ],
     };
-  }, [salesData, productsData, donutToggle, isDark]);
+  }, [salesData, productsData, donutToggle, isDark, t, lang]);
 
   const donutOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: { position: 'bottom', labels: { color: textColor, font: { family: 'Space Grotesk', size: 12, weight: '700' }, padding: 24, usePointStyle: true, boxWidth: 10 } },
-      tooltip: { backgroundColor: '#000000', titleColor: '#FFFFFF', bodyColor: '#FFFFFF', borderColor: '#FFFFFF', borderWidth: 2, padding: 12, cornerRadius: 0 },
+      tooltip: { 
+        backgroundColor: '#000000', titleColor: '#FFFFFF', bodyColor: '#FFFFFF', borderColor: '#FFFFFF', borderWidth: 2, padding: 12, cornerRadius: 0,
+        callbacks: {
+          label: (context) => {
+            const val = context.raw;
+            return ` ${context.label}: ` + (donutToggle === 'revenue' ? `₹${val.toLocaleString()}` : `${val} ${t('analytics.units')}`);
+          }
+        }
+      },
       datalabels: {
         color: '#ffffff',
         font: { family: 'Space Grotesk', weight: '900', size: 14 },
@@ -231,10 +249,19 @@ export function Analytics() {
   const productGridData = useMemo(() => {
     const pmap = {};
     salesData.forEach((s) => {
-      if (!pmap[s.pid]) pmap[s.pid] = { id: s.pid, name: s.name, qty: 0, rev: 0, profit: 0 };
-      pmap[s.pid].qty += s.qty;
-      pmap[s.pid].rev += s.amt;
-      pmap[s.pid].profit += s.profit;
+      if (s.items) {
+        s.items.forEach(item => {
+           if (!pmap[item.pid]) pmap[item.pid] = { id: item.pid, name: item.name, qty: 0, rev: 0, profit: 0 };
+           pmap[item.pid].qty += item.qty;
+           pmap[item.pid].rev += item.price * item.qty;
+           pmap[item.pid].profit += (item.price - item.cost) * item.qty;
+        });
+      } else {
+        if (!pmap[s.pid]) pmap[s.pid] = { id: s.pid, name: s.name, qty: 0, rev: 0, profit: 0 };
+        pmap[s.pid].qty += s.qty;
+        pmap[s.pid].rev += s.amt;
+        pmap[s.pid].profit += s.profit;
+      }
     });
     
     let arr = Object.values(pmap).map(p => ({
@@ -249,7 +276,21 @@ export function Analytics() {
     });
 
     return arr;
-  }, [salesData, sortConfig]);
+  }, [salesData, sortConfig, t, lang]);
+
+  // --- TOP CUSTOMERS ---
+  const topCustomersData = useMemo(() => {
+    const cmap = {};
+    salesData.forEach((s) => {
+      if (!s.customerId) return;
+      if (!cmap[s.customerId]) cmap[s.customerId] = { id: s.customerId, name: s.customerName, rev: 0, txns: 0 };
+      cmap[s.customerId].rev += s.amt;
+      cmap[s.customerId].txns += 1;
+    });
+    let arr = Object.values(cmap);
+    arr.sort((a,b) => b.rev - a.rev);
+    return arr;
+  }, [salesData]);
 
   const handleSort = (key) => {
     let direction = 'desc';
@@ -257,64 +298,57 @@ export function Analytics() {
     setSortConfig({ key, direction });
   };
 
-  // --- SMART RECOMMENDATION ENGINE ---
-  const recommendations = useMemo(() => {
-    const recs = [];
-    if (!productsData.length) return recs;
+  // --- BUSINESS INSIGHTS STATEMENTS ---
+  const businessInsights = useMemo(() => {
+    const insights = [];
+    if (!productsData.length || !salesData.length) return insights;
 
-    // Fast Moving / Restock
-    if (productGridData.length > 0) {
-      const topSelling = productGridData[0];
-      const prodInDB = productsData.find(p => p.id === topSelling.id);
-      if (prodInDB && prodInDB.qty <= 20) {
-        recs.push({
-          type: 'restock',
-          title: `${t('analytics.restock')}: ${prodInDB.name}`,
-          desc: t('analytics.reasonRestock', '').replace('{qty}', prodInDB.qty),
-          reason: `Formula: Stock (${prodInDB.qty}) ≤ 20 units AND top revenue product → restock flag triggered. Revenue from this item: ₹${topSelling.rev.toLocaleString()}.`,
-          icon: <TrendingUp className="w-6 h-6 text-[#111111]" />, bg: '#FFD600'
+    // Top Category
+    if (donutData.labels.length > 0) {
+      let maxCat = '';
+      let maxVal = -1;
+      let sum = 0;
+      donutData.labels.forEach((lbl, i) => {
+        const val = donutData.datasets[0].data[i];
+        sum += val;
+        if (val > maxVal) { maxVal = val; maxCat = lbl; }
+      });
+      if (maxVal > 0) {
+        let percent = ((maxVal / sum) * 100).toFixed(1);
+        insights.push({
+          title: `${t('analytics.topCategory')}: ${maxCat}`,
+          desc: donutToggle === 'revenue' ? `(₹${maxVal.toLocaleString()}, ${percent}%)` : `(${maxVal} ${t('analytics.units')}, ${percent}%)`,
+          icon: <TrendingUp className="w-6 h-6 text-[#111111]" />, bg: '#00C853'
         });
       }
     }
 
-    // Dead Stock
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const deadStock = productsData.filter(p => p.qty > 0 && !salesData.some(s => s.pid === p.id && new Date(s.date) >= thirtyDaysAgo));
-    if (deadStock.length > 0) {
-      recs.push({
-        type: 'dead',
-        title: `${t('analytics.promote')}: ${deadStock[0].name}`,
-        desc: t('analytics.reasonPromote', '').replace('{qty}', deadStock[0].qty),
-        reason: `Formula: product has ${deadStock[0].qty} units in stock AND zero sales recorded in last 30 days → dead stock flag. Holding cost = tied-up capital.`,
-        icon: <TrendingDown className="w-6 h-6 text-[#111111]" />, bg: '#00E5FF'
-      });
+    // Lowest Performer (by qty)
+    if (productGridData.length > 0) {
+      const sortedByQty = [...productGridData].sort((a,b) => a.qty - b.qty);
+      const lowest = sortedByQty.find(p => p.qty > 0) || sortedByQty[0];
+      if (lowest) {
+        insights.push({
+          title: `${t('analytics.lowestPerformer')}: ${lowest.name}`,
+          desc: `(${lowest.qty} ${t('analytics.units')} sold)`,
+          icon: <TrendingDown className="w-6 h-6 text-[#111111]" />, bg: '#FF4081'
+        });
+      }
+
+      // High Margin
+      const sortedByMargin = [...productGridData].sort((a,b) => Number(b.margin) - Number(a.margin));
+      const highestMargin = sortedByMargin.find(p => p.rev > 0);
+      if (highestMargin) {
+        insights.push({
+          title: `${t('analytics.highMargin')}: ${highestMargin.name}`,
+          desc: `(${highestMargin.margin}% ${t('analytics.margin')})`,
+          icon: <PieChart className="w-6 h-6 text-[#111111]" />, bg: '#00E5FF'
+        });
+      }
     }
 
-    // Low Profit Margin Warning
-    const lowMarginItem = productGridData.find(p => Number(p.margin) < 15 && p.rev > 0);
-    if (lowMarginItem) {
-      recs.push({
-        type: 'warning',
-        title: `${t('analytics.reviewPricing')}: ${lowMarginItem.name}`,
-        desc: t('analytics.reasonReviewPricing', '').replace('{margin}', lowMarginItem.margin),
-        reason: `Formula: Margin = (Profit / Revenue) × 100 = (₹${(lowMarginItem.profit||0).toLocaleString()} / ₹${lowMarginItem.rev.toLocaleString()}) × 100 = ${lowMarginItem.margin}% — below 15% healthy threshold.`,
-        icon: <AlertTriangle className="w-6 h-6 text-[#ffffff]" />, bg: '#FF4081'
-      });
-    }
-
-    if (recs.length === 0) {
-      recs.push({
-        type: 'good',
-        title: t('analytics.allGood'),
-        desc: t('analytics.allGoodDesc'),
-        reason: 'No low stock, dead stock, or low margin items detected based on your current thresholds.',
-        icon: <CheckCircle2 className="w-6 h-6 text-[#111111]" />, bg: '#00C853'
-      });
-    }
-
-    return recs;
-  }, [productsData, salesData, productGridData, t]);
+    return insights;
+  }, [donutData, productGridData, t, donutToggle]);
 
   const renderEmptyState = (msg) => (
     <div className="h-full flex flex-col items-center justify-center gap-6 text-[var(--text-secondary)] opacity-30 py-20 text-center">
@@ -338,30 +372,18 @@ export function Analytics() {
         </div>
       </div>
 
-      {/* SMART RECOMMENDATIONS with Why? explainability */}
-      {recommendations.length > 0 && (
+      {/* BUSINESS INSIGHTS */}
+      {businessInsights.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {recommendations.map((rec, i) => (
-            <div key={i} className="border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-6 shadow-[6px_6px_0_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[8px_8px_0_var(--shadow-color)] transition-all">
-              <div className="flex items-center gap-4 mb-3">
-                <div className="w-12 h-12 flex items-center justify-center border-2 border-[var(--border-color)] shadow-[3px_3px_0_var(--shadow-color)]" style={{ backgroundColor: rec.bg }}>
-                  {rec.icon}
-                </div>
-                <h3 className="text-base font-black uppercase tracking-tighter leading-tight text-[var(--text-primary)] flex-1">{rec.title}</h3>
+          {businessInsights.map((insight, i) => (
+            <div key={i} className="border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-6 shadow-[6px_6px_0_var(--shadow-color)] hover:-translate-y-1 hover:shadow-[8px_8px_0_var(--shadow-color)] transition-all flex items-center gap-4">
+              <div className="w-12 h-12 shrink-0 flex items-center justify-center border-2 border-[var(--border-color)] shadow-[3px_3px_0_var(--shadow-color)]" style={{ backgroundColor: insight.bg }}>
+                {insight.icon}
               </div>
-              <p className="text-sm font-bold text-[var(--text-secondary)] mb-4">{rec.desc}</p>
-              <button
-                onClick={() => setExpandedWhy(expandedWhy === i ? null : i)}
-                className="text-xs font-black uppercase tracking-wider border-2 border-[var(--border-color)] px-3 py-1.5 bg-[var(--bg-secondary)] hover:bg-[var(--border-color)] hover:text-[var(--bg-primary)] transition-colors flex items-center gap-2"
-              >
-                <HelpCircle className="w-3 h-3" /> {t('analytics.whyButton')}
-              </button>
-              {expandedWhy === i && (
-                <div className="mt-4 p-4 border-2 border-[var(--border-color)] bg-[var(--bg-secondary)] text-xs font-bold text-[var(--text-primary)] leading-relaxed">
-                  <span className="font-black uppercase tracking-widest block mb-1 text-[var(--color-secondary)]">Calculation:</span>
-                  {rec.reason}
-                </div>
-              )}
+              <div className="flex-1">
+                <h3 className="text-sm font-black uppercase tracking-tight leading-tight text-[var(--text-primary)] mb-1">{insight.title}</h3>
+                <p className="text-sm font-bold text-[var(--text-secondary)]">{insight.desc}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -415,7 +437,6 @@ export function Analytics() {
             {donutData.labels.length > 0 ? <Doughnut key={lang} data={donutData} options={donutOptions} /> : renderEmptyState(t('analytics.noData'))}
           </div>
         </div>
-
       </div>
 
       {/* CHARTS GRID 2: PROFIT COMPOSITION & PERFORMANCE GRID */}
@@ -479,9 +500,39 @@ export function Analytics() {
             </table>
           </div>
         </div>
-
       </div>
 
+      {/* TOP CUSTOMERS ROW */}
+      <div className="brutalist-card flex flex-col hover:shadow-[8px_8px_0_var(--shadow-color)] transition-shadow overflow-hidden">
+        <div className="flex items-center gap-4 mb-6 pb-4 border-b-2 border-[var(--border-color)]">
+          <div className="w-10 h-10 border-2 border-[var(--border-color)] bg-[#00E5FF] flex items-center justify-center shadow-[2px_2px_0_var(--shadow-color)]">
+            <CheckCircle2 className="w-5 h-5 text-[#111111]" />
+          </div>
+          <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">Top Customers</p>
+        </div>
+        <div className="flex-1 overflow-auto brutalist-table-wrap">
+          <table className="brutalist-table w-full text-sm">
+            <thead className="bg-[var(--card-bg)] shadow-sm border-b-4 border-[var(--border-color)]">
+              <tr>
+                <th>{t('customers.name')}</th>
+                <th>{t('analytics.units')}</th>
+                <th>{t('analytics.revenue')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topCustomersData.length > 0 ? topCustomersData.slice(0, 5).map((c, i) => (
+                <tr key={c.id} className={i === 0 ? 'bg-[#FFD600]/10' : ''}>
+                  <td className="font-bold uppercase">{c.name}</td>
+                  <td className="font-black">{c.txns}</td>
+                  <td className="font-bold italic">₹{c.rev.toLocaleString()}</td>
+                </tr>
+              )) : (
+                <tr><td colSpan="3" className="text-center py-10 opacity-50 font-bold uppercase tracking-widest">No customer sales data</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

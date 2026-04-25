@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, LineChart, LogOut, Package, Receipt, Settings } from 'lucide-react';
+import { LayoutDashboard, LineChart, LogOut, Package, Receipt, Settings, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { DB } from '../../services/db';
@@ -21,6 +21,7 @@ export function Sidebar({ isOpen, toggleSidebar }) {
   const nav = [
     { to: '/dashboard', icon: LayoutDashboard, label: t('nav.overview') },
     { to: '/inventory', icon: Package, label: t('nav.inventory'), badge: lowStockCount },
+    { to: '/customers', icon: Users, label: t('nav.customers') },
     { to: '/sales', icon: Receipt, label: t('nav.billing') },
     { to: '/analytics', icon: LineChart, label: t('nav.insights') },
     { to: '/settings', icon: Settings, label: t('nav.settings') },

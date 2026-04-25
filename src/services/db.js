@@ -8,4 +8,6 @@ export const DB = {
   setProducts: (uid, p) => localStorage.setItem(`as_p_${uid}`, JSON.stringify(p)),
   getSales: (uid) => JSON.parse(localStorage.getItem(`as_s_${uid}`) || '[]'),
   setSales: (uid, s) => localStorage.setItem(`as_s_${uid}`, JSON.stringify(s)),
+  getCustomers: (uid) => JSON.parse(localStorage.getItem(`as_c_${uid}`) || '[]'),
+  setCustomers: (uid, c) => localStorage.setItem(`as_c_${uid}`, JSON.stringify(c)),
 };
