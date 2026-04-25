@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Trash2, Sun, Moon, AlertTriangle, Globe } from 'lucide-react';
+import { ShieldCheck, Trash2, Sun, Moon, AlertTriangle, Globe, SlidersHorizontal } from 'lucide-react';
 import { Modal } from '../components/UI/Modal';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { DB } from '../services/db';
+
+const SETTINGS_KEY = 'arth_analysis_settings';
+const DEFAULT_SETTINGS = { lowStockQty: 5, deadStockDays: 30, fastMovingSales: 5 };
+const loadSettings = () => {
+  try { return { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY)) }; }
+  catch { return DEFAULT_SETTINGS; }
+};
+const saveSettings = (s) => localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
 
 export function Settings() {
   const { user } = useAuth();
@@ -15,6 +23,7 @@ export function Settings() {
   const navigate = useNavigate();
   const { t, lang, changeLanguage, LANGS, LANG_NAMES } = useLanguage();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [analysisSettings, setAnalysisSettings] = useState(loadSettings());
 
   const clearData = () => {
     if (!user?.uid) return;
@@ -23,6 +32,12 @@ export function Settings() {
     toast.info('All business data has been deleted.');
     setShowConfirm(false);
     navigate('/dashboard');
+  };
+
+  const updateSetting = (key, value) => {
+    const updated = { ...analysisSettings, [key]: Number(value) || 0 };
+    setAnalysisSettings(updated);
+    saveSettings(updated);
   };
 
   return (
@@ -65,8 +80,39 @@ export function Settings() {
             </div>
             <select value={lang} onChange={(e) => changeLanguage(e.target.value)}
               className="brutalist-input !w-auto !py-4 !px-8 bg-[var(--card-bg)] text-[var(--text-primary)] font-black text-sm shadow-[5px_5px_0_var(--shadow-color)] cursor-pointer">
-              {LANGS.map(l => <option key={l} value={l}>{LANG_NAMES[l]} ({l.toUpperCase()})</option>)}
+              {LANGS.map(l => <option key={l} value={l}>{LANG_NAMES[l]}</option>)}
             </select>
+          </div>
+        </div>
+
+        {/* Analysis Settings Section */}
+        <div className="brutalist-card">
+          <div className="flex items-center gap-6 mb-8 pb-4 border-b-2 border-[var(--border-color)]">
+            <div className="w-14 h-14 border-4 border-[var(--border-color)] bg-[#00E5FF] flex items-center justify-center shadow-[4px_4px_0_var(--shadow-color)]">
+              <SlidersHorizontal className="w-8 h-8 text-[#111111]" />
+            </div>
+            <div>
+              <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('settings.analysisSettings')}</h4>
+              <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('settings.analysisSettingsDesc')}</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { key: 'lowStockQty',     label: t('settings.lowStockThreshold') },
+              { key: 'deadStockDays',   label: t('settings.deadStockDays') },
+              { key: 'fastMovingSales', label: t('settings.fastMovingSales') },
+            ].map(({ key, label }) => (
+              <div key={key} className="border-2 border-[var(--border-color)] bg-[var(--bg-secondary)] p-5 shadow-[4px_4px_0_var(--shadow-color)]">
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] mb-3">{label}</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={analysisSettings[key]}
+                  onChange={(e) => updateSetting(key, e.target.value)}
+                  className="brutalist-input !py-3 !text-xl font-black text-center w-full"
+                />
+              </div>
+            ))}
           </div>
         </div>
 

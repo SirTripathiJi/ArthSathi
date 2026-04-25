@@ -16,7 +16,16 @@
     "topProducts": "शीर्ष उत्पाद",
     "noSalesData": "चार्ट देखने के लिए पहली बिक्री दर्ज करें।",
     "user": "यूज़र",
-    "myStore": "मेरा स्टोर"
+    "myStore": "मेरा स्टोर",
+    "cashflow": "नकद प्रवाह (7 दिन)",
+    "moneyIn": "आय (राजस्व)",
+    "moneyOut": "व्यय (लागत)",
+    "inventoryStatus": "इन्वेंटरी स्थिति",
+    "lowStock": "कम स्टॉक",
+    "deadStock": "निष्क्रिय स्टॉक",
+    "fastMoving": "तेज़ बिकने वाला",
+    "noTransactions": "अभी कोई लेन-देन नहीं।",
+    "addTransactionCta": "कैशफ्लो देखने के लिए कोई बिक्री दर्ज करें।"
   },
   "inventory": {
     "addProduct": "उत्पाद जोड़ें",
@@ -59,10 +68,33 @@
     "recordSale": "बिक्री दर्ज करें"
   },
   "analytics": {
-    "businessPerformance": "व्यापार प्रदर्शन",
-    "revenueVsProfit": "राजस्व बनाम लाभ (15 दिन)",
-    "revenueByCategory": "श्रेणी अनुसार राजस्व",
-    "noAnalyticsData": "अभी कोई बिक्री डेटा नहीं।"
+    "businessPerformance": "व्यापार बुद्धिमत्ता",
+    "revenueVsProfit": "राजस्व बनाम लाभ",
+    "revenueByCategory": "श्रेणी हिस्सा",
+    "noAnalyticsData": "अभी कोई बिक्री डेटा नहीं।",
+    "salesTrendTitle": "बिक्री ट्रेंड विश्लेषण",
+    "profitComposition": "लाभ संरचना",
+    "productGrid": "उत्पाद प्रदर्शन ग्रिड",
+    "categoryShare": "श्रेणी हिस्सा",
+    "daily": "दैनिक",
+    "weekly": "साप्ताहिक",
+    "monthly": "मासिक",
+    "revenue": "राजस्व",
+    "qty": "मात्रा",
+    "units": "इकाइयाँ",
+    "margin": "मार्जिन %",
+    "noData": "डेटा नहीं",
+    "noDataCta": "इनसाइट्स देखने के लिए लेन-देन जोड़ें।",
+    "recommendations": "स्मार्ट अनुशंसाएं",
+    "restock": "पुनः स्टॉक की आवश्यकता",
+    "promote": "आइटम का प्रचार करें",
+    "reviewPricing": "मूल्य निर्धारण की समीक्षा करें",
+    "allGood": "सभी प्रणालियाँ सामान्य",
+    "allGoodDesc": "इन्वेंटरी और मार्जिन स्वस्थ दिखती है।",
+    "whyButton": "क्यों?",
+    "reasonRestock": "उच्च मांग पाई गई। स्टॉक {qty} इकाइयों से कम है।",
+    "reasonPromote": "पिछले 30 दिनों में कोई बिक्री नहीं। {qty} इकाइयाँ निष्क्रिय।",
+    "reasonReviewPricing": "लाभ मार्जिन {margin}% है — 15% सीमा से नीचे।"
   },
   "settings": {
     "settings": "सेटिंग्स",
@@ -78,14 +110,21 @@
     "deleteConfirmDesc": "यह कार्रवाई सभी उत्पाद रिकॉर्ड, इतिहास और व्यावसायिक मेट्रिक्स को स्थायी रूप से मिटा देगी। इसे पूर्ववत नहीं किया जा सकता।",
     "cancel": "रद्द करें",
     "trust": "निजी · सुरक्षित · ऑफलाइन काम करता है",
-    "support": "सहायता: +91 7066863550 | tripathiakshat2604@gmail.com"
+    "support": "सहायता: +91 7066863550 | tripathiakshat2604@gmail.com",
+    "analysisSettings": "विश्लेषण सेटिंग्स",
+    "analysisSettingsDesc": "इनसाइट्स वर्गीकृत करने के लिए सीमाएं निर्धारित करें।",
+    "lowStockThreshold": "कम स्टॉक सीमा (इकाइयाँ)",
+    "deadStockDays": "निष्क्रिय स्टॉक (बिना बिक्री के दिन)",
+    "fastMovingSales": "तेज़ बिकने वाला (30 दिनों में बिक्री)"
   },
   "misc": {
     "loading": "ArthSaathi लोड हो रहा है…"
   },
   "insights": {
-    "headerDescription": "पिछले 14 दिनों के लिए उन्नत पूर्वानुमान विश्लेषण और लेन-देन इतिहास ट्रैकिंग।",
+    "headerDescription": "आपके वास्तविक लेन-देन इतिहास से रियल-टाइम विश्लेषण।",
     "intelligenceLabel": "इनसाइट्स:",
-    "intelligenceMessage": "लेन-देन के पैटर्न सप्ताह के मध्य चक्रों के दौरान उच्च मात्रा का संकेत देते हैं। तदनुसार इन्वेंट्री रीस्टॉकिंग को अनुकूलित करें।"
+    "intelligenceMessage": "नीचे दी गई सभी इनसाइट्स आपके वास्तविक डेटा से गणना की गई हैं।",
+    "title": "बुद्धिमत्ता",
+    "subtitle": "आपके वास्तविक लेन-देन से प्राप्त क्रियाशील इनसाइट्स।"
   }
 }

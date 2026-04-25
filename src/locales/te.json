@@ -1,91 +1,10 @@
 {
-  "nav": {
-    "overview": "అవలోకనం",
-    "inventory": "ఇన్వెంటరీ",
-    "billing": "బిల్లింగ్",
-    "insights": "అంతర్దృష్టులు",
-    "settings": "సెట్టింగ్‌లు",
-    "signout": "లాగ్అవుట్"
-  },
-  "dashboard": {
-    "totalSales": "మొత్తం అమ్మకాలు",
-    "netProfit": "నికర లాభం",
-    "productsInStock": "స్టాక్‌లో ఉత్పత్తులు",
-    "transactionsToday": "ఈరోజు లావాదేవీలు",
-    "salesLast7Days": "అమ్మకాలు — గత 7 రోజులు",
-    "topProducts": "టాప్ ఉత్పత్తులు",
-    "noSalesData": "చార్టులు చూడటానికి మొదటి అమ్మకం నమోదు చేయండి.",
-    "user": "వినియోగదారు",
-    "myStore": "నా స్టోర్"
-  },
-  "inventory": {
-    "addProduct": "ఉత్పత్తి జోడించు",
-    "search": "శోధించండి...",
-    "product": "ఉత్పత్తి",
-    "category": "వర్గం",
-    "costPrice": "ఖరీదు",
-    "sellingPrice": "అమ్మకం ధర",
-    "stock": "స్టాక్",
-    "expiryDate": "గడువు తేదీ",
-    "action": "చర్య",
-    "editProduct": "సవరించు",
-    "saveProduct": "సేవ్ చేయండి",
-    "cancel": "రద్దు",
-    "name": "పేరు",
-    "sellingPriceRs": "అమ్మకం ధర (₹)",
-    "stockQty": "స్టాక్ పరిమాణం",
-    "lowStockAlert": "తక్కువ స్టాక్ అలర్ట్",
-    "noProducts": "ప్రారంభించడానికి మొదటి ఉత్పత్తిని జోడించండి.",
-    "outOfStock": "స్టాక్ లేదు",
-    "expiringSoon": "త్వరలో గడువు",
-    "expired": "గడువు ముగిసింది",
-    "intelligenceAlert": "అలర్ట్: కొన్ని ఉత్పత్తుల స్టాక్ తక్కువగా ఉంది."
-  },
-  "sales": {
-    "newSale": "కొత్త అమ్మకం",
-    "searchReceipts": "రశీదులు శోధించండి...",
-    "receipt": "రశీదు",
-    "product": "ఉత్పత్తి",
-    "qty": "పరిమాణం",
-    "amount": "మొత్తం",
-    "profit": "లాభం",
-    "date": "తేదీ",
-    "actions": "చర్య",
-    "noSales": "ప్రారంభించడానికి మొదటి అమ్మకం నమోదు చేయండి.",
-    "selectProduct": "ఉత్పత్తి ఎంచుకోండి",
-    "saleQty": "పరిమాణం",
-    "confirmSale": "అమ్మకం నిర్ధారించు",
-    "done": "పూర్తయింది",
-    "recordSale": "అమ్మకం నమోదు"
-  },
-  "analytics": {
-    "businessPerformance": "వ్యాపార పనితీరు",
-    "revenueVsProfit": "రాబడి vs లాభం (15 రోజులు)",
-    "revenueByCategory": "వర్గం వారీగా రాబడి",
-    "noAnalyticsData": "డేటా లేదు."
-  },
-  "settings": {
-    "settings": "సెట్టింగ్‌లు",
-    "manageAccount": "ఖాతా ప్రాధాన్యతలను మరియు డేటా భద్రతను నిర్వహించండి.",
-    "darkMode": "డార్క్ మోడ్",
-    "darkModeDesc": "లైట్ మరియు డార్క్ మోడ్ మార్చండి.",
-    "language": "భాష",
-    "languageDesc": "స్థానిక భాష సెట్టింగ్‌లు",
-    "resetData": "వ్యాపార డేటా రీసెట్",
-    "resetDataDesc": "అన్ని ఉత్పత్తులు మరియు అమ్మకాల రికార్డులను తొలగించండి.",
-    "deleteAll": "అన్ని డేటా తొలగించు",
-    "deleteConfirmTitle": "ఎంటర్‌ప్రైజ్ డేటా తొలగించాలా?",
-    "deleteConfirmDesc": "ఈ చర్య అన్ని రికార్డులను శాశ్వతంగా తొలగిస్తుంది. తిరిగి పొందలేరు.",
-    "cancel": "రద్దు",
-    "trust": "సురక్షితమైనది · ఆఫ్‌లైన్‌లో పనిచేస్తుంది",
-    "support": "మద్దతు: +91 7066863550 | tripathiakshat2604@gmail.com"
-  },
-  "misc": {
-    "loading": "లోడ్ అవుతోంది…"
-  },
-  "insights": {
-    "headerDescription": "గత 14 రోజులుగా అధునాతన అంచనా విశ్లేషణ మరియు లావాదేవీ చరిత్ర ట్రాకింగ్.",
-    "intelligenceLabel": "ఇంటెలిజెన్స్:",
-    "intelligenceMessage": "లావాదేవీల నమూనాలు వారం మధ్యలో అధిక వాల్యూమ్‌ను సూచిస్తున్నాయి. తదనుగుణంగా ఇన్వెంటరీని రీస్టాక్ చేయండి."
-  }
+  "nav": { "overview": "తెలుగు అవలోకనం", "inventory": "ఇన్వెంటరీ", "billing": "బిల్లింగ్", "insights": "ఇంటెలిజెన్స్", "settings": "సెట్టింగులు", "signout": "సైన్ అవుట్" },
+  "dashboard": { "totalSales": "మొత్తం అమ్మకాలు", "netProfit": "నికర లాభం", "productsInStock": "స్టాక్‌లో ఉత్పత్తులు", "transactionsToday": "ఈరోజు లావాదేవీలు", "salesLast7Days": "అమ్మకాలు — చివరి 7 రోజులు", "topProducts": "అగ్రశ్రేణి ఉత్పత్తులు", "noSalesData": "చార్ట్‌లు చూడటానికి మొదటి అమ్మకం నమోదు చేయండి.", "user": "వినియోగదారు", "myStore": "నా దుకాణం", "cashflow": "క్యాష్‌ఫ్లో (7 రోజులు)", "moneyIn": "వచ్చిన డబ్బు (ఆదాయం)", "moneyOut": "వెళ్ళిన డబ్బు (ఖర్చు)", "inventoryStatus": "ఇన్వెంటరీ స్థితి", "lowStock": "తక్కువ స్టాక్", "deadStock": "నిష్క్రియ స్టాక్", "fastMoving": "వేగంగా అమ్ముడవుతున్న", "noTransactions": "ఇంకా లావాదేవీలు లేవు.", "addTransactionCta": "క్యాష్‌ఫ్లో చూడటానికి అమ్మకం జోడించండి." },
+  "inventory": { "addProduct": "ఉత్పత్తి జోడించు", "search": "ఉత్పత్తులు వెతకండి...", "product": "ఉత్పత్తి", "category": "వర్గం", "costPrice": "వ్యయ ధర", "sellingPrice": "అమ్మకపు ధర", "stock": "స్టాక్", "expiryDate": "గడువు తేదీ", "action": "చర్య", "editProduct": "సవరించు", "saveProduct": "సేవ్ చేయి", "cancel": "రద్దు చేయి", "name": "పేరు", "sellingPriceRs": "అమ్మకపు ధర (₹)", "stockQty": "స్టాక్ పరిమాణం", "lowStockAlert": "తక్కువ స్టాక్ హెచ్చరిక", "noProducts": "ప్రారంభించడానికి మొదటి ఉత్పత్తి జోడించండి.", "outOfStock": "స్టాక్ లేదు", "expiringSoon": "త్వరలో గడువు", "expired": "గడువు ముగిసింది", "intelligenceAlert": "ఇంటెలిజెన్స్: కొన్ని ఉత్పత్తులపై దృష్టి పెట్టండి." },
+  "sales": { "newSale": "కొత్త అమ్మకం", "searchReceipts": "రసీదులు వెతకండి...", "receipt": "రసీదు", "product": "ఉత్పత్తి", "qty": "పరిమాణం", "amount": "మొత్తం", "profit": "లాభం", "date": "తేదీ", "actions": "చర్యలు", "noSales": "ప్రారంభించడానికి మొదటి అమ్మకం నమోదు చేయండి.", "selectProduct": "ఉత్పత్తి ఎంచుకోండి", "saleQty": "పరిమాణం", "confirmSale": "అమ్మకం నిర్ధారించు", "done": "పూర్తైంది", "recordSale": "అమ్మకం నమోదు చేయి" },
+  "analytics": { "businessPerformance": "వ్యాపార ఇంటెలిజెన్స్", "revenueVsProfit": "ఆదాయం vs లాభం", "revenueByCategory": "వర్గం వాటా", "noAnalyticsData": "ఇంకా అమ్మకాల డేటా లేదు.", "salesTrendTitle": "అమ్మకాల ట్రెండ్ విశ్లేషణ", "profitComposition": "లాభ నిర్మాణం", "productGrid": "ఉత్పత్తి పనితీరు గ్రిడ్", "categoryShare": "వర్గం వాటా", "daily": "రోజువారీ", "weekly": "వారపు", "monthly": "మాసపు", "revenue": "ఆదాయం", "qty": "పరిమాణం", "units": "యూనిట్లు", "margin": "మార్జిన్ %", "noData": "డేటా లేదు", "noDataCta": "అంతర్దృష్టులు చూడటానికి లావాదేవీలు జోడించండి.", "recommendations": "స్మార్ట్ సిఫారసులు", "restock": "మళ్ళీ స్టాక్ అవసరం", "promote": "వస్తువుని ప్రమోట్ చేయి", "reviewPricing": "ధర నిర్ణయం సమీక్షించు", "allGood": "అన్నీ సాధారణంగా ఉన్నాయి", "allGoodDesc": "ఇన్వెంటరీ మరియు మార్జిన్లు ఆరోగ్యకరంగా ఉన్నాయి.", "whyButton": "ఎందుకు?", "reasonRestock": "అధిక డిమాండ్ గుర్తించబడింది. స్టాక్ {qty} యూనిట్ల కంటే తక్కువ.", "reasonPromote": "గత 30 రోజుల్లో అమ్మకం లేదు. {qty} యూనిట్లు నిష్క్రియంగా ఉన్నాయి.", "reasonReviewPricing": "లాభ మార్జిన్ {margin}% — 15% పరిమితి కంటే తక్కువ." },
+  "settings": { "settings": "సెట్టింగులు", "manageAccount": "మీ ఖాతా ప్రాధాన్యతలు మరియు డేటా భద్రతను నిర్వహించండి.", "darkMode": "డార్క్ మోడ్", "darkModeDesc": "లైట్ మరియు డార్క్ ఇంటర్‌ఫేస్ మధ్య మారండి.", "language": "భాష", "languageDesc": "స్థానికీకరించిన ఇంటర్‌ఫేస్ సెట్టింగులు", "resetData": "వ్యాపార డేటా రీసెట్ చేయి", "resetDataDesc": "అన్ని ఉత్పత్తులు మరియు అమ్మకాల రికార్డులను శాశ్వతంగా తొలగించండి.", "deleteAll": "అన్ని డేటా తొలగించు", "deleteConfirmTitle": "ఎంటర్‌ప్రైజ్ డేటా తొలగించాలా?", "deleteConfirmDesc": "ఈ చర్య అన్ని రికార్డులు, చరిత్ర మరియు వ్యాపార మెట్రిక్స్‌ను శాశ్వతంగా తొలగిస్తుంది.", "cancel": "రద్దు చేయి", "trust": "ప్రైవేట్ · సురక్షితం · ఆఫ్‌లైన్‌లో పని చేస్తుంది", "support": "మద్దతు: +91 7066863550 | tripathiakshat2604@gmail.com", "analysisSettings": "విశ్లేషణ సెట్టింగులు", "analysisSettingsDesc": "అంతర్దృష్టులను వర్గీకరించడానికి ప్రమాణాలు నిర్వచించండి.", "lowStockThreshold": "తక్కువ స్టాక్ పరిమితి (యూనిట్లు)", "deadStockDays": "నిష్క్రియ స్టాక్ (అమ్మకం లేని రోజులు)", "fastMovingSales": "వేగమైన అమ్మకాలు (30 రోజుల్లో)" },
+  "misc": { "loading": "లోడ్ అవుతోంది…" },
+  "insights": { "headerDescription": "మీ వాస్తవ లావాదేవీ చరిత్ర నుండి నిజ-సమయ విశ్లేషణ.", "intelligenceLabel": "ఇంటెలిజెన్స్:", "intelligenceMessage": "దిగువ అన్ని అంతర్దృష్టులు మీ వాస్తవ డేటా నుండి లెక్కించబడ్డాయి.", "title": "ఇంటెలిజెన్స్", "subtitle": "మీ వాస్తవ లావాదేవీల నుండి వచ్చిన చర్యాత్మక అంతర్దృష్టులు." }
 }

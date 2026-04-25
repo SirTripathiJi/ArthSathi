@@ -16,7 +16,16 @@
     "topProducts": "Top Products by Revenue",
     "noSalesData": "Record your first sale to see charts here.",
     "user": "User",
-    "myStore": "My Store"
+    "myStore": "My Store",
+    "cashflow": "Cashflow (7 Days)",
+    "moneyIn": "Money In (Revenue)",
+    "moneyOut": "Money Out (Cost)",
+    "inventoryStatus": "Inventory Status",
+    "lowStock": "Low Stock",
+    "deadStock": "Dead Stock",
+    "fastMoving": "Fast Moving",
+    "noTransactions": "No transactions recorded yet.",
+    "addTransactionCta": "Add a sale to see your cashflow here."
   },
   "inventory": {
     "addProduct": "Add Product",
@@ -59,10 +68,33 @@
     "recordSale": "Record Sale"
   },
   "analytics": {
-    "businessPerformance": "Business Performance",
-    "revenueVsProfit": "Revenue vs. Profit (15 Days)",
-    "revenueByCategory": "Revenue by Category",
-    "noAnalyticsData": "No sales data yet."
+    "businessPerformance": "Business Intelligence",
+    "revenueVsProfit": "Revenue vs. Profit",
+    "revenueByCategory": "Category Share",
+    "noAnalyticsData": "No sales data yet.",
+    "salesTrendTitle": "Sales Trend Analysis",
+    "profitComposition": "Profit Composition",
+    "productGrid": "Product Performance Grid",
+    "categoryShare": "Category Share",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "revenue": "Revenue",
+    "qty": "Qty",
+    "units": "Units",
+    "margin": "Margin %",
+    "noData": "No Data",
+    "noDataCta": "Add transactions to see insights.",
+    "recommendations": "Smart Recommendations",
+    "restock": "Restock Needed",
+    "promote": "Promote Item",
+    "reviewPricing": "Review Pricing",
+    "allGood": "All Systems Normal",
+    "allGoodDesc": "Inventory and margins look healthy.",
+    "whyButton": "Why?",
+    "reasonRestock": "High demand detected. Stock is below {qty} units.",
+    "reasonPromote": "No sales recorded in the last 30 days. {qty} units sitting idle.",
+    "reasonReviewPricing": "Profit margin is {margin}% — below 15% threshold."
   },
   "settings": {
     "settings": "Settings",
@@ -78,14 +110,21 @@
     "deleteConfirmDesc": "This action will permanently wipe all product records, transactional history, and business metrics. This cannot be undone.",
     "cancel": "Cancel",
     "trust": "Private · Secure · Works Offline",
-    "support": "Support: +91 7066863550 | tripathiakshat2604@gmail.com"
+    "support": "Support: +91 7066863550 | tripathiakshat2604@gmail.com",
+    "analysisSettings": "Analysis Settings",
+    "analysisSettingsDesc": "Define thresholds used to classify insights.",
+    "lowStockThreshold": "Low Stock Threshold (units)",
+    "deadStockDays": "Dead Stock (days without sale)",
+    "fastMovingSales": "Fast Moving (sales in last 30 days)"
   },
   "misc": {
     "loading": "Loading ArthSaathi…"
   },
   "insights": {
-    "headerDescription": "Advanced predictive analysis and transactional history tracking for the last 14 operative days.",
+    "headerDescription": "Real-time analysis from your actual transaction history.",
     "intelligenceLabel": "INTELLIGENCE:",
-    "intelligenceMessage": "Transactional patterns indicate high volume during mid-week cycles. Optimize inventory restocking accordingly."
+    "intelligenceMessage": "All insights below are computed from your real data — no assumptions.",
+    "title": "Intelligence",
+    "subtitle": "Actionable insights derived from your actual transactions."
   }
 }

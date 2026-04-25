@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // Providers & Layout
 import { AppLayout } from './components/Layout/AppLayout';
+import { ErrorBoundary } from './components/UI/ErrorBoundary';
 import { ToastProvider } from './components/UI/ToastContext';
 import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
@@ -39,18 +40,20 @@ const PageLoader = () => (
 function AppContent() {
   return (
     <Suspense fallback={<PageLoader />}>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/auth" element={<AuthPage />} />
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/auth" element={<AuthPage />} />
 
-        <Route element={<AppLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="/sales" element={<Sales />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/settings" element={<Settings />} />
-        </Route>
-      </Routes>
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
+            <Route path="/inventory" element={<ErrorBoundary><Inventory /></ErrorBoundary>} />
+            <Route path="/sales" element={<ErrorBoundary><Sales /></ErrorBoundary>} />
+            <Route path="/analytics" element={<ErrorBoundary><Analytics /></ErrorBoundary>} />
+            <Route path="/settings" element={<ErrorBoundary><Settings /></ErrorBoundary>} />
+          </Route>
+        </Routes>
+      </ErrorBoundary>
     </Suspense>
   );
 }
