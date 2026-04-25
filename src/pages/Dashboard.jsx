@@ -165,7 +165,7 @@ export function Dashboard() {
               </div>
               <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('dashboard.cashflow')}</p>
             </div>
-            <div className="text-xs font-black text-[#111111] border-2 border-[var(--border-color)] bg-[var(--color-brand)] px-4 py-1.5 shadow-[3px_3px_0_var(--shadow-color)]">7 {t('analytics.daily').slice(0, 3).toUpperCase()}</div>
+            <div className="text-xs font-black text-[#111111] border-2 border-[var(--border-color)] bg-[var(--color-brand)] px-4 py-1.5 shadow-[3px_3px_0_var(--shadow-color)] min-w-[80px] text-center whitespace-nowrap uppercase">7 Days</div>
           </div>
           {salesData.length > 0 ? (
             <div className="h-[300px]">
