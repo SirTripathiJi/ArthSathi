@@ -1,20 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, Trash2, Sun, Moon, AlertTriangle, Globe, SlidersHorizontal } from 'lucide-react';
+import { ShieldCheck, Trash2, Sun, Moon, AlertTriangle, Globe } from 'lucide-react';
 import { Modal } from '../components/UI/Modal';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { DB } from '../services/db';
-
-const SETTINGS_KEY = 'arth_analysis_settings';
-const DEFAULT_SETTINGS = { lowStockQty: 5, deadStockDays: 30, fastMovingSales: 5 };
-const loadSettings = () => {
-  try { return { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY)) }; }
-  catch { return DEFAULT_SETTINGS; }
-};
-const saveSettings = (s) => localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
 
 export function Settings() {
   const { user } = useAuth();
@@ -23,7 +15,6 @@ export function Settings() {
   const navigate = useNavigate();
   const { t, lang, changeLanguage, LANGS, LANG_NAMES } = useLanguage();
   const [showConfirm, setShowConfirm] = useState(false);
-  const [analysisSettings, setAnalysisSettings] = useState(loadSettings());
 
   const clearData = () => {
     if (!user?.uid) return;
@@ -34,22 +25,16 @@ export function Settings() {
     navigate('/dashboard');
   };
 
-  const updateSetting = (key, value) => {
-    const updated = { ...analysisSettings, [key]: Number(value) || 0 };
-    setAnalysisSettings(updated);
-    saveSettings(updated);
-  };
-
   return (
-    <div className="max-w-3xl space-y-12">
-      <div className="space-y-4 border-l-8 border-[var(--border-color)] pl-8">
+    <div className="max-w-4xl mx-auto px-6 space-y-12">
+      <div className="space-y-4 text-center">
         <h2 className="text-5xl font-black tracking-tighter uppercase italic leading-none text-[var(--text-primary)]">{t('nav.settings')}</h2>
         <p className="text-lg font-bold text-[var(--text-secondary)]">{t('settings.manageAccount')}</p>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-8 flex flex-col gap-5">
         {/* Appearance Section */}
-        <div className="brutalist-card">
+        <div className="brutalist-card w-full">
           <div className="flex justify-between items-center gap-8">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 border-4 border-[var(--border-color)] bg-[var(--color-brand)] flex items-center justify-center shadow-[4px_4px_0_var(--shadow-color)] text-[#111111]">
@@ -67,7 +52,7 @@ export function Settings() {
         </div>
 
         {/* Language Section */}
-        <div className="brutalist-card">
+        <div className="brutalist-card w-full">
           <div className="flex justify-between items-center gap-8">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 border-4 border-[var(--border-color)] bg-[var(--color-accent)] flex items-center justify-center shadow-[4px_4px_0_var(--shadow-color)]">
@@ -85,39 +70,8 @@ export function Settings() {
           </div>
         </div>
 
-        {/* Analysis Settings Section */}
-        <div className="brutalist-card">
-          <div className="flex items-center gap-6 mb-8 pb-4 border-b-2 border-[var(--border-color)]">
-            <div className="w-14 h-14 border-4 border-[var(--border-color)] bg-[#00E5FF] flex items-center justify-center shadow-[4px_4px_0_var(--shadow-color)]">
-              <SlidersHorizontal className="w-8 h-8 text-[#111111]" />
-            </div>
-            <div>
-              <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('settings.analysisSettings')}</h4>
-              <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('settings.analysisSettingsDesc')}</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { key: 'lowStockQty',     label: t('settings.lowStockThreshold') },
-              { key: 'deadStockDays',   label: t('settings.deadStockDays') },
-              { key: 'fastMovingSales', label: t('settings.fastMovingSales') },
-            ].map(({ key, label }) => (
-              <div key={key} className="border-2 border-[var(--border-color)] bg-[var(--bg-secondary)] p-5 shadow-[4px_4px_0_var(--shadow-color)]">
-                <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] mb-3">{label}</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={analysisSettings[key]}
-                  onChange={(e) => updateSetting(key, e.target.value)}
-                  className="brutalist-input !py-3 !text-xl font-black text-center w-full"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Security Section */}
-        <div className="brutalist-card !bg-[var(--card-bg)] border-red-500 shadow-[4px_4px_0_#ef4444]">
+        <div className="brutalist-card w-full !bg-[var(--card-bg)] border-red-500 shadow-[4px_4px_0_#ef4444]">
           <div className="flex justify-between items-center gap-8">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 border-4 border-[var(--border-color)] bg-red-500 flex items-center justify-center shadow-[4px_4px_0_var(--shadow-color)] text-[#ffffff]">
@@ -136,7 +90,7 @@ export function Settings() {
       </div>
 
       {/* Trust Badge */}
-      <div className="p-10 border-4 border-[var(--border-color)] bg-[var(--border-color)] text-[var(--bg-primary)] flex gap-10 items-center shadow-[10px_10px_0_var(--color-brand)]">
+      <div className="p-10 border-4 border-[var(--border-color)] bg-[var(--border-color)] text-[var(--bg-primary)] flex gap-10 items-center shadow-[10px_10px_0_var(--color-brand)] w-full">
         <div className="w-20 h-20 bg-[var(--color-brand)] border-2 border-[var(--bg-primary)] flex items-center justify-center text-[#111111] flex-shrink-0">
           <ShieldCheck className="w-12 h-12" />
         </div>

@@ -9,7 +9,7 @@ import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 
-// Lazy-loaded pages
+// Lazy-loaded pages (using relative paths for stability)
 const LandingPage = lazy(() =>
   import('./pages/LandingPage').then((module) => ({ default: module.LandingPage }))
 );
@@ -39,22 +39,22 @@ const PageLoader = () => (
 
 function AppContent() {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <ErrorBoundary>
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />
 
           <Route element={<AppLayout />}>
-            <Route path="/dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
-            <Route path="/inventory" element={<ErrorBoundary><Inventory /></ErrorBoundary>} />
-            <Route path="/sales" element={<ErrorBoundary><Sales /></ErrorBoundary>} />
-            <Route path="/analytics" element={<ErrorBoundary><Analytics /></ErrorBoundary>} />
-            <Route path="/settings" element={<ErrorBoundary><Settings /></ErrorBoundary>} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/sales" element={<Sales />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>
-      </ErrorBoundary>
-    </Suspense>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 

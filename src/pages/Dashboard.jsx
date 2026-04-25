@@ -18,14 +18,9 @@ import { DB } from '../services/db';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, ArcElement, ChartDataLabels);
 
-// Persistence helpers for Analysis Settings
-const SETTINGS_KEY = 'arth_analysis_settings';
-const DEFAULT_SETTINGS = { lowStockQty: 5, deadStockDays: 30, fastMovingSales: 5 };
-const loadSettings = () => {
-  try { return { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY)) }; }
-  catch { return DEFAULT_SETTINGS; }
-};
-const saveSettings = (s) => localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+// Baseline thresholds (no longer user-configurable)
+const ANALYSIS_THRESHOLDS = { lowStockQty: 5, deadStockDays: 30, fastMovingSales: 5 };
+
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -63,10 +58,10 @@ export function Dashboard() {
 
   // ----------- STAT CARDS -----------
   const cardsData = {
-    sales:    { id: 'sales',    label: t('dashboard.totalSales'),        icon: <Receipt className="w-5 h-5" />,    value: `₹${totalSales.toLocaleString()}`,  bgAccent: '#FFD600' },
-    profit:   { id: 'profit',   label: t('dashboard.netProfit'),         icon: <TrendingUp className="w-5 h-5" />, value: `₹${totalProfit.toLocaleString()}`, bgAccent: '#00C853' },
-    products: { id: 'products', label: t('dashboard.productsInStock'),   icon: <Package className="w-5 h-5" />,    value: totalProducts,                       bgAccent: '#00E5FF' },
-    txns:     { id: 'txns',     label: t('dashboard.transactionsToday'), icon: <Activity className="w-5 h-5" />,   value: totalTxns,                           bgAccent: '#FF4081' },
+    sales: { id: 'sales', label: t('dashboard.totalSales'), icon: <Receipt className="w-5 h-5" />, value: `₹${totalSales.toLocaleString()}`, bgAccent: '#FFD600' },
+    profit: { id: 'profit', label: t('dashboard.netProfit'), icon: <TrendingUp className="w-5 h-5" />, value: `₹${totalProfit.toLocaleString()}`, bgAccent: '#00C853' },
+    products: { id: 'products', label: t('dashboard.productsInStock'), icon: <Package className="w-5 h-5" />, value: totalProducts, bgAccent: '#00E5FF' },
+    txns: { id: 'txns', label: t('dashboard.transactionsToday'), icon: Activity ? <Activity className="w-5 h-5" /> : null, value: totalTxns, bgAccent: '#FF4081' },
   };
 
   const handleDragStart = (id) => setDraggedId(id);
@@ -99,7 +94,7 @@ export function Dashboard() {
     return {
       labels: Object.keys(dmap),
       datasets: [
-        { label: t('dashboard.moneyIn'),  data: Object.values(dmap).map(v => v.in),  backgroundColor: '#00C853', borderColor: isDark ? '#ffffff' : '#000000', borderWidth: 2 },
+        { label: t('dashboard.moneyIn'), data: Object.values(dmap).map(v => v.in), backgroundColor: '#00C853', borderColor: isDark ? '#ffffff' : '#000000', borderWidth: 2 },
         { label: t('dashboard.moneyOut'), data: Object.values(dmap).map(v => v.out), backgroundColor: '#FF4081', borderColor: isDark ? '#ffffff' : '#000000', borderWidth: 2 },
       ],
     };
@@ -118,10 +113,9 @@ export function Dashboard() {
     },
   };
 
-  // ----------- INVENTORY HEALTH (derived from real data + user thresholds) -----------
+  // ----------- INVENTORY HEALTH (derived from real data) -----------
   const inventoryHealth = useMemo(() => {
-    const settings = loadSettings();
-    const { lowStockQty, deadStockDays, fastMovingSales } = settings;
+    const { lowStockQty, deadStockDays, fastMovingSales } = ANALYSIS_THRESHOLDS;
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - deadStockDays);
 
@@ -171,7 +165,7 @@ export function Dashboard() {
               </div>
               <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('dashboard.cashflow')}</p>
             </div>
-            <div className="text-xs font-black text-[#111111] border-2 border-[var(--border-color)] bg-[var(--color-brand)] px-4 py-1.5 shadow-[3px_3px_0_var(--shadow-color)]">7 {t('analytics.daily').slice(0,3).toUpperCase()}</div>
+            <div className="text-xs font-black text-[#111111] border-2 border-[var(--border-color)] bg-[var(--color-brand)] px-4 py-1.5 shadow-[3px_3px_0_var(--shadow-color)]">7 {t('analytics.daily').slice(0, 3).toUpperCase()}</div>
           </div>
           {salesData.length > 0 ? (
             <div className="h-[300px]">
@@ -201,7 +195,7 @@ export function Dashboard() {
               <div className="border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-[4px_4px_0_var(--shadow-color)]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-[#FFD600] border-2 border-[var(--border-color)] flex items-center justify-center"><AlertOctagon className="w-4 h-4 text-black"/></div>
+                    <div className="w-8 h-8 bg-[#FFD600] border-2 border-[var(--border-color)] flex items-center justify-center"><AlertOctagon className="w-4 h-4 text-black" /></div>
                     <span className="font-black uppercase text-sm tracking-widest text-[var(--text-primary)]">{t('dashboard.lowStock')}</span>
                   </div>
                   <span className="text-2xl font-black">{inventoryHealth.lowStockCount}</span>
@@ -219,24 +213,24 @@ export function Dashboard() {
               <div className="border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-[4px_4px_0_var(--shadow-color)]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-[#FF4081] border-2 border-[var(--border-color)] flex items-center justify-center"><PackageX className="w-4 h-4 text-white"/></div>
+                    <div className="w-8 h-8 bg-[#FF4081] border-2 border-[var(--border-color)] flex items-center justify-center"><PackageX className="w-4 h-4 text-white" /></div>
                     <span className="font-black uppercase text-sm tracking-widest text-[var(--text-primary)]">{t('dashboard.deadStock')}</span>
                   </div>
                   <span className="text-2xl font-black">{inventoryHealth.deadStockCount}</span>
                 </div>
-                <p className="text-[10px] mt-1 text-[var(--text-secondary)] font-bold">{`${t('settings.deadStockDays')}: ${loadSettings().deadStockDays}`}</p>
+                <p className="text-[10px] mt-1 text-[var(--text-secondary)] font-bold">{t('dashboard.deadStock')}</p>
               </div>
 
               {/* Fast Moving */}
               <div className="border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-[4px_4px_0_var(--shadow-color)]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-[#00C853] border-2 border-[var(--border-color)] flex items-center justify-center"><ArrowUp className="w-4 h-4 text-black"/></div>
+                    <div className="w-8 h-8 bg-[#00C853] border-2 border-[var(--border-color)] flex items-center justify-center"><ArrowUp className="w-4 h-4 text-black" /></div>
                     <span className="font-black uppercase text-sm tracking-widest text-[var(--text-primary)]">{t('dashboard.fastMoving')}</span>
                   </div>
                   <span className="text-2xl font-black">{inventoryHealth.fastMovingCount}</span>
                 </div>
-                <p className="text-[10px] mt-1 text-[var(--text-secondary)] font-bold">{`>${loadSettings().fastMovingSales} ${t('analytics.units')} / 30d`}</p>
+                <p className="text-[10px] mt-1 text-[var(--text-secondary)] font-bold">{t('dashboard.fastMoving')}</p>
               </div>
             </div>
           ) : (
