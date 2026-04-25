@@ -16,25 +16,25 @@ export function Topbar({ toggleSidebar }) {
   const titleKey = PAGE_KEYS[path] || 'overview';
 
   return (
-    <header className="sticky top-0 z-[100] h-20 bg-[var(--surface)] border-b-4 border-black px-8 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-[100] h-20 bg-[var(--card-bg)] border-b-4 border-[var(--border-color)] px-8 flex items-center justify-between gap-4">
       <div className="flex items-center gap-4">
         <button onClick={() => toggleSidebar()}
-          className="md:hidden w-10 h-10 flex items-center justify-center border-2 border-black bg-white shadow-[3px_3px_0_#000] active:shadow-none active:translate-x-0.5 active:translate-y-0.5">
-          <Menu className="w-5 h-5" />
+          className="md:hidden w-10 h-10 flex items-center justify-center border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[3px_3px_0_var(--shadow-color)] active:shadow-none active:translate-x-0.5 active:translate-y-0.5">
+          <Menu className="w-6 h-6 text-[var(--text-primary)]" />
         </button>
-        <h1 className="text-xl font-black text-black uppercase italic tracking-tighter">{t(titleKey)}</h1>
+        <h1 className="text-2xl font-black text-[var(--text-primary)] uppercase italic tracking-tighter">{t(titleKey)}</h1>
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="flex items-center border-2 border-black bg-white shadow-[3px_3px_0_#000]">
+        <div className="flex items-center border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[4px_4px_0_var(--shadow-color)]">
           <select value={lang} onChange={(e) => changeLanguage(e.target.value)}
-            className="text-xs font-black uppercase bg-transparent text-black px-4 py-2 cursor-pointer focus:outline-none border-none">
+            className="text-sm font-black uppercase bg-transparent text-[var(--text-primary)] px-5 py-2.5 cursor-pointer focus:outline-none border-none">
             {LANGS.map((l) => <option key={l} value={l}>{l}</option>)}
           </select>
         </div>
         <button onClick={toggleTheme} aria-label="Toggle theme"
-          className="w-10 h-10 flex items-center justify-center border-2 border-black bg-white shadow-[3px_3px_0_#000] hover:bg-[var(--color-brand)] transition-all active:shadow-none active:translate-x-0.5 active:translate-y-0.5">
-          {theme === 'dark' ? <Sun className="w-5 h-5 text-black" /> : <Moon className="w-5 h-5 text-black" />}
+          className="w-12 h-12 flex items-center justify-center border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[4px_4px_0_var(--shadow-color)] hover:bg-[var(--color-brand)] hover:text-[#111111] transition-all active:shadow-none active:translate-x-0.5 active:translate-y-0.5">
+          {theme === 'dark' ? <Sun className="w-6 h-6 text-inherit" /> : <Moon className="w-6 h-6 text-inherit" />}
         </button>
       </div>
     </header>

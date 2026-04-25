@@ -94,11 +94,11 @@ export function Sales() {
     <div className="space-y-10">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="relative w-full md:w-[400px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black" />
-          <input className="brutalist-input !pl-14" placeholder={t('search_receipts')} value={search} onChange={(e) => setSearch(e.target.value)} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-primary)]" />
+          <input className="brutalist-input !pl-16 text-base py-4" placeholder={t('search_receipts')} value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-        <button className="brutalist-btn gap-3 w-full md:w-auto px-8 py-4 bg-[var(--color-secondary)] text-white" onClick={openSaleModal}>
-          <Plus className="w-6 h-6" /> <span className="uppercase">{t('new_sale')}</span>
+        <button className="brutalist-btn gap-4 w-full md:w-auto px-10 py-5 text-base bg-[var(--color-secondary)] text-[#ffffff]" onClick={openSaleModal}>
+          <Plus className="w-7 h-7" /> <span className="uppercase">{t('new_sale')}</span>
         </button>
       </div>
 
@@ -118,23 +118,23 @@ export function Sales() {
             {filteredSales.length > 0 ? (
               filteredSales.map((s) => (
                 <tr key={s.id}>
-                  <td><span className="text-base font-black uppercase italic">{s.name}</span></td>
-                  <td><span className="font-black">{s.qty}</span></td>
-                  <td><span className="font-black text-lg">₹{s.amt.toLocaleString()}</span></td>
+                  <td><span className="text-lg font-black uppercase italic tracking-tight">{s.name}</span></td>
+                  <td><span className="font-black text-lg">{s.qty}</span></td>
+                  <td><span className="font-black text-xl">₹{s.amt.toLocaleString()}</span></td>
                   <td>
-                    <span className="text-xs font-black uppercase border-2 border-black bg-[var(--color-success)] text-white px-2 py-1 shadow-[2px_2px_0_#000]">
+                    <span className="text-sm font-black uppercase border-2 border-[var(--border-color)] bg-[var(--color-success)] text-[#111111] px-3 py-1.5 shadow-[3px_3px_0_var(--shadow-color)]">
                       +₹{s.profit.toLocaleString()}
                     </span>
                   </td>
-                  <td><span className="text-xs font-black">{new Date(s.date).toLocaleDateString()}</span></td>
+                  <td><span className="text-sm font-black">{new Date(s.date).toLocaleDateString()}</span></td>
                   <td className="text-right">
-                    <button onClick={() => deleteSale(s.id)} className="p-2 border-2 border-black bg-white hover:bg-red-500 hover:text-white transition-all shadow-[2px_2px_0_#000] active:shadow-none"><Trash2 className="w-4 h-4" /></button>
+                    <button onClick={() => deleteSale(s.id)} className="p-2 border-2 border-[var(--border-color)] bg-[var(--card-bg)] hover:bg-red-500 hover:text-[#ffffff] transition-all shadow-[2px_2px_0_var(--shadow-color)] active:shadow-none"><Trash2 className="w-4 h-4" /></button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center py-32 bg-gray-50">
+                <td colSpan="6" className="text-center py-32 bg-[var(--bg-secondary)]">
                   <div className="flex flex-col items-center justify-center gap-6 opacity-30">
                     <Receipt className="w-20 h-20" />
                     <p className="text-xl font-black uppercase tracking-widest">{t('no_sales')}</p>
@@ -158,8 +158,8 @@ export function Sales() {
       >
         <div className="space-y-8">
           <div>
-            <label className="block text-xs font-black uppercase tracking-wider text-black mb-3">{t('select_product')}</label>
-            <select className="brutalist-input bg-white" value={selProductId} onChange={(e) => setSelProductId(e.target.value)}>
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('select_product')}</label>
+            <select className="brutalist-input bg-[var(--card-bg)] text-[var(--text-primary)] text-base py-4" value={selProductId} onChange={(e) => setSelProductId(e.target.value)}>
               <option value="">Choose item…</option>
               {products.filter((x) => x.qty > 0).map((p) => (
                 <option key={p.id} value={p.id}>{p.name} (Stock: {p.qty})</option>
@@ -167,18 +167,18 @@ export function Sales() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-black uppercase tracking-wider text-black mb-3">{t('sale_qty')}</label>
-            <input className="brutalist-input" type="number" min="1" placeholder="0" value={selQty} onChange={(e) => setSelQty(e.target.value)} />
+            <label className="block text-sm font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('sale_qty')}</label>
+            <input className="brutalist-input text-base py-4" type="number" min="1" placeholder="0" value={selQty} onChange={(e) => setSelQty(e.target.value)} />
           </div>
           {preview && (
-            <div className="p-8 border-4 border-black bg-[var(--color-brand)] shadow-[6px_6px_0_#000] space-y-4">
+            <div className="p-8 border-4 border-[var(--border-color)] bg-[var(--color-brand)] shadow-[6px_6px_0_var(--shadow-color)] space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-black uppercase tracking-widest text-black">Total Invoice</span>
-                <span className="text-3xl font-black italic">₹{preview.total.toLocaleString()}</span>
+                <span className="text-sm font-black uppercase tracking-widest text-[#111111]">Total Invoice</span>
+                <span className="text-4xl font-black italic text-[#111111]">₹{preview.total.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between items-center border-t-2 border-black pt-4">
-                <span className="text-xs font-black uppercase tracking-widest text-black">Net Margin</span>
-                <span className="text-lg font-black text-white bg-black px-3 py-1">+₹{preview.profit.toLocaleString()}</span>
+              <div className="flex justify-between items-center border-t-2 border-[var(--border-color)] pt-6">
+                <span className="text-sm font-black uppercase tracking-widest text-[#111111]">Net Margin</span>
+                <span className="text-xl font-black text-[var(--bg-primary)] bg-[var(--border-color)] px-4 py-1.5">+₹{preview.profit.toLocaleString()}</span>
               </div>
             </div>
           )}
@@ -188,16 +188,16 @@ export function Sales() {
       {isBillModalOpen && lastTxn && (
         <Modal isOpen={true} onClose={() => setIsBillModalOpen(false)} title="Sale Confirmed">
           <div className="text-center py-6">
-            <div className="w-24 h-24 border-4 border-black bg-[var(--color-success)] flex items-center justify-center mx-auto mb-8 shadow-[6px_6px_0_#000]">
-              <CheckCircle2 className="w-12 h-12 text-white" />
+            <div className="w-24 h-24 border-4 border-[var(--border-color)] bg-[var(--color-success)] flex items-center justify-center mx-auto mb-8 shadow-[6px_6px_0_var(--shadow-color)]">
+              <CheckCircle2 className="w-12 h-12 text-[#111111]" />
             </div>
-            <h3 className="text-3xl font-black tracking-tighter uppercase italic mb-2">Invoice Confirmed</h3>
-            <p className="text-xs font-black uppercase tracking-widest text-gray-500 mb-10 italic">ID: {lastTxn.id}</p>
+            <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-2">Invoice Confirmed</h3>
+            <p className="text-sm font-black uppercase tracking-widest text-[var(--text-secondary)] mb-10 italic">ID: {lastTxn.id}</p>
             
-            <div className="border-4 border-black p-8 mb-10 text-left space-y-6 bg-white shadow-[8px_8px_0_#000]">
-              <div className="flex justify-between text-sm font-black uppercase"><span className="text-gray-500">Product</span><span>{lastTxn.name}</span></div>
-              <div className="flex justify-between text-sm font-black uppercase"><span className="text-gray-500">Quantity</span><span>{lastTxn.qty}</span></div>
-              <div className="pt-6 border-t-4 border-black flex justify-between items-center"><span className="text-lg font-black uppercase tracking-widest">Total</span><span className="text-4xl font-black italic">₹{lastTxn.amt.toLocaleString()}</span></div>
+            <div className="border-4 border-[var(--border-color)] p-10 mb-10 text-left space-y-6 bg-[var(--card-bg)] shadow-[10px_10px_0_var(--shadow-color)]">
+              <div className="flex justify-between text-base font-black uppercase"><span className="text-[var(--text-secondary)]">Product</span><span>{lastTxn.name}</span></div>
+              <div className="flex justify-between text-base font-black uppercase"><span className="text-[var(--text-secondary)]">Quantity</span><span>{lastTxn.qty}</span></div>
+              <div className="pt-8 border-t-4 border-[var(--border-color)] flex justify-between items-center"><span className="text-xl font-black uppercase tracking-widest">Total</span><span className="text-5xl font-black italic">₹{lastTxn.amt.toLocaleString()}</span></div>
             </div>
 
             <button className="brutalist-btn w-full py-6 text-xl bg-[var(--color-brand)]" onClick={() => setIsBillModalOpen(false)}>

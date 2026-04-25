@@ -29,7 +29,8 @@ export function Analytics() {
   }, [user]);
 
   const isDark = theme === 'dark';
-  const textColor = isDark ? '#FFFFFF' : '#000000';
+  const textColor = isDark ? '#FFFFFF' : '#111111';
+  const axisTextColor = isDark ? '#aaaaaa' : '#555555';
   const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
 
   const lineOptions = useMemo(
@@ -37,7 +38,7 @@ export function Analytics() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'top', labels: { color: textColor, font: { family: 'Space Grotesk', size: 10, weight: '700' }, usePointStyle: true, boxWidth: 8 } },
+        legend: { position: 'top', labels: { color: textColor, font: { family: 'Space Grotesk', size: 12, weight: '700' }, usePointStyle: true, boxWidth: 10 } },
         tooltip: {
           backgroundColor: '#000000',
           titleColor: '#FFFFFF',
@@ -48,11 +49,11 @@ export function Analytics() {
         }
       },
       scales: {
-        x: { ticks: { color: textColor, font: { family: 'Space Grotesk', size: 10, weight: '700' } }, grid: { display: false }, border: { color: textColor, width: 2 } },
-        y: { ticks: { color: textColor, font: { family: 'Space Grotesk', size: 10, weight: '700' } }, grid: { color: gridColor }, border: { color: textColor, width: 2 } },
+        x: { ticks: { color: axisTextColor, font: { family: 'Space Grotesk', size: 12, weight: '700' } }, grid: { display: false }, border: { color: textColor, width: 2 } },
+        y: { ticks: { color: axisTextColor, font: { family: 'Space Grotesk', size: 12, weight: '700' } }, grid: { color: gridColor }, border: { color: textColor, width: 2 } },
       },
     }),
-    [textColor, gridColor]
+    [textColor, axisTextColor, gridColor]
   );
 
   const pieOptions = useMemo(
@@ -60,7 +61,7 @@ export function Analytics() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'bottom', labels: { color: textColor, font: { family: 'Space Grotesk', size: 10, weight: '700' }, padding: 20, usePointStyle: true, boxWidth: 8 } },
+        legend: { position: 'bottom', labels: { color: textColor, font: { family: 'Space Grotesk', size: 12, weight: '700' }, padding: 24, usePointStyle: true, boxWidth: 10 } },
         tooltip: {
           backgroundColor: '#000000',
           titleColor: '#FFFFFF',
@@ -101,7 +102,7 @@ export function Analytics() {
           tension: 0,
           fill: true,
           pointRadius: 4,
-          pointBackgroundColor: '#000000',
+          pointBackgroundColor: isDark ? '#151515' : '#000000',
           pointBorderColor: '#FFD600',
           pointBorderWidth: 2,
         },
@@ -113,7 +114,7 @@ export function Analytics() {
           borderWidth: 4,
           tension: 0,
           pointRadius: 4,
-          pointBackgroundColor: '#000000',
+          pointBackgroundColor: isDark ? '#151515' : '#000000',
           pointBorderColor: '#FF4081',
           pointBorderWidth: 2,
         },
@@ -133,8 +134,8 @@ export function Analytics() {
       datasets: [
         {
           data: Object.values(cmap),
-          backgroundColor: ['#FFD600', '#FF4081', '#00E5FF', '#00C853', '#000000'],
-          borderColor: '#000000',
+          backgroundColor: ['#FFD600', '#FF4081', '#00E5FF', '#00C853', isDark ? '#333333' : '#111111'],
+          borderColor: isDark ? '#ffffff' : '#000000',
           borderWidth: 2,
           hoverOffset: 15,
         },
@@ -143,7 +144,7 @@ export function Analytics() {
   }, [salesData, productsData]);
 
   const renderEmptyState = (msg) => (
-    <div className="h-full flex flex-col items-center justify-center gap-6 text-black opacity-30 py-20 text-center">
+    <div className="h-full flex flex-col items-center justify-center gap-6 text-[var(--text-secondary)] opacity-30 py-20 text-center">
       <LineChartIcon className="w-16 h-16" />
       <p className="text-xl font-black uppercase tracking-widest">{msg || t('no_analytics_data')}</p>
     </div>
@@ -151,35 +152,35 @@ export function Analytics() {
 
   return (
     <div className="space-y-12">
-      <div className="brutalist-card bg-[var(--color-brand)] border-black flex flex-col md:flex-row justify-between items-start md:items-center gap-8 p-12">
+      <div className="brutalist-card bg-[var(--color-brand)] border-[var(--border-color)] flex flex-col md:flex-row justify-between items-start md:items-center gap-8 p-12">
         <div className="max-w-xl">
-          <h2 className="text-5xl font-black tracking-tighter mb-4 uppercase italic leading-none">{t('business_growth')}</h2>
-          <p className="text-lg font-bold text-black/80 leading-tight">Advanced predictive analysis and transactional history tracking for the last 14 operative days.</p>
+          <h2 className="text-5xl font-black tracking-tighter mb-4 uppercase italic leading-none text-[#111111]">{t('business_growth')}</h2>
+          <p className="text-lg font-bold text-[#111111]/80 leading-tight">Advanced predictive analysis and transactional history tracking for the last 14 operative days.</p>
         </div>
-        <div className="p-6 bg-white border-4 border-black shadow-[6px_6px_0_#000]">
-          <TrendingUp className="w-12 h-12 text-black" />
+        <div className="p-6 bg-[var(--card-bg)] border-4 border-[var(--border-color)] shadow-[6px_6px_0_var(--shadow-color)]">
+          <TrendingUp className="w-12 h-12 text-[var(--text-primary)]" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2 brutalist-card bg-white">
-          <div className="flex items-center gap-4 mb-10 pb-4 border-b-2 border-black">
-            <div className="w-10 h-10 border-2 border-black bg-[var(--color-accent)] flex items-center justify-center shadow-[2px_2px_0_#000]">
-              <LineChartIcon className="w-5 h-5 text-black" />
+        <div className="lg:col-span-2 brutalist-card">
+          <div className="flex items-center gap-4 mb-10 pb-4 border-b-2 border-[var(--border-color)]">
+            <div className="w-10 h-10 border-2 border-[var(--border-color)] bg-[var(--color-accent)] flex items-center justify-center shadow-[2px_2px_0_var(--shadow-color)]">
+              <LineChartIcon className="w-5 h-5 text-[#111111]" />
             </div>
-            <p className="text-sm font-black text-black uppercase tracking-widest">{t('revenue_vs_profit')}</p>
+            <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('revenue_vs_profit')}</p>
           </div>
           <div className="h-[400px] flex-1">
             {salesData.length > 0 ? <Line data={lineData} options={lineOptions} /> : renderEmptyState()}
           </div>
         </div>
         
-        <div className="brutalist-card bg-white">
-          <div className="flex items-center gap-4 mb-10 pb-4 border-b-2 border-black">
-            <div className="w-10 h-10 border-2 border-black bg-[var(--color-secondary)] flex items-center justify-center shadow-[2px_2px_0_#000] text-white">
+        <div className="brutalist-card">
+          <div className="flex items-center gap-4 mb-10 pb-4 border-b-2 border-[var(--border-color)]">
+            <div className="w-10 h-10 border-2 border-[var(--border-color)] bg-[var(--color-secondary)] flex items-center justify-center shadow-[2px_2px_0_var(--shadow-color)] text-[#ffffff]">
               <PieChart className="w-5 h-5" />
             </div>
-            <p className="text-sm font-black text-black uppercase tracking-widest">{t('revenue_by_category')}</p>
+            <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('revenue_by_category')}</p>
           </div>
           <div className="h-[400px] flex-1">
             {pieData.labels.length > 0 ? <Pie data={pieData} options={pieOptions} /> : renderEmptyState('No category data')}
@@ -187,8 +188,8 @@ export function Analytics() {
         </div>
       </div>
 
-      <div className="p-8 border-4 border-black bg-black text-white flex items-center gap-8 shadow-[8px_8px_0_var(--color-accent)]">
-        <div className="w-14 h-14 bg-[var(--color-accent)] border-2 border-white flex items-center justify-center text-black flex-shrink-0">
+      <div className="p-8 border-4 border-[var(--border-color)] bg-[var(--border-color)] text-[var(--bg-primary)] flex items-center gap-8 shadow-[8px_8px_0_var(--color-accent)]">
+        <div className="w-14 h-14 bg-[var(--color-accent)] border-2 border-[var(--bg-primary)] flex items-center justify-center text-[#111111] flex-shrink-0">
           <Info className="w-8 h-8" />
         </div>
         <p className="text-lg font-bold leading-tight">

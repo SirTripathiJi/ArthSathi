@@ -35,10 +35,10 @@ export function Sidebar({ isOpen, toggleSidebar }) {
       />
 
       <aside
-        className={`w-[260px] bg-[var(--surface)] border-r-4 border-black flex flex-col fixed top-0 bottom-0 left-0 z-[200] transition-transform duration-200 md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`w-[260px] bg-[var(--card-bg)] border-r-4 border-[var(--border-color)] flex flex-col fixed top-0 bottom-0 left-0 z-[200] transition-transform duration-200 md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Logo */}
-        <div className="h-20 flex items-center px-6 border-b-4 border-black bg-[var(--color-brand)]/10">
+        <div className="h-20 flex items-center px-6 border-b-4 border-[var(--border-color)] bg-[var(--color-brand)]/10">
           <Logo size="sm" />
         </div>
 
@@ -47,16 +47,16 @@ export function Sidebar({ isOpen, toggleSidebar }) {
           {nav.map(({ to, icon: Icon, label, badge }) => (
             <NavLink key={to} to={to} onClick={() => toggleSidebar(false)}
               className={({ isActive }) =>
-                `flex items-center gap-4 px-4 py-3 font-black text-sm border-2 border-transparent transition-all group ${
+                `flex items-center gap-5 px-5 py-4 font-black text-base border-2 border-transparent transition-all group ${
                   isActive 
-                    ? 'bg-black text-white shadow-[4px_4px_0_var(--color-brand)]' 
-                    : 'text-black hover:bg-white hover:border-black hover:shadow-[4px_4px_0_#000]'
+                    ? 'bg-[var(--border-color)] text-[var(--bg-primary)] shadow-[5px_5px_0_var(--color-brand)]' 
+                    : 'text-[var(--text-primary)] hover:bg-[var(--card-bg)] hover:border-[var(--border-color)] hover:shadow-[5px_5px_0_var(--shadow-color)]'
                 }`
               }>
-              <Icon className="w-5 h-5" />
-              <span className="flex-1 uppercase tracking-tight">{label}</span>
+              <Icon className="w-6 h-6" />
+              <span className="flex-1 uppercase tracking-normal">{label}</span>
               {badge > 0 && (
-                <span className="bg-[var(--color-secondary)] text-white text-[10px] font-black px-2 py-0.5 border-2 border-black">
+                <span className="bg-[var(--color-secondary)] text-[#ffffff] text-xs font-black px-2.5 py-1 border-2 border-[var(--border-color)]">
                   {badge}
                 </span>
               )}
@@ -65,21 +65,21 @@ export function Sidebar({ isOpen, toggleSidebar }) {
         </nav>
 
         {/* User footer */}
-        <div className="p-4 border-t-4 border-black bg-[var(--surface2)]">
-          <div className="flex items-center gap-3 px-3 py-3 border-2 border-black bg-white shadow-[3px_3px_0_#000] mb-4">
-            <div className="w-10 h-10 bg-black text-white flex items-center justify-center font-black text-lg border-2 border-white">
+        <div className="p-4 border-t-4 border-[var(--border-color)] bg-[var(--bg-secondary)]">
+          <div className="flex items-center gap-3 px-3 py-3 border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[3px_3px_0_var(--shadow-color)] mb-4">
+            <div className="w-12 h-12 bg-[var(--border-color)] text-[var(--bg-primary)] flex items-center justify-center font-black text-xl border-2 border-[var(--bg-primary)]">
               {user?.name?.charAt(0) || 'U'}
             </div>
             <div className="min-w-0">
-              <p className="font-black text-sm text-black truncate uppercase">{user?.name || 'User'}</p>
-              <p className="text-[10px] font-bold text-gray-600 uppercase tracking-tighter">{user?.store || 'My Store'}</p>
+              <p className="font-black text-base text-[var(--text-primary)] truncate uppercase leading-tight">{user?.name || 'User'}</p>
+              <p className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-tight">{user?.store || 'My Store'}</p>
             </div>
           </div>
           <button
             onClick={() => { toggleSidebar(false); logout(); }}
-            className="flex items-center justify-center gap-3 px-4 py-3 border-2 border-black font-black text-sm w-full bg-white hover:bg-red-500 hover:text-white transition-all shadow-[4px_4px_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
+            className="flex items-center justify-center gap-4 px-5 py-4 border-2 border-[var(--border-color)] font-black text-base w-full bg-[var(--card-bg)] hover:bg-[var(--color-error)] hover:text-[#ffffff] text-[var(--text-primary)] transition-all shadow-[5px_5px_0_var(--shadow-color)] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-5 h-5" />
             <span className="uppercase">Sign Out</span>
           </button>
         </div>

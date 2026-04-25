@@ -47,21 +47,21 @@ export function AuthPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen relative bg-[var(--bg)] p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen relative bg-[var(--bg-primary)] p-6">
       <button
-        className="absolute top-10 left-10 p-4 border-2 border-black bg-white shadow-[4px_4px_0_#000] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all z-10"
+        className="absolute top-10 left-10 p-4 border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[4px_4px_0_var(--shadow-color)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all z-10"
         onClick={() => navigate('/')}>
-        <ArrowLeft className="w-6 h-6" />
+        <ArrowLeft className="w-6 h-6 text-[var(--text-primary)]" />
       </button>
 
-      <div className="w-full max-w-[450px] brutalist-card p-12 relative z-10 bg-white">
+      <div className="w-full max-w-[450px] brutalist-card p-12 relative z-10">
         <div className="flex justify-center mb-12 scale-125"><Logo /></div>
 
         {/* Tab switcher */}
-        <div className="flex border-4 border-black p-1 bg-black mb-10 shadow-[4px_4px_0_var(--color-brand)]">
+        <div className="flex border-4 border-[var(--border-color)] p-1 bg-[var(--border-color)] mb-10 shadow-[4px_4px_0_var(--color-brand)]">
           {['login', 'signup'].map(t => (
             <button key={t} onClick={() => setTab(t)}
-              className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${tab === t ? 'bg-[var(--color-brand)] text-black' : 'text-white hover:text-[var(--color-brand)]'}`}>
+              className={`flex-1 py-3 text-sm font-black uppercase tracking-widest transition-all ${tab === t ? 'bg-[var(--color-brand)] text-[#111111]' : 'text-[var(--bg-primary)] hover:text-[var(--color-brand)]'}`}>
               {t === 'login' ? 'Log In' : 'Sign Up'}
             </button>
           ))}
@@ -71,11 +71,11 @@ export function AuthPage() {
           <form onSubmit={handleLogin} className="space-y-8 animate-brutal-fade-in">
             <div className="space-y-6">
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-black mb-3">Email Address</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-primary)] mb-3">Email Address</label>
                 <input type="email" value={logEmail} onChange={e => setLogEmail(e.target.value)} className="brutalist-input" placeholder="name@business.com" />
               </div>
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-black mb-3">Password</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-primary)] mb-3">Password</label>
                 <input type="password" value={logPass} onChange={e => setLogPass(e.target.value)} className="brutalist-input" placeholder="••••••••" />
               </div>
             </div>
@@ -87,23 +87,23 @@ export function AuthPage() {
           <form onSubmit={handleRegister} className="space-y-8 animate-brutal-fade-in">
             <div className="space-y-6">
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-black mb-3">Full Name</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-primary)] mb-3">Full Name</label>
                 <input value={regName} onChange={e => setRegName(e.target.value)} className="brutalist-input" placeholder="Rahul Sharma" />
               </div>
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-black mb-3">Business Email</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-primary)] mb-3">Business Email</label>
                 <input type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} className="brutalist-input" placeholder="rahul@store.com" />
               </div>
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-black mb-3">Store Name</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-primary)] mb-3">Store Name</label>
                 <input value={regStore} onChange={e => setRegStore(e.target.value)} className="brutalist-input" placeholder="Sharma Retailers" />
               </div>
               <div>
-                <label className="block text-xs font-black uppercase tracking-widest text-black mb-3">Create Password</label>
+                <label className="block text-xs font-black uppercase tracking-widest text-[var(--text-primary)] mb-3">Create Password</label>
                 <input type="password" value={regPass} onChange={e => setRegPass(e.target.value)} className="brutalist-input" placeholder="Min. 6 characters" />
               </div>
             </div>
-            <button type="submit" className="w-full brutalist-btn py-5 text-lg bg-[var(--color-secondary)] text-white">
+            <button type="submit" className="w-full brutalist-btn py-5 text-lg bg-[var(--color-secondary)] text-[#ffffff]">
               Create Account
             </button>
           </form>

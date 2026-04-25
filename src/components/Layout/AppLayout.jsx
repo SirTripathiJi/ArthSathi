@@ -12,9 +12,9 @@ export function AppLayout() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--bg)] text-black fixed inset-0 z-[99999]">
-        <div className="w-12 h-12 border-4 border-black border-t-[var(--color-brand)] rounded-full animate-spin mb-4" />
-        <p className="font-black uppercase tracking-widest text-black">{t('loading')}</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] fixed inset-0 z-[99999]">
+        <div className="w-12 h-12 border-4 border-[var(--border-color)] border-t-[var(--color-brand)] rounded-full animate-spin mb-4" />
+        <p className="font-black uppercase tracking-widest text-[var(--text-primary)]">{t('loading')}</p>
       </div>
     );
   }
@@ -26,7 +26,7 @@ export function AppLayout() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[var(--bg)]">
+    <div className="flex min-h-screen bg-[var(--bg-primary)]">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex-1 flex flex-col min-h-screen md:ml-[260px]">
         <Topbar toggleSidebar={toggleSidebar} />

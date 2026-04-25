@@ -11,27 +11,27 @@ export function StatCard({ label, value, icon, bgAccent, onDragStart, onDragEnte
       onDragEnd={() => { cardRef.current.style.opacity = '1'; onDragEnd?.(); }}
       onDragOver={(e) => e.preventDefault()}
       onDragEnter={() => onDragEnter?.(id)}
-      className="brutalist-card cursor-grab active:cursor-grabbing select-none relative overflow-hidden flex flex-col justify-between min-h-[160px]"
-      style={{ backgroundColor: 'var(--surface)' }}
+      className="brutalist-card cursor-grab active:cursor-grabbing select-none relative overflow-hidden flex flex-col justify-between min-h-[160px] animate-brutal-fade-in"
+      style={{ backgroundColor: 'var(--card-bg)' }}
     >
       {/* Brutalist color block */}
       <div 
-        className="absolute top-0 right-0 w-20 h-20 border-l-4 border-b-4 border-black"
+        className="absolute top-0 right-0 w-20 h-20 border-l-4 border-b-4 border-[var(--border-color)]"
         style={{ backgroundColor: bgAccent }}
       />
 
-      <div className="flex items-center justify-between relative z-10">
-        <span className="text-xs font-black text-black uppercase tracking-widest leading-tight">{label}</span>
-        <div className="w-10 h-10 flex items-center justify-center border-2 border-black bg-white shadow-[2px_2px_0_#000]">
+      <div className="flex items-center justify-between relative z-10 text-[var(--text-primary)]">
+        <span className="text-sm font-black text-[var(--text-primary)] uppercase tracking-widest leading-tight">{label}</span>
+        <div className="w-12 h-12 flex items-center justify-center border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[3px_3px_0_var(--shadow-color)]">
           {icon}
         </div>
       </div>
       
-      <div className="relative z-10 mt-6">
-        <div className="text-3xl font-black text-black leading-none uppercase tracking-tighter">{value}</div>
-        <div className="mt-4 h-4 w-full border-2 border-black bg-white shadow-[2px_2px_0_#000] overflow-hidden">
+      <div className="relative z-10 mt-8">
+        <div className="text-4xl font-black text-[var(--text-primary)] leading-none uppercase tracking-tighter">{value}</div>
+        <div className="mt-4 h-4 w-full border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[2px_2px_0_var(--shadow-color)] overflow-hidden">
           <div 
-            className="h-full border-r-2 border-black"
+            className="h-full border-r-2 border-[var(--border-color)]"
             style={{ backgroundColor: bgAccent, width: '45%' }}
           />
         </div>

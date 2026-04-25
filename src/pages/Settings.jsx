@@ -27,62 +27,62 @@ export function Settings() {
 
   return (
     <div className="max-w-3xl space-y-12">
-      <div className="space-y-4 border-l-8 border-black pl-8">
-        <h2 className="text-5xl font-black tracking-tighter uppercase italic leading-none">{t('settings')}</h2>
-        <p className="text-lg font-bold text-gray-600">Manage your account preferences and global data security.</p>
+      <div className="space-y-4 border-l-8 border-[var(--border-color)] pl-8">
+        <h2 className="text-5xl font-black tracking-tighter uppercase italic leading-none text-[var(--text-primary)]">{t('settings')}</h2>
+        <p className="text-lg font-bold text-[var(--text-secondary)]">Manage your account preferences and global data security.</p>
       </div>
 
       <div className="space-y-8">
         {/* Appearance Section */}
-        <div className="brutalist-card bg-white">
+        <div className="brutalist-card">
           <div className="flex justify-between items-center gap-8">
             <div className="flex items-center gap-6">
-              <div className="w-14 h-14 border-4 border-black bg-[var(--color-brand)] flex items-center justify-center shadow-[4px_4px_0_#000]">
+              <div className="w-14 h-14 border-4 border-[var(--border-color)] bg-[var(--color-brand)] flex items-center justify-center shadow-[4px_4px_0_var(--shadow-color)] text-[#111111]">
                 {theme === 'dark' ? <Moon className="w-8 h-8" /> : <Sun className="w-8 h-8" />}
               </div>
               <div>
-                <h4 className="text-xl font-black uppercase tracking-tighter mb-1">{t('dark_mode')}</h4>
-                <p className="text-xs font-black text-gray-500 uppercase tracking-widest italic">{t('dark_mode_desc')}</p>
+                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('dark_mode')}</h4>
+                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('dark_mode_desc')}</p>
               </div>
             </div>
-            <button onClick={toggleTheme} className={`relative w-16 h-8 border-4 border-black transition-colors ${theme === 'dark' ? 'bg-[var(--color-brand)]' : 'bg-white'}`}>
-              <div className={`absolute top-0 bottom-0 w-6 bg-black transition-all ${theme === 'dark' ? 'right-0' : 'left-0'}`} />
+            <button onClick={toggleTheme} className={`relative w-16 h-8 border-4 border-[var(--border-color)] transition-colors ${theme === 'dark' ? 'bg-[var(--color-brand)]' : 'bg-[var(--card-bg)]'}`}>
+              <div className={`absolute top-0 bottom-0 w-6 bg-[var(--border-color)] transition-all ${theme === 'dark' ? 'right-0' : 'left-0'}`} />
             </button>
           </div>
         </div>
 
         {/* Language Section */}
-        <div className="brutalist-card bg-white">
+        <div className="brutalist-card">
           <div className="flex justify-between items-center gap-8">
             <div className="flex items-center gap-6">
-              <div className="w-14 h-14 border-4 border-black bg-[var(--color-accent)] flex items-center justify-center shadow-[4px_4px_0_#000]">
-                <Globe className="w-8 h-8 text-black" />
+              <div className="w-14 h-14 border-4 border-[var(--border-color)] bg-[var(--color-accent)] flex items-center justify-center shadow-[4px_4px_0_var(--shadow-color)]">
+                <Globe className="w-8 h-8 text-[#111111]" />
               </div>
               <div>
-                <h4 className="text-xl font-black uppercase tracking-tighter mb-1">Language</h4>
-                <p className="text-xs font-black text-gray-500 uppercase tracking-widest italic">Localized interface settings</p>
+                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">Language</h4>
+                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">Localized interface settings</p>
               </div>
             </div>
             <select value={lang} onChange={(e) => changeLanguage(e.target.value)}
-              className="brutalist-input !w-auto !py-3 !px-6 bg-white font-black uppercase text-xs tracking-widest shadow-[4px_4px_0_#000]">
+              className="brutalist-input !w-auto !py-4 !px-8 bg-[var(--card-bg)] text-[var(--text-primary)] font-black uppercase text-sm tracking-widest shadow-[5px_5px_0_var(--shadow-color)]">
               {LANGS.map(l => <option key={l} value={l}>{l}</option>)}
             </select>
           </div>
         </div>
 
         {/* Security Section */}
-        <div className="brutalist-card bg-red-50 border-red-500">
+        <div className="brutalist-card !bg-[var(--card-bg)] border-red-500 shadow-[4px_4px_0_#ef4444]">
           <div className="flex justify-between items-center gap-8">
             <div className="flex items-center gap-6">
-              <div className="w-14 h-14 border-4 border-black bg-red-500 flex items-center justify-center shadow-[4px_4px_0_#000] text-white">
+              <div className="w-14 h-14 border-4 border-[var(--border-color)] bg-red-500 flex items-center justify-center shadow-[4px_4px_0_var(--shadow-color)] text-[#ffffff]">
                 <Trash2 className="w-8 h-8" />
               </div>
               <div>
-                <h4 className="text-xl font-black uppercase tracking-tighter mb-1">{t('reset_data')}</h4>
-                <p className="text-xs font-black text-gray-500 uppercase tracking-widest italic">{t('reset_data_desc')}</p>
+                <h4 className="text-2xl font-black uppercase tracking-tighter mb-1 text-[var(--text-primary)]">{t('reset_data')}</h4>
+                <p className="text-sm font-black text-[var(--text-secondary)] uppercase tracking-widest italic">{t('reset_data_desc')}</p>
               </div>
             </div>
-            <button className="brutalist-btn bg-red-500 text-white px-8" onClick={() => setShowConfirm(true)}>
+            <button className="brutalist-btn bg-red-500 text-[#ffffff] px-8 hover:shadow-[6px_6px_0_var(--shadow-color)] hover:-translate-y-1" onClick={() => setShowConfirm(true)}>
               {t('delete_all')}
             </button>
           </div>
@@ -90,13 +90,13 @@ export function Settings() {
       </div>
 
       {/* Trust Badge */}
-      <div className="p-10 border-4 border-black bg-black text-white flex gap-10 items-center shadow-[10px_10px_0_var(--color-brand)]">
-        <div className="w-20 h-20 bg-[var(--color-brand)] border-2 border-white flex items-center justify-center text-black flex-shrink-0">
+      <div className="p-10 border-4 border-[var(--border-color)] bg-[var(--border-color)] text-[var(--bg-primary)] flex gap-10 items-center shadow-[10px_10px_0_var(--color-brand)]">
+        <div className="w-20 h-20 bg-[var(--color-brand)] border-2 border-[var(--bg-primary)] flex items-center justify-center text-[#111111] flex-shrink-0">
           <ShieldCheck className="w-12 h-12" />
         </div>
         <div>
           <h4 className="font-black text-2xl uppercase italic tracking-tighter mb-3">{t('trust')}</h4>
-          <p className="text-base font-bold text-gray-300 leading-tight">{t('support')}</p>
+          <p className="text-base font-bold opacity-80 leading-tight">{t('support')}</p>
         </div>
       </div>
 
@@ -109,11 +109,11 @@ export function Settings() {
           </div>
         }>
         <div className="flex flex-col items-center text-center py-8">
-          <div className="w-24 h-24 border-4 border-black bg-red-100 flex items-center justify-center text-red-600 mb-8 shadow-[6px_6px_0_#000]">
+          <div className="w-24 h-24 border-4 border-[var(--border-color)] bg-[var(--card-bg)] flex items-center justify-center text-red-500 mb-8 shadow-[6px_6px_0_var(--shadow-color)]">
             <AlertTriangle className="w-12 h-12" />
           </div>
-          <h3 className="text-3xl font-black tracking-tighter uppercase italic mb-4">Delete Enterprise Data?</h3>
-          <p className="text-black font-bold text-lg leading-tight">This action will permanently wipe all product records, transactional history, and business metrics. This cannot be undone.</p>
+          <h3 className="text-4xl font-black tracking-tighter uppercase italic mb-4 text-[var(--text-primary)]">Delete Enterprise Data?</h3>
+          <p className="text-[var(--text-secondary)] font-bold text-xl leading-tight">This action will permanently wipe all product records, transactional history, and business metrics. This cannot be undone.</p>
         </div>
       </Modal>
     </div>

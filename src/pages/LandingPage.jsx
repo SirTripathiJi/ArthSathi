@@ -22,10 +22,10 @@ export function LandingPage() {
     { icon: Receipt,     title: 'Billing Made Simple', text: 'Fast entries with instant, real profit visibility.',          color: 'var(--color-secondary)' },
     { icon: LineChart,   title: 'Business Insights',   text: 'Understand performance clearly. No noise, just useful data.', color: 'var(--color-accent)' },
     { icon: ShieldCheck, title: 'Privacy-First',       text: '100% local data storage. No cloud, no subscriptions.',       color: 'var(--color-success)' },
-    { icon: Sparkles,    title: 'Smart Assistant',     text: 'Simple business guidance based on your data.',               color: 'var(--text3)', comingSoon: true },
-    { icon: Mic,         title: 'Voice Entries',       text: 'Add transactions by speaking naturally.',                    color: 'var(--text3)', comingSoon: true },
-    { icon: TrendingUp,  title: 'Profit Intelligence', text: 'See true profit after cost and expenses.',                   color: 'var(--text3)', comingSoon: true },
-    { icon: Users,       title: 'Customer Insights',   text: 'Identify reliable and risky customers.',                    color: 'var(--text3)', comingSoon: true },
+    { icon: Sparkles,    title: 'Smart Assistant',     text: 'Simple business guidance based on your data.',               color: 'var(--text-secondary)', comingSoon: true },
+    { icon: Mic,         title: 'Voice Entries',       text: 'Add transactions by speaking naturally.',                    color: 'var(--text-secondary)', comingSoon: true },
+    { icon: TrendingUp,  title: 'Profit Intelligence', text: 'See true profit after cost and expenses.',                   color: 'var(--text-secondary)', comingSoon: true },
+    { icon: Users,       title: 'Customer Insights',   text: 'Identify reliable and risky customers.',                    color: 'var(--text-secondary)', comingSoon: true },
   ];
 
   const trustItems = [
@@ -36,20 +36,20 @@ export function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] font-sans" style={{ overflowX: 'hidden' }}>
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans" style={{ overflowX: 'hidden' }}>
 
       {/* Navbar */}
-      <nav className="fixed top-0 inset-x-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 bg-[var(--surface)] border-b-4 border-[var(--border-color)]">
+      <nav className="fixed top-0 inset-x-0 z-50 h-20 flex items-center justify-between px-6 md:px-12 bg-[var(--card-bg)] border-b-4 border-[var(--border-color)]">
         <Logo />
         <div className="flex items-center gap-4">
           <a
             href="#pricing"
-            className="hidden sm:block text-xs font-black uppercase tracking-widest text-[var(--text)] border-2 border-[var(--border-color)] px-3 py-1.5 shadow-[2px_2px_0_var(--border-color)] hover:bg-[var(--color-brand)] hover:text-[#000] hover:border-[var(--color-brand)] transition-all"
+            className="hidden sm:block text-xs font-black uppercase tracking-widest text-[var(--text-primary)] border-2 border-[var(--border-color)] px-3 py-1.5 shadow-[2px_2px_0_var(--border-color)] hover:bg-[var(--color-brand)] hover:text-[#111111] hover:border-[var(--color-brand)] transition-all"
           >
             Pricing
           </a>
           <button onClick={toggleTheme}
-            className="w-10 h-10 flex items-center justify-center border-2 border-[var(--border-color)] bg-[var(--surface)] shadow-[2px_2px_0_var(--border-color)] hover:bg-[var(--color-brand)] hover:text-[#000] transition-all">
+            className="w-10 h-10 flex items-center justify-center border-2 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[2px_2px_0_var(--border-color)] hover:bg-[var(--color-brand)] hover:text-[#111111] transition-all">
             {theme === 'dark' ? <Sun className="w-5 h-5 text-inherit" /> : <Moon className="w-5 h-5 text-inherit" />}
           </button>
           <button onClick={go} className="brutalist-btn hidden sm:flex">Launch App</button>
@@ -111,22 +111,22 @@ export function LandingPage() {
 
         <div className="relative z-10 w-full" style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 24 }}>
           {/* Headline */}
-          <h1 className="font-black text-[var(--text)] uppercase italic w-full"
+          <h1 className="font-black text-[var(--text-primary)] uppercase italic w-full"
             style={{ fontSize: 'clamp(2.4rem, 6.5vw, 5rem)', lineHeight: 1.08, letterSpacing: '-0.04em', wordBreak: 'break-word' }}>
             Run your business
             <br />
             <span className="text-[var(--color-brand)] inline-block"
-              style={{ background: 'var(--text)', padding: '6px 22px', marginTop: 14, boxShadow: '8px 8px 0 var(--color-secondary)', wordBreak: 'break-word', maxWidth: '100%' }}>
+              style={{ background: 'var(--text-primary)', padding: '6px 22px', marginTop: 14, boxShadow: '8px 8px 0 var(--color-secondary)', wordBreak: 'break-word', maxWidth: '100%' }}>
               with clarity.
             </span>
           </h1>
 
           {/* Sub-copy */}
           <div style={{ maxWidth: 660, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <p className="font-bold text-[var(--text2)]" style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', lineHeight: 1.55 }}>
+            <p className="font-bold text-[var(--text-secondary)]" style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', lineHeight: 1.55 }}>
               Track inventory, record sales, and know your exact profit — without confusion.
             </p>
-            <p className="font-bold text-[var(--text3)]" style={{ fontSize: 'clamp(0.875rem, 1.6vw, 1.05rem)', lineHeight: 1.5 }}>
+            <p className="font-bold text-[var(--text-secondary)]" style={{ fontSize: 'clamp(0.875rem, 1.6vw, 1.05rem)', lineHeight: 1.5 }}>
               Built for real shopkeepers. Fast. Offline. Reliable.
             </p>
           </div>
@@ -134,11 +134,11 @@ export function LandingPage() {
           {/* CTA */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, marginTop: 8 }}>
             <button onClick={go}
-              className="brutalist-btn bg-[var(--color-brand)] text-[#000] hover:-translate-y-1 hover:shadow-[8px_8px_0_var(--border-color)] transition-all"
+              className="brutalist-btn bg-[var(--color-brand)] text-[#111111] hover:-translate-y-1 hover:shadow-[8px_8px_0_var(--border-color)] transition-all"
               style={{ fontSize: '1.2rem', padding: '16px 44px' }}>
               Get Started <ArrowRight className="ml-3 w-5 h-5" />
             </button>
-            <span className="font-black uppercase tracking-widest text-[var(--text3)]" style={{ fontSize: '0.7rem' }}>
+            <span className="font-black uppercase tracking-widest text-[var(--text-secondary)]" style={{ fontSize: '0.7rem' }}>
               Plans from ₹399/month · Cancel anytime · Works fully offline.
             </span>
           </div>
@@ -146,7 +146,7 @@ export function LandingPage() {
       </section>
 
       {/* Feature Grid */}
-      <section id="features" className="relative border-t-4 border-[var(--border-color)] bg-[var(--surface2)] overflow-hidden"
+      <section id="features" className="relative border-t-4 border-[var(--border-color)] bg-[var(--bg-secondary)] overflow-hidden"
         style={{ padding: '90px 24px' }}>
         <div className="texture-dots" />
         {/* ₹ tag — top right */}
@@ -184,22 +184,22 @@ export function LandingPage() {
                 {/* Icon */}
                 <div className="flex-shrink-0 border-4 border-[var(--border-color)] flex items-center justify-center shadow-[3px_3px_0_var(--border-color)]"
                   style={{ width: 52, height: 52, marginBottom: 16, backgroundColor: f.color }}>
-                  <Icon className="w-6 h-6 text-[#000]" />
+                  <Icon className="w-6 h-6 text-[#111111]" />
                 </div>
                 {/* Title */}
-                <h3 className="font-black uppercase text-[var(--text)]"
+                <h3 className="font-black uppercase text-[var(--text-primary)]"
                   style={{ fontSize: f.comingSoon ? '0.95rem' : '1.1rem', lineHeight: 1.15, letterSpacing: '-0.02em', wordBreak: 'break-word', marginBottom: 8 }}>
                   {f.title}
                 </h3>
                 {/* Badge */}
                 {f.comingSoon && (
-                  <span className="inline-block bg-[var(--surface)] border-2 border-[var(--border-color)] text-[var(--text3)] uppercase font-black tracking-widest"
+                  <span className="inline-block bg-[var(--card-bg)] border-2 border-[var(--border-color)] text-[var(--text-secondary)] uppercase font-black tracking-widest"
                     style={{ fontSize: '8px', padding: '2px 6px', margin: '6px 0' }}>
                     Coming Soon
                   </span>
                 )}
                 {/* Description */}
-                <p className="text-[var(--text2)] font-bold flex-1"
+                <p className="text-[var(--text-secondary)] font-bold flex-1"
                   style={{ fontSize: '0.85rem', lineHeight: 1.55, marginTop: 8, wordBreak: 'break-word' }}>
                   {f.text}
                 </p>
@@ -210,7 +210,7 @@ export function LandingPage() {
       </section>
 
       {/* Trust Section */}
-      <section className="relative border-y-4 border-[var(--border-color)] overflow-hidden" style={{ padding: '100px 24px', background: 'var(--text)' }}>
+      <section className="relative border-y-4 border-[var(--border-color)] overflow-hidden" style={{ padding: '100px 24px', background: 'var(--text-primary)' }}>
         <div className="texture-dots" style={{ opacity: 0.06 }} />
         {/* Coin ₹ — top left */}
         <div className="biz-shape animate-float-alt" style={{ top: '8%', left: '2%', width: 60, height: 60, animationDelay: '0s' }}>
@@ -242,7 +242,7 @@ export function LandingPage() {
                 style={{ color: item.color, fontSize: '1.35rem', lineHeight: 1.15, marginBottom: 10 }}>
                 {item.title}
               </div>
-              <div className="font-bold" style={{ color: 'var(--bg)', opacity: 0.88, fontSize: '0.95rem', lineHeight: 1.5 }}>
+              <div className="font-bold" style={{ color: 'var(--bg-primary)', opacity: 0.88, fontSize: '0.95rem', lineHeight: 1.5 }}>
                 {item.text}
               </div>
             </div>
@@ -251,7 +251,7 @@ export function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="relative border-t-4 border-[var(--border-color)] bg-[var(--surface2)] overflow-hidden" style={{ padding: '100px 24px', scrollMarginTop: 80 }}>
+      <section id="pricing" className="relative border-t-4 border-[var(--border-color)] bg-[var(--bg-secondary)] overflow-hidden" style={{ padding: '100px 24px', scrollMarginTop: 80 }}>
         <div className="texture-dots" />
         {/* ₹ tag — top left */}
         <div className="biz-shape animate-float-slow" style={{ top: '6%', left: '1%', width: 62, height: 62, animationDelay: '0s' }}>
@@ -288,11 +288,11 @@ export function LandingPage() {
         <div className="mx-auto" style={{ maxWidth: 1120 }}>
           {/* Section Header */}
           <div style={{ marginBottom: 56, textAlign: 'center' }}>
-            <h2 className="font-black uppercase italic text-[var(--text)]"
+            <h2 className="font-black uppercase italic text-[var(--text-primary)]"
               style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', lineHeight: 1.1, letterSpacing: '-0.04em', marginBottom: 12 }}>
               Simple, Honest Pricing.
             </h2>
-            <p className="font-bold text-[var(--text3)]"
+            <p className="font-bold text-[var(--text-secondary)]"
               style={{ fontSize: '1rem', lineHeight: 1.5, maxWidth: 520, margin: '0 auto' }}>
               No hidden fees. No per-device charges. Pay once, use everywhere.
             </p>
@@ -307,23 +307,23 @@ export function LandingPage() {
               <div className="flex items-center gap-3" style={{ marginBottom: 20 }}>
                 <div className="flex-shrink-0 border-4 border-[var(--border-color)] flex items-center justify-center shadow-[3px_3px_0_var(--border-color)]"
                   style={{ width: 48, height: 48, backgroundColor: 'var(--color-brand)' }}>
-                  <span className="font-black text-[#000]" style={{ fontSize: '1.1rem' }}>S</span>
+                  <span className="font-black text-[#111111]" style={{ fontSize: '1.1rem' }}>S</span>
                 </div>
                 <div>
-                  <h3 className="font-black uppercase text-[var(--text)]"
+                  <h3 className="font-black uppercase text-[var(--text-primary)]"
                     style={{ fontSize: '1.25rem', lineHeight: 1.1, letterSpacing: '-0.03em' }}>
                     Starter
                   </h3>
-                  <p className="font-bold text-[var(--text3)]" style={{ fontSize: '0.75rem' }}>For daily shop operations</p>
+                  <p className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.75rem' }}>For daily shop operations</p>
                 </div>
               </div>
 
               {/* Price */}
               <div style={{ marginBottom: 8 }}>
-                <span className="font-black text-[var(--text)]" style={{ fontSize: '2.8rem', lineHeight: 1, letterSpacing: '-0.04em' }}>₹399</span>
-                <span className="font-bold text-[var(--text3)]" style={{ fontSize: '0.85rem', marginLeft: 6 }}>/month</span>
+                <span className="font-black text-[var(--text-primary)]" style={{ fontSize: '2.8rem', lineHeight: 1, letterSpacing: '-0.04em' }}>₹399</span>
+                <span className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.85rem', marginLeft: 6 }}>/month</span>
               </div>
-              <p className="font-bold text-[var(--text2)]" style={{ fontSize: '0.85rem', lineHeight: 1.5, marginBottom: 28 }}>
+              <p className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.85rem', lineHeight: 1.5, marginBottom: 28 }}>
                 Everything you need to run your daily business.
               </p>
 
@@ -335,9 +335,9 @@ export function LandingPage() {
                 {['Inventory Control', 'Billing System', 'Basic Insights', 'Offline Access'].map((feat) => (
                   <li key={feat} className="flex items-center gap-3">
                     <div className="flex-shrink-0 w-5 h-5 border-2 border-[var(--border-color)] bg-[var(--color-brand)] flex items-center justify-center shadow-[2px_2px_0_var(--border-color)]">
-                      <span className="text-[#000] font-black" style={{ fontSize: '10px', lineHeight: 1 }}>✓</span>
+                      <span className="text-[#111111] font-black" style={{ fontSize: '10px', lineHeight: 1 }}>✓</span>
                     </div>
-                    <span className="font-bold text-[var(--text2)]" style={{ fontSize: '0.9rem' }}>{feat}</span>
+                    <span className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.9rem' }}>{feat}</span>
                   </li>
                 ))}
               </ul>
@@ -345,7 +345,7 @@ export function LandingPage() {
               {/* CTA */}
               <button
                 onClick={go}
-                className="brutalist-btn bg-[var(--color-brand)] text-[#000] w-full hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--border-color)] transition-all"
+                className="brutalist-btn bg-[var(--color-brand)] text-[#111111] w-full hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--border-color)] transition-all"
                 style={{ fontSize: '1rem', padding: '14px 24px' }}
               >
                 Get Started
@@ -361,12 +361,12 @@ export function LandingPage() {
                 padding: 32,
                 borderColor: 'var(--color-accent)',
                 boxShadow: '6px 6px 0 var(--color-accent)',
-                background: 'var(--surface)',
+                background: 'var(--card-bg)',
               }}
             >
               {/* Best Value badge */}
               <div
-                className="absolute top-0 right-0 bg-[var(--color-accent)] text-[#000] font-black uppercase tracking-widest"
+                className="absolute top-0 right-0 bg-[var(--color-accent)] text-[#111111] font-black uppercase tracking-widest"
                 style={{ fontSize: '8px', padding: '4px 10px', borderLeft: '3px solid var(--border-color)', borderBottom: '3px solid var(--border-color)' }}
               >
                 Best Value
@@ -376,29 +376,29 @@ export function LandingPage() {
               <div className="flex items-center gap-3" style={{ marginBottom: 20 }}>
                 <div className="flex-shrink-0 border-4 flex items-center justify-center shadow-[3px_3px_0_var(--color-accent)]"
                   style={{ width: 48, height: 48, backgroundColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' }}>
-                  <span className="font-black text-[#000]" style={{ fontSize: '1.1rem' }}>P</span>
+                  <span className="font-black text-[#111111]" style={{ fontSize: '1.1rem' }}>P</span>
                 </div>
                 <div>
-                  <h3 className="font-black uppercase text-[var(--text)]"
+                  <h3 className="font-black uppercase text-[var(--text-primary)]"
                     style={{ fontSize: '1.25rem', lineHeight: 1.1, letterSpacing: '-0.03em' }}>
                     Pro+
                     <span
-                      className="inline-block bg-[var(--surface2)] border-2 border-[var(--border-color)] text-[var(--text3)] uppercase font-black tracking-widest"
+                      className="inline-block bg-[var(--bg-secondary)] border-2 border-[var(--border-color)] text-[var(--text-secondary)] uppercase font-black tracking-widest"
                       style={{ fontSize: '8px', padding: '2px 6px', marginLeft: 8, verticalAlign: 'middle' }}
                     >
                       Coming Soon
                     </span>
                   </h3>
-                  <p className="font-bold text-[var(--text3)]" style={{ fontSize: '0.75rem' }}>Premium intelligence</p>
+                  <p className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.75rem' }}>Premium intelligence</p>
                 </div>
               </div>
 
               {/* Price */}
               <div style={{ marginBottom: 8 }}>
-                <span className="font-black text-[var(--text)]" style={{ fontSize: '2.8rem', lineHeight: 1, letterSpacing: '-0.04em' }}>₹799</span>
-                <span className="font-bold text-[var(--text3)]" style={{ fontSize: '0.85rem', marginLeft: 6 }}>/month</span>
+                <span className="font-black text-[var(--text-primary)]" style={{ fontSize: '2.8rem', lineHeight: 1, letterSpacing: '-0.04em' }}>₹799</span>
+                <span className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.85rem', marginLeft: 6 }}>/month</span>
               </div>
-              <p className="font-bold text-[var(--text2)]" style={{ fontSize: '0.85rem', lineHeight: 1.5, marginBottom: 28 }}>
+              <p className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.85rem', lineHeight: 1.5, marginBottom: 28 }}>
                 Advanced intelligence for smarter decisions.
               </p>
 
@@ -417,13 +417,13 @@ export function LandingPage() {
                   <li key={feat.label} className="flex items-center gap-3">
                     <div className="flex-shrink-0 w-5 h-5 border-2 flex items-center justify-center shadow-[2px_2px_0_var(--color-accent)]"
                       style={{ backgroundColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' }}>
-                      <span className="text-[#000] font-black" style={{ fontSize: '10px', lineHeight: 1 }}>✓</span>
+                      <span className="text-[#111111] font-black" style={{ fontSize: '10px', lineHeight: 1 }}>✓</span>
                     </div>
-                    <span className="font-bold text-[var(--text2)]" style={{ fontSize: '0.9rem' }}>
+                    <span className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.9rem' }}>
                       {feat.label}
                       {feat.soon && (
                         <span
-                          className="inline-block bg-[var(--surface2)] border border-[var(--border-color)] text-[var(--text3)] uppercase font-black tracking-widest"
+                          className="inline-block bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] uppercase font-black tracking-widest"
                           style={{ fontSize: '7px', padding: '1px 4px', marginLeft: 6, verticalAlign: 'middle' }}
                         >
                           Soon
@@ -441,8 +441,8 @@ export function LandingPage() {
                 style={{
                   fontSize: '1rem',
                   padding: '14px 24px',
-                  background: 'var(--surface2)',
-                  color: 'var(--text3)',
+                  background: 'var(--bg-secondary)',
+                  color: 'var(--text-secondary)',
                   borderColor: 'var(--border-color)',
                   boxShadow: 'none',
                   transform: 'none',
@@ -458,15 +458,15 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[var(--surface)] border-t-4 border-[var(--border-color)]" style={{ padding: '52px 24px' }}>
+      <footer className="bg-[var(--card-bg)] border-t-4 border-[var(--border-color)]" style={{ padding: '52px 24px' }}>
         <div className="mx-auto flex flex-col md:flex-row justify-between items-center" style={{ maxWidth: 1120, gap: 28 }}>
           <Logo />
-          <div className="flex flex-wrap justify-center gap-8 text-sm font-black uppercase tracking-widest text-[var(--text)] underline decoration-2 underline-offset-4">
+          <div className="flex flex-wrap justify-center gap-8 text-sm font-black uppercase tracking-widest text-[var(--text-primary)] underline decoration-2 underline-offset-4">
             <a href="#" className="hover:text-[var(--color-secondary)] transition-colors">Privacy</a>
             <a href="#" className="hover:text-[var(--color-brand)] transition-colors">Terms</a>
             <a href="mailto:tripathiakshat2604@gmail.com" className="hover:text-[var(--color-accent)] transition-colors">Support</a>
           </div>
-          <p className="text-[var(--text3)] font-black uppercase tracking-widest text-center md:text-right"
+          <p className="text-[var(--text-secondary)] font-black uppercase tracking-widest text-center md:text-right"
             style={{ fontSize: '0.7rem', maxWidth: 260 }}>
             Built for business owners who value clarity today and smarter growth tomorrow.
           </p>
