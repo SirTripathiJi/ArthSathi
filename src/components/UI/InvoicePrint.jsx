@@ -9,7 +9,8 @@ export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, r
   const isThermal = type === 'thermal';
 
   return (
-    <div ref={ref} className={`print-only bg-white text-black ${isThermal ? 'w-[80mm] p-2 text-xs font-sans' : 'w-full max-w-4xl p-8 font-sans'}`}>
+    <div className="invoice-print-container flex justify-center w-full bg-[#f0f0f0] p-4 sm:p-10">
+      <div ref={ref} className={`print-only bg-white text-black shadow-2xl ${isThermal ? 'w-[80mm] p-4 text-xs font-sans' : 'w-full max-w-3xl p-12 font-sans border-[12px] border-double border-black'}`}>
       {/* Header */}
       <div className={`text-center border-b-2 border-black pb-4 mb-4 ${isThermal ? '' : 'border-b-4'}`}>
         <h1 className={`${isThermal ? 'text-xl font-bold uppercase' : 'text-4xl font-black uppercase tracking-tighter'}`}>
@@ -98,6 +99,7 @@ export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, r
       <div className="text-center mt-6">
         <p className={`${isThermal ? 'text-[10px] font-bold' : 'text-lg font-black uppercase'}`}>Thank you for your business!</p>
         {!isThermal && <p className="text-xs uppercase mt-2">Powered by ArthSathi POS</p>}
+      </div>
       </div>
     </div>
   );

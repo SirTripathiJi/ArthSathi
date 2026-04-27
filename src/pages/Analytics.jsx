@@ -26,32 +26,21 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ArrowDownRight, ArrowUpRight, CheckCircle2, ChevronDown, ChevronUp, LineChart as LineChartIcon, Package, PieChart, AlertTriangle, TrendingDown, TrendingUp, Lightbulb, HelpCircle, X } from 'lucide-react';
-import { StatCard } from '../components/UI/StatCard';
-import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { DB } from '../services/db';
+import { useData } from '../context/DataContext';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, ArcElement, Filler, ChartDataLabels);
 
 export function Analytics() {
-  const { user } = useAuth();
   const { theme } = useTheme();
   const { t = (k) => k, lang } = useTranslation();
+  const { sales: salesData, products: productsData } = useData();
 
-  const [salesData, setSalesData] = useState([]);
-  const [productsData, setProductsData] = useState([]);
   const [timeRange, setTimeRange] = useState('daily');
   const [donutToggle, setDonutToggle] = useState('revenue');
   const [sortConfig, setSortConfig] = useState({ key: 'revenue', direction: 'desc' });
-  const [expandedWhy, setExpandedWhy] = useState(null); // id of active Why? explanation
-
-  useEffect(() => {
-    if (user?.uid) {
-      setSalesData(DB.getSales(user.uid));
-      setProductsData(DB.getProducts(user.uid));
-    }
-  }, [user]);
+  const [expandedWhy, setExpandedWhy] = useState(null);
 
   const isDark = theme === 'dark';
   const textColor = isDark ? '#FFFFFF' : '#111111';

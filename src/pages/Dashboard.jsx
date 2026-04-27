@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   ArcElement, BarElement, CategoryScale, Chart as ChartJS,
@@ -12,9 +12,9 @@ import {
 } from 'lucide-react';
 import { StatCard } from '../components/UI/StatCard';
 import { useAuth } from '../context/AuthContext';
+import { useData } from '../context/DataContext';
 import { useTranslation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { DB } from '../services/db';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, ArcElement, ChartDataLabels);
 
@@ -23,21 +23,12 @@ const ANALYSIS_THRESHOLDS = { lowStockQty: 5, deadStockDays: 30, fastMovingSales
 
 
 export function Dashboard() {
-  const { user } = useAuth();
   const { theme } = useTheme();
   const { t = (k) => k, lang } = useTranslation();
+  const { sales: salesData, products: productsData } = useData();
 
-  const [salesData, setSalesData] = useState([]);
-  const [productsData, setProductsData] = useState([]);
   const [cardOrder, setCardOrder] = useState(['sales', 'profit', 'products', 'txns']);
   const [draggedId, setDraggedId] = useState(null);
-
-  useEffect(() => {
-    if (user?.uid) {
-      setSalesData(DB.getSales(user.uid));
-      setProductsData(DB.getProducts(user.uid));
-    }
-  }, [user]);
 
   // Re-render charts on language change by using lang as key
   const isDark = theme === 'dark';

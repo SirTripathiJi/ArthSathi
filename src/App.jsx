@@ -6,6 +6,7 @@ import { AppLayout } from './components/Layout/AppLayout';
 import { ErrorBoundary } from './components/UI/ErrorBoundary';
 import { ToastProvider } from './components/UI/ToastContext';
 import { AuthProvider } from './context/AuthContext';
+import { DataProvider } from './context/DataContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -73,7 +74,9 @@ function App() {
         <LanguageProvider>
           <ToastProvider>
             <AuthProvider>
-              <AppContent />
+              <DataProvider>
+                <AppContent />
+              </DataProvider>
             </AuthProvider>
           </ToastProvider>
         </LanguageProvider>

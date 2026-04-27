@@ -6,7 +6,7 @@ import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { DB } from '../services/db';
+import { useData } from '../context/DataContext';
 
 export function Settings() {
   const { user } = useAuth();
@@ -14,12 +14,11 @@ export function Settings() {
   const toast = useToast();
   const navigate = useNavigate();
   const { t = (k) => k, LANGS, LANG_NAMES, changeLanguage, lang } = useTranslation();
+  const { resetAllData } = useData();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const clearData = () => {
-    if (!user?.uid) return;
-    DB.setProducts(user.uid, []);
-    DB.setSales(user.uid, []);
+    resetAllData();
     toast.info('All business data has been deleted.');
     setShowConfirm(false);
     navigate('/dashboard');

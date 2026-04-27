@@ -1,433 +1,506 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Plus, Receipt, Search, Trash2, CheckCircle2, Printer, X, ShoppingCart, User } from 'lucide-react';
+import {
+  CheckCircle2, Minus, Plus, Printer, Receipt,
+  Search, ShoppingCart, Trash2, User, X, Zap
+} from 'lucide-react';
 import { Modal } from '../components/UI/Modal';
+import { InvoicePrint } from '../components/UI/InvoicePrint';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
+import { useData } from '../context/DataContext';
 import { useTranslation } from '../context/LanguageContext';
 import { DB } from '../services/db';
-import { InvoicePrint } from '../components/UI/InvoicePrint';
+import { calcInvoice, formatCurrency, round2 } from '../lib/calc';
+import { isExpired } from '../lib/dates';
+
+const PAYMENT_MODES = ['Cash', 'UPI', 'Card', 'Udhaar'];
 
 export function Sales() {
   const { user } = useAuth();
   const toast = useToast();
   const { t = (k) => k } = useTranslation();
+  const { products, customers, confirmSale } = useData();
 
-  const [products, setProducts] = useState([]);
-  const [customers, setCustomers] = useState([]);
   const [cart, setCart] = useState([]);
-  
-  // Invoice Details
   const [customerId, setCustomerId] = useState('');
   const [discountPercent, setDiscountPercent] = useState(0);
   const [taxPercent, setTaxPercent] = useState(0);
   const [paid, setPaid] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('Cash'); // UPI, Cash, Card, Udhaar
+  const [paymentMethod, setPaymentMethod] = useState('Cash');
   const [notes, setNotes] = useState('');
 
-  // Modals
-  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  // Search & modals
+  const [searchItem, setSearchItem] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
   const [isCustomItemModalOpen, setIsCustomItemModalOpen] = useState(false);
   const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
-  
   const [lastInvoice, setLastInvoice] = useState(null);
-  const printRef = useRef(null);
 
-  // Item Modal State
-  const [searchItem, setSearchItem] = useState('');
-  
-  // Custom Item Modal State
   const [customName, setCustomName] = useState('');
   const [customPrice, setCustomPrice] = useState('');
 
-  const fetchAll = () => {
-    if (user?.uid) {
-      setProducts(DB.getProducts(user.uid));
-      setCustomers(DB.getCustomers(user.uid));
+  const printRef = useRef(null);
+  const searchRef = useRef(null);
+
+  // ─── CALCULATIONS (single source of truth) ────────────────
+  const calc = useMemo(
+    () => calcInvoice(cart, discountPercent, taxPercent, paid, paymentMethod),
+    [cart, discountPercent, taxPercent, paid, paymentMethod]
+  );
+  const { subtotal, discountAmount, taxAmount, finalTotal, paidAmount, dueAmount, status } = calc;
+
+  // ─── ITEM SEARCH ──────────────────────────────────────────
+  const filteredProducts = useMemo(() => {
+    const q = String(searchItem || '').toLowerCase();
+    if (!q) return products.slice(0, 12);
+    return products.filter(p => String(p.name || '').toLowerCase().includes(q)).slice(0, 12);
+  }, [products, searchItem]);
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Escape') setShowSearch(false);
+    if (e.key === 'Enter' && filteredProducts.length === 1) {
+      addToCart(filteredProducts[0]);
+      setSearchItem('');
+      setShowSearch(false);
     }
   };
 
-  useEffect(() => { fetchAll(); }, [user]);
+  useEffect(() => {
+    if (showSearch) searchRef.current?.focus();
+  }, [showSearch]);
 
-  // Cart Calculations
-  const subtotal = cart.reduce((acc, item) => acc + (item.qty * (item.rate || 0)), 0);
-  const totalMargin = cart.reduce((acc, item) => acc + (item.qty * ((item.rate || 0) - (item.cost || 0))), 0);
-  const discountAmount = (subtotal * (discountPercent / 100)) || 0;
-  const taxAmount = (subtotal - discountAmount) * (taxPercent / 100) || 0;
-  const finalTotal = Math.max(0, subtotal - discountAmount + taxAmount);
-  const paidAmount = paid === '' ? (paymentMethod === 'Udhaar' ? 0 : finalTotal) : Number(paid);
-  const dueAmount = Math.max(0, finalTotal - paidAmount);
+  // ─── CART ACTIONS ─────────────────────────────────────────
+  const addToCart = useCallback((product) => {
+    if (!product.isCustom) {
+      if (Number(product.qty) <= 0) return toast.error(`${product.name} is out of stock`);
+      if (isExpired(product.expiry)) return toast.error(`${product.name} is expired — cannot sell`);
+    }
 
-  const getPaymentStatus = () => {
-    if (dueAmount <= 0) return 'PAID';
-    if (paidAmount <= 0) return 'DUE';
-    return 'PARTIAL';
-  };
-
-  const addToCart = (product) => {
-    if (product.qty <= 0 && !product.isCustom) return toast.error('Out of stock');
-    
     setCart(prev => {
       const existing = prev.find(p => String(p.id) === String(product.id));
       if (existing) {
-        if (!product.isCustom && existing.qty + 1 > product.qty) {
-          toast.error('Cannot add more than available stock');
+        const newQty = existing.qty + 1;
+        const stockProduct = products.find(pd => String(pd.id) === String(product.id));
+        if (!product.isCustom && stockProduct && newQty > Number(stockProduct.qty)) {
+          toast.error(`Only ${stockProduct.qty} in stock`);
           return prev;
         }
-        return prev.map(p => String(p.id) === String(product.id) ? { ...p, qty: p.qty + 1 } : p);
+        return prev.map(p => String(p.id) === String(product.id) ? { ...p, qty: newQty } : p);
       }
-      return [...prev, { 
-        id: product.id, 
-        name: product.name, 
-        rate: product.sell || product.rate, 
-        cost: product.cost || 0,
+      return [...prev, {
+        id: String(product.id),
+        name: product.name,
+        rate: round2(Number(product.sell || product.rate || 0)),
+        cost: round2(Number(product.cost || 0)),
         qty: 1,
-        isCustom: product.isCustom || false
+        isCustom: product.isCustom || false,
       }];
     });
-    toast.success(`${product.name} added`);
-  };
+    setShowSearch(false);
+    setSearchItem('');
+  }, [products, toast]);
+
+  const updateCartQty = useCallback((id, delta) => {
+    setCart(prev => prev.map(p => {
+      if (String(p.id) !== String(id)) return p;
+      const newQty = p.qty + delta;
+      if (newQty <= 0) return null;
+      if (!p.isCustom) {
+        const stock = products.find(pd => String(pd.id) === String(id));
+        if (stock && newQty > Number(stock.qty)) {
+          toast.error(`Only ${stock.qty} in stock`);
+          return p;
+        }
+      }
+      return { ...p, qty: newQty };
+    }).filter(Boolean));
+  }, [products, toast]);
+
+  const updateCartRate = useCallback((id, newRate) => {
+    const r = round2(Math.max(0, Number(newRate) || 0));
+    setCart(prev => prev.map(p => String(p.id) === String(id) ? { ...p, rate: r } : p));
+  }, []);
+
+  const removeFromCart = useCallback((id) => {
+    setCart(prev => prev.filter(p => String(p.id) !== String(id)));
+    toast.info('Item removed');
+  }, [toast]);
+
+  const clearCart = useCallback(() => {
+    setCart([]);
+    setCustomerId('');
+    setDiscountPercent(0);
+    setTaxPercent(0);
+    setPaid('');
+    setPaymentMethod('Cash');
+    setNotes('');
+  }, []);
 
   const addCustomCharge = () => {
-    if (!customName || !customPrice) return toast.error('Enter valid details');
+    if (!customName.trim()) return toast.error('Enter item name');
+    if (!customPrice || Number(customPrice) <= 0) return toast.error('Enter valid price');
     addToCart({
       id: 'custom_' + Date.now(),
-      name: customName,
-      rate: Number(customPrice),
+      name: customName.trim(),
+      sell: Number(customPrice),
       cost: 0,
       qty: 1,
-      isCustom: true
+      isCustom: true,
     });
     setIsCustomItemModalOpen(false);
     setCustomName('');
     setCustomPrice('');
   };
 
-  const updateCartQty = (id, delta) => {
-    setCart(prev => prev.map(p => {
-      if (String(p.id) === String(id)) {
-        const newQty = p.qty + delta;
-        if (newQty <= 0) return null; // will be filtered out
-        const stockProduct = products.find(prod => String(prod.id) === String(id));
-        if (!p.isCustom && stockProduct && newQty > stockProduct.qty) {
-          toast.error('Exceeds available stock');
-          return p;
-        }
-        return { ...p, qty: newQty };
-      }
-      return p;
-    }).filter(Boolean));
-  };
-
-  const removeFromCart = (id) => setCart(prev => prev.filter(p => String(p.id) !== String(id)));
-
-  const clearCart = () => {
-    if (!window.confirm('Clear all items?')) return;
-    setCart([]);
-    setCustomerId('');
-    setDiscountPercent(0);
-    setTaxPercent(0);
-    setPaid('');
-    setPaymentMethod('Cash');
-    setNotes('');
-  };
-
-  const confirmSale = () => {
+  // ─── CONFIRM SALE ─────────────────────────────────────────
+  const confirmBill = useCallback(() => {
     if (cart.length === 0) return toast.error('Cart is empty');
-    if ((dueAmount > 0 || paymentMethod === 'Udhaar') && !customerId) return toast.error('Selected payment mode or Due balance requires a customer.');
+    if (paymentMethod === 'Udhaar' && !customerId) return toast.error('Select a customer for Udhaar payment');
+    if (dueAmount > 0 && !customerId) return toast.error('Select a customer to record balance due');
 
     const selectedCustomer = customers.find(c => String(c.id) === String(customerId));
-    
-    // Deduct Inventory
-    const updatedProducts = [...products];
-    cart.forEach(item => {
-      if (!item.isCustom) {
-        const pIdx = updatedProducts.findIndex(p => String(p.id) === String(item.id));
-        if (pIdx > -1) {
-          updatedProducts[pIdx].qty -= item.qty;
-        }
-      }
-    });
-
-    const existingSales = DB.getSales(user.uid);
-    let nextNum = 10001;
-    if (existingSales.length > 0) {
-      const lastId = existingSales[existingSales.length - 1].id;
-      if (lastId && String(lastId).startsWith('INV-')) {
-        const lastNum = parseInt(String(lastId).split('-')[1]);
-        if (!isNaN(lastNum)) nextNum = lastNum + 1;
-      }
-    }
-    const invId = `INV-${nextNum}`;
+    const invId = DB.getNextInvoiceId(user.uid);
 
     const invoice = {
       id: invId,
       date: new Date().toISOString(),
-      customerId,
+      customerId: customerId || null,
       customerName: selectedCustomer ? selectedCustomer.name : 'Walk-in',
-      customerPhone: selectedCustomer ? selectedCustomer.phone : '',
+      customerPhone: selectedCustomer?.phone || '',
       items: cart,
       subtotal,
       discount: discountAmount,
-      discountPercent,
-      taxPercent,
+      discountPercent: Number(discountPercent),
       tax: taxAmount,
+      taxPercent: Number(taxPercent),
       total: finalTotal,
       paid: paidAmount,
       due: dueAmount,
       paymentMethod,
-      paymentStatus: getPaymentStatus(),
-      profit: totalMargin - discountAmount, 
-      notes,
-      status: getPaymentStatus()
+      status,
+      profit: round2(cart.reduce((a, i) => a + (Number(i.rate) - Number(i.cost)) * Number(i.qty), 0) - discountAmount),
+      notes: notes.trim(),
+      _createdAt: new Date().toISOString(),
     };
 
-    existingSales.push(invoice);
-    
-    DB.setProducts(user.uid, updatedProducts);
-    DB.setSales(user.uid, existingSales);
-    
-    setProducts(updatedProducts);
+    confirmSale(invoice, cart);
+
     setLastInvoice(invoice);
     setIsReceiptModalOpen(true);
-    
-    // Reset Form
-    setCart([]);
-    setCustomerId('');
-    setDiscountPercent(0);
-    setTaxPercent(0);
-    setPaid('');
-    setPaymentMethod('Cash');
-    setNotes('');
-    
-    toast.success('Invoice Generated Successfully');
-    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#FFD600', '#FF4081', '#000000'] });
-  };
+    clearCart();
 
-  const handlePrint = () => {
-    window.print();
-  };
+    toast.success(`Invoice ${invId} generated`);
+    confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#FFD600', '#FF4081', '#00E5FF'] });
+  }, [cart, paymentMethod, customerId, dueAmount, customers, subtotal, discountAmount, taxAmount, finalTotal, paidAmount, status, discountPercent, taxPercent, notes, confirmSale, clearCart, toast, user?.uid]);
 
-  const filteredProducts = useMemo(() => 
-    products.filter(p => String(p.name || '').toLowerCase().includes(String(searchItem || '').toLowerCase())),
-  [products, searchItem]);
+  const selectedCustomer = customers.find(c => String(c.id) === String(customerId));
 
   return (
-    <div className="space-y-6">
-      {/* Hidden Print Component */}
-      <InvoicePrint ref={printRef} invoice={lastInvoice} type="thermal" shopDetails={{ name: user?.store || 'My Shop' }} />
+    <div className="space-y-0">
+      {/* Hidden print target */}
+      <InvoicePrint ref={printRef} invoice={lastInvoice} shopDetails={{ name: user?.store || 'My Shop' }} />
 
-      <div className="flex flex-col xl:flex-row gap-6">
-        
-        {/* Left Area: Billing Actions */}
-        <div className="flex-1 space-y-6">
-          <div className="flex flex-wrap gap-4">
-            <button className="brutalist-btn flex-1 gap-2" onClick={() => setIsItemModalOpen(true)}>
-              <Search className="w-5 h-5" /> {t('sales.findItem')}
-            </button>
-            <button className="brutalist-btn bg-[var(--color-secondary)] text-white flex-1 gap-2" onClick={() => setIsCustomItemModalOpen(true)}>
-              <Plus className="w-5 h-5" /> {t('sales.extraCharge')}
-            </button>
+      <div className="flex flex-col xl:flex-row gap-6 items-start">
+        {/* ── LEFT: Item selector + customer ── */}
+        <div className="flex-1 space-y-4 min-w-0">
+
+          {/* Search bar */}
+          <div className="relative">
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-secondary)]" />
+                <input
+                  ref={searchRef}
+                  className="brutalist-input !pl-12 text-base"
+                  placeholder="Search & add items..."
+                  value={searchItem}
+                  onChange={e => { setSearchItem(e.target.value); setShowSearch(true); }}
+                  onFocus={() => setShowSearch(true)}
+                  onKeyDown={handleSearchKeyDown}
+                />
+              </div>
+              <button className="brutalist-btn btn-sm whitespace-nowrap gap-2 bg-[var(--color-secondary)] text-white"
+                onClick={() => setIsCustomItemModalOpen(true)}>
+                <Plus className="w-4 h-4" /> {t('sales.extraCharge')}
+              </button>
+            </div>
+
+            {/* Autocomplete dropdown */}
+            {showSearch && (
+              <div className="absolute top-full left-0 right-0 z-50 bg-[var(--card-bg)] border-4 border-[var(--border-color)] shadow-[8px_8px_0_var(--shadow-color)] max-h-72 overflow-y-auto mt-1">
+                {filteredProducts.length === 0 ? (
+                  <div className="p-4 text-center text-sm font-bold text-[var(--text-secondary)] uppercase">No products found</div>
+                ) : (
+                  filteredProducts.map(p => (
+                    <button
+                      key={p.id}
+                      className="w-full flex items-center justify-between px-4 py-3 hover:bg-[var(--color-brand)] hover:text-[#111111] transition-colors border-b border-[var(--border-color)] last:border-b-0 text-left"
+                      onMouseDown={(e) => { e.preventDefault(); addToCart(p); }}
+                    >
+                      <div>
+                        <p className="font-black text-sm uppercase">{p.name}</p>
+                        <p className="text-xs font-bold text-[var(--text-secondary)]">{p.category} · Stock: {p.qty}</p>
+                      </div>
+                      <div className="text-right shrink-0 ml-4">
+                        <p className="font-black text-base">{formatCurrency(p.sell)}</p>
+                        {Number(p.qty) <= 0 && <span className="badge badge-outstock text-[9px]">Out of Stock</span>}
+                        {isExpired(p.expiry) && <span className="badge badge-expired text-[9px]">Expired</span>}
+                      </div>
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
           </div>
 
-          <div className="brutalist-card space-y-4">
-            <h3 className="text-xl font-black uppercase mb-4 flex items-center gap-2 border-b-4 border-[var(--border-color)] pb-2">
-              <User className="w-6 h-6" /> {t('sales.customerDetails')}
-            </h3>
-            <div>
-              <select className="brutalist-input py-3" value={customerId} onChange={(e) => setCustomerId(e.target.value)}>
-                <option value="">{t('sales.walkIn')}</option>
-                {customers.map(c => <option key={c.id} value={c.id}>{c.name} - {c.phone}</option>)}
-              </select>
-            </div>
+          {/* Click away to close search */}
+          {showSearch && <div className="fixed inset-0 z-40" onClick={() => setShowSearch(false)} />}
+
+          {/* Customer picker */}
+          <div className="brutalist-card">
+            <p className="section-title flex items-center gap-2"><User className="w-4 h-4" /> {t('sales.customerDetails')}</p>
+            <select
+              className="brutalist-input"
+              value={customerId}
+              onChange={e => setCustomerId(e.target.value)}
+            >
+              <option value="">{t('sales.walkIn')}</option>
+              {customers.map(c => (
+                <option key={c.id} value={c.id}>{c.name} — {c.phone}</option>
+              ))}
+            </select>
             {customerId && (
-              <p className="text-sm font-bold text-[var(--color-secondary)] uppercase">
+              <p className="text-xs font-bold text-[var(--color-secondary)] uppercase mt-2">
                 {t('sales.khataNote')}
               </p>
             )}
           </div>
+
+          {/* Notes */}
+          <div>
+            <input
+              className="brutalist-input text-sm"
+              placeholder="Notes (optional)..."
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+            />
+          </div>
         </div>
 
-        {/* Right Area: Cart & Checkout */}
-        <div className="flex-[2] border-4 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[8px_8px_0_var(--shadow-color)] flex flex-col min-h-[600px]">
-          <div className="p-4 border-b-4 border-[var(--border-color)] bg-[var(--color-brand)] flex justify-between items-center">
-            <h2 className="text-2xl font-black uppercase flex items-center gap-2 text-[#111111]">
-              <ShoppingCart className="w-6 h-6" /> {t('sales.currentBill')}
-            </h2>
-            <button onClick={clearCart} className="text-sm font-black uppercase underline hover:text-[var(--color-error)] text-[#111111]">{t('sales.clearAll')}</button>
-          </div>
+        {/* ── RIGHT: Cart + Totals ── */}
+        <div className="flex-[1.4] border-4 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[8px_8px_0_var(--shadow-color)] flex flex-col min-h-[600px] w-full xl:w-auto">
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[var(--bg-secondary)]">
-            {cart.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center opacity-30 text-center py-20">
-                <Receipt className="w-24 h-24 mb-4" />
-                <p className="text-xl font-black uppercase">{t('sales.cartEmpty')}</p>
-                <p className="font-bold">{t('sales.addItemsCta')}</p>
-              </div>
-            ) : (
-              cart.map((item) => (
-                <div key={item.id} className="flex justify-between items-center bg-white border-2 border-[var(--border-color)] p-3 shadow-[2px_2px_0_var(--shadow-color)]">
-                  <div className="flex-1">
-                    <p className="font-black uppercase text-lg leading-none mb-1">{item.name}</p>
-                    <p className="text-sm font-bold text-[var(--text-secondary)]">₹{item.rate.toLocaleString()} / unit</p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center border-2 border-[var(--border-color)] bg-[var(--bg-secondary)]">
-                      <button className="px-3 py-1 font-black hover:bg-[var(--color-brand)]" onClick={() => updateCartQty(item.id, -1)}>-</button>
-                      <span className="px-3 py-1 font-black text-lg border-x-2 border-[var(--border-color)]">{item.qty}</span>
-                      <button className="px-3 py-1 font-black hover:bg-[var(--color-brand)]" onClick={() => updateCartQty(item.id, 1)}>+</button>
-                    </div>
-                    <div className="w-24 text-right font-black text-xl">
-                      ₹{(item.qty * item.rate).toLocaleString()}
-                    </div>
-                    <button className="p-2 text-[var(--color-error)] hover:bg-[var(--color-error)] hover:text-white border-2 border-transparent hover:border-[var(--border-color)] transition-all" onClick={() => removeFromCart(item.id)}>
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-              ))
+          {/* Cart header */}
+          <div className="px-5 py-4 border-b-4 border-[var(--border-color)] bg-[var(--color-brand)] flex justify-between items-center shrink-0">
+            <h2 className="text-xl font-black uppercase flex items-center gap-2 text-[#111111]">
+              <ShoppingCart className="w-5 h-5" /> {t('sales.currentBill')}
+              {cart.length > 0 && <span className="text-sm bg-[#111111] text-[var(--color-brand)] px-2 py-0.5 font-black">{cart.length}</span>}
+            </h2>
+            {cart.length > 0 && (
+              <button onClick={clearCart} className="text-xs font-black uppercase underline text-[#111111] hover:text-red-700">
+                {t('sales.clearAll')}
+              </button>
             )}
           </div>
 
-          {/* Totals & Checkout */}
-          <div className="p-6 border-t-4 border-[var(--border-color)] bg-white space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm font-black uppercase">
-              <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
-                <span>{t('sales.subtotal')}</span>
-                <span className="text-lg">₹{subtotal.toLocaleString()}</span>
+          {/* Cart items */}
+          <div className="flex-1 overflow-y-auto">
+            {cart.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center gap-4 text-[var(--text-secondary)] opacity-30 py-16">
+                <Receipt className="w-16 h-16" />
+                <p className="text-base font-black uppercase tracking-widest">{t('sales.cartEmpty')}</p>
+                <p className="text-sm font-bold">{t('sales.addItemsCta')}</p>
               </div>
-              <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
-                <span>{t('sales.discount')} (%)</span>
-                <input 
-                  type="number" 
-                  className="w-20 border-2 border-[var(--border-color)] px-1 text-right outline-none" 
-                  value={discountPercent} 
-                  onFocus={e => e.target.select()}
-                  onChange={e => setDiscountPercent(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
-                />
-              </div>
-              <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
-                <span>{t('sales.taxGst')} (%)</span>
-                <input 
-                  type="number" 
-                  className="w-20 border-2 border-[var(--border-color)] px-1 text-right outline-none" 
-                  value={taxPercent} 
-                  onFocus={e => e.target.select()}
-                  onChange={e => setTaxPercent(Number(e.target.value) || 0)} 
-                />
-              </div>
-              <div className="flex items-center justify-between bg-[var(--color-brand)] border-2 border-[var(--border-color)] p-1 px-2 text-[#111111]">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-black leading-none">{t('sales.netTotal')}</span>
-                  <span className="text-xl leading-tight">₹{finalTotal.toLocaleString()}</span>
-                </div>
-                <div className="text-right">
-                  <span className="text-[10px] font-black leading-none">{t('sales.off')}: ₹{discountAmount.toLocaleString()}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6 pt-2">
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs font-black uppercase mb-1">{t('sales.paymentMode')}</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {['Cash', 'UPI', 'Card', 'Udhaar'].map(mode => (
-                      <button 
-                        key={mode} 
-                        onClick={() => setPaymentMethod(mode)}
-                        className={`text-[10px] font-black py-1 border-2 border-[var(--border-color)] transition-all ${paymentMethod === mode ? 'bg-[var(--color-brand)] shadow-[2px_2px_0_var(--shadow-color)]' : 'bg-white hover:bg-[var(--bg-secondary)]'}`}
-                      >
-                        {mode}
+            ) : (
+              <div className="divide-y-2 divide-[var(--border-color)]">
+                {cart.map(item => (
+                  <div key={item.id} className="flex items-center gap-3 px-4 py-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-black text-sm uppercase truncate">{item.name}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        {/* Rate edit */}
+                        <span className="text-xs text-[var(--text-secondary)] font-bold">₹</span>
+                        <input
+                          type="number"
+                          className="w-20 text-xs font-black border-b-2 border-[var(--border-color)] bg-transparent outline-none focus:border-[var(--color-brand)] text-right"
+                          value={item.rate}
+                          onFocus={e => e.target.select()}
+                          onChange={e => updateCartRate(item.id, e.target.value)}
+                          min="0"
+                        />
+                      </div>
+                    </div>
+                    {/* Qty stepper */}
+                    <div className="flex items-center border-2 border-[var(--border-color)] shrink-0">
+                      <button className="w-8 h-8 flex items-center justify-center font-black hover:bg-[var(--bg-secondary)] transition-colors"
+                        onClick={() => updateCartQty(item.id, -1)}>
+                        <Minus className="w-3 h-3" />
                       </button>
-                    ))}
+                      <span className="w-8 text-center font-black text-sm border-x-2 border-[var(--border-color)] h-8 flex items-center justify-center">
+                        {item.qty}
+                      </span>
+                      <button className="w-8 h-8 flex items-center justify-center font-black hover:bg-[var(--bg-secondary)] transition-colors"
+                        onClick={() => updateCartQty(item.id, 1)}>
+                        <Plus className="w-3 h-3" />
+                      </button>
+                    </div>
+                    {/* Line total */}
+                    <div className="text-right shrink-0 w-20">
+                      <p className="font-black text-sm">{formatCurrency(item.qty * item.rate)}</p>
+                    </div>
+                    {/* Remove */}
+                    <button onClick={() => removeFromCart(item.id)}
+                      className="text-[var(--text-secondary)] hover:text-[var(--color-error)] transition-colors p-1">
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Totals + payment */}
+          {cart.length > 0 && (
+            <div className="p-5 border-t-4 border-[var(--border-color)] bg-[var(--bg-secondary)] space-y-4 shrink-0">
+
+              {/* Discount + Tax row */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="section-title text-[10px]">{t('sales.discount')} (%)</label>
+                  <input type="number" min="0" max="100"
+                    className="brutalist-input text-center text-base font-black py-2"
+                    value={discountPercent}
+                    onFocus={e => e.target.select()}
+                    onChange={e => setDiscountPercent(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-black uppercase mb-1">{t('sales.paidAmount')}</label>
-                  <input 
-                    type="number" 
-                    placeholder={paidAmount.toString()} 
-                    className="brutalist-input py-2 text-xl" 
-                    value={paid} 
+                  <label className="section-title text-[10px]">{t('sales.taxGst')} (%)</label>
+                  <input type="number" min="0"
+                    className="brutalist-input text-center text-base font-black py-2"
+                    value={taxPercent}
                     onFocus={e => e.target.select()}
-                    onChange={e => setPaid(e.target.value)} 
+                    onChange={e => setTaxPercent(Math.max(0, Number(e.target.value) || 0))}
                   />
                 </div>
               </div>
-              <div className="flex flex-col justify-end">
-                <div className="flex justify-between items-end border-b-4 border-[var(--border-color)] pb-1">
-                  <span className="text-sm font-black uppercase text-[var(--color-error)]">{t('sales.balanceDue')}</span>
-                  <span className="text-3xl font-black text-[var(--color-error)]">₹{dueAmount.toLocaleString()}</span>
+
+              {/* Live calculation */}
+              <div className="space-y-1.5 text-sm font-bold">
+                <div className="flex justify-between text-[var(--text-secondary)]">
+                  <span>{t('sales.subtotal')}</span>
+                  <span>{formatCurrency(subtotal)}</span>
+                </div>
+                {discountAmount > 0 && (
+                  <div className="flex justify-between text-[var(--color-error)]">
+                    <span>{t('sales.discount')} ({discountPercent}%)</span>
+                    <span>− {formatCurrency(discountAmount)}</span>
+                  </div>
+                )}
+                {taxAmount > 0 && (
+                  <div className="flex justify-between text-[var(--text-secondary)]">
+                    <span>GST ({taxPercent}%)</span>
+                    <span>+ {formatCurrency(taxAmount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-[#111111] bg-[var(--color-brand)] -mx-2 px-2 py-2 font-black text-lg border-y-4 border-[var(--border-color)]">
+                  <span>{t('sales.netTotal')}</span>
+                  <span>{formatCurrency(finalTotal)}</span>
                 </div>
               </div>
-            </div>
 
-            <button className="brutalist-btn w-full py-5 text-xl mt-4" onClick={confirmSale}>
-              {t('sales.generateInvoice')}
-            </button>
-          </div>
+              {/* Payment mode */}
+              <div>
+                <label className="section-title text-[10px]">{t('sales.paymentMode')}</label>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {PAYMENT_MODES.map(mode => (
+                    <button key={mode}
+                      onClick={() => { setPaymentMethod(mode); if (mode === 'Udhaar') setPaid('0'); }}
+                      className={`text-[11px] font-black py-2 border-2 border-[var(--border-color)] transition-all ${paymentMethod === mode ? 'bg-[var(--color-brand)] shadow-[2px_2px_0_var(--shadow-color)] text-[#111111]' : 'bg-[var(--card-bg)] text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]'}`}>
+                      {mode}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Paid input */}
+              <div className="grid grid-cols-2 gap-3 items-end">
+                <div>
+                  <label className="section-title text-[10px]">{t('sales.paidAmount')} (₹)</label>
+                  <input type="number" min="0"
+                    className="brutalist-input text-lg font-black py-2"
+                    placeholder={formatCurrency(finalTotal)}
+                    value={paid}
+                    disabled={paymentMethod === 'Udhaar'}
+                    onFocus={e => e.target.select()}
+                    onChange={e => setPaid(e.target.value)}
+                  />
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-black uppercase text-[var(--text-secondary)] mb-1">{t('sales.balanceDue')}</p>
+                  <p className={`text-3xl font-black ${dueAmount > 0 ? 'text-[var(--color-error)]' : 'text-[var(--color-success)]'}`}>
+                    {formatCurrency(dueAmount)}
+                  </p>
+                </div>
+              </div>
+
+              <button className="brutalist-btn btn-lg w-full gap-3" onClick={confirmBill}>
+                <Zap className="w-5 h-5" /> {t('sales.generateInvoice')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Select Item Modal */}
-      <Modal isOpen={isItemModalOpen} onClose={() => setIsItemModalOpen(false)} title="ADD ITEM TO BILL"
-        actions={<button className="brutalist-btn w-full" onClick={() => setIsItemModalOpen(false)}>DONE</button>}>
-        <div className="space-y-4">
-          <input className="brutalist-input py-3" placeholder="Search Inventory..." value={searchItem} onChange={e => setSearchItem(e.target.value)} autoFocus />
-          <div className="max-h-80 overflow-y-auto space-y-2">
-            {filteredProducts.map(p => (
-              <div key={p.id} className="flex justify-between items-center p-3 border-2 border-[var(--border-color)] hover:bg-[var(--color-brand)] cursor-pointer" onClick={() => addToCart(p)}>
-                <div>
-                  <p className="font-black uppercase">{p.name}</p>
-                  <p className="text-sm font-bold">Stock: {p.qty} | ₹{p.sell}</p>
-                </div>
-                <Plus className="w-6 h-6" />
-              </div>
-            ))}
-            {filteredProducts.length === 0 && <p className="text-center font-bold py-4 uppercase">No items found</p>}
-          </div>
-        </div>
-      </Modal>
-
-      {/* Custom Item Modal */}
-      <Modal isOpen={isCustomItemModalOpen} onClose={() => setIsCustomItemModalOpen(false)} title="ADD EXTRA CHARGE"
+      {/* ── CUSTOM ITEM MODAL ── */}
+      <Modal isOpen={isCustomItemModalOpen} onClose={() => setIsCustomItemModalOpen(false)}
+        title={t('sales.extraCharge')}
         actions={
           <div className="flex gap-4">
-            <button className="text-sm font-black uppercase underline decoration-2" onClick={() => setIsCustomItemModalOpen(false)}>CANCEL</button>
-            <button className="brutalist-btn px-8" onClick={addCustomCharge}>ADD</button>
+            <button className="text-sm font-black uppercase underline" onClick={() => setIsCustomItemModalOpen(false)}>{t('sales.close')}</button>
+            <button className="brutalist-btn px-8" onClick={addCustomCharge}>{t('sales.findItem')}</button>
           </div>
         }>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-black uppercase tracking-wider mb-2">Charge Name</label>
-            <input className="brutalist-input py-3" placeholder="Delivery, Labor, Custom Item..." value={customName} onChange={e => setCustomName(e.target.value)} autoFocus />
+            <label className="section-title text-[10px]">Item Name</label>
+            <input className="brutalist-input" value={customName} onChange={e => setCustomName(e.target.value)} placeholder="e.g. Delivery Charge" />
           </div>
           <div>
-            <label className="block text-sm font-black uppercase tracking-wider mb-2">Amount (₹)</label>
-            <input type="number" className="brutalist-input py-3" placeholder="0" value={customPrice} onChange={e => setCustomPrice(e.target.value)} />
+            <label className="section-title text-[10px]">Amount (₹)</label>
+            <input type="number" min="0" className="brutalist-input text-2xl font-black" value={customPrice} onChange={e => setCustomPrice(e.target.value)} onFocus={e => e.target.select()} />
           </div>
         </div>
       </Modal>
 
-      {/* Receipt Modal */}
+      {/* ── RECEIPT MODAL ── */}
       {isReceiptModalOpen && lastInvoice && (
-        <Modal isOpen={true} onClose={() => setIsReceiptModalOpen(false)} title={t('sales.invoiceGenerated')}>
-          <div className="text-center py-4">
-            <div className="w-20 h-20 border-4 border-[var(--border-color)] bg-[var(--color-success)] flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0_var(--shadow-color)]">
-              <CheckCircle2 className="w-10 h-10 text-[#111111]" />
-            </div>
-            <h3 className="text-3xl font-black tracking-tighter uppercase mb-2">₹{(lastInvoice.total || 0).toLocaleString()}</h3>
-            <p className="text-sm font-black uppercase tracking-widest text-[var(--text-secondary)] mb-6">INV: {lastInvoice.id}</p>
-            
+        <Modal isOpen={true} onClose={() => setIsReceiptModalOpen(false)}
+          title={t('sales.invoiceGenerated')}
+          actions={
             <div className="flex gap-4">
-              <button className="brutalist-btn flex-1 bg-[var(--color-accent)] text-[#111111] gap-2" onClick={handlePrint}>
-                <Printer className="w-5 h-5" /> {t('sales.printReceipt')}
+              <button className="brutalist-btn bg-[var(--color-accent)] text-[#111111] gap-2" onClick={() => window.print()}>
+                <Printer className="w-4 h-4" /> {t('sales.printReceipt')}
               </button>
-              <button className="brutalist-btn flex-1 gap-2" onClick={() => setIsReceiptModalOpen(false)}>
-                <X className="w-5 h-5" /> {t('sales.close')}
+              <button className="brutalist-btn brutalist-btn-ghost" onClick={() => setIsReceiptModalOpen(false)}>
+                <X className="w-4 h-4" /> {t('sales.close')}
               </button>
             </div>
+          }>
+          <div className="text-center py-4">
+            <div className="w-16 h-16 border-4 border-[var(--border-color)] bg-[var(--color-success)] flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0_var(--shadow-color)]">
+              <CheckCircle2 className="w-8 h-8 text-[#111111]" />
+            </div>
+            <p className="text-3xl font-black tracking-tighter">{formatCurrency(lastInvoice.total)}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] mt-1">{lastInvoice.id}</p>
+            {lastInvoice.due > 0 && (
+              <p className="text-sm font-bold text-[var(--color-error)] mt-2">
+                Balance Due: {formatCurrency(lastInvoice.due)}
+                {lastInvoice.customerName !== 'Walk-in' && ` — added to ${lastInvoice.customerName}'s khata`}
+              </p>
+            )}
           </div>
         </Modal>
       )}
