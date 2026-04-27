@@ -51,7 +51,11 @@
     "expiringSoon": "Expiring Soon",
     "expired": "Expired",
     "intelligenceAlert": "INTELLIGENCE: Some products need attention.",
-    "margin": "Margin"
+    "margin": "Margin",
+    "lowStock": "Low Stock",
+    "totalProducts": "Total Products",
+    "lowOutOfStock": "Low / Out of Stock",
+    "categories": "Categories"
   },
   "sales": {
     "newSale": "New Sale",
@@ -69,8 +73,8 @@
     "confirmSale": "Confirm Sale",
     "done": "Done",
     "recordSale": "Record Sale",
-    "findItem": "Find Item",
-    "extraCharge": "Extra Charge",
+    "findItem": "Add Custom Item",
+    "extraCharge": "Custom Item",
     "customerDetails": "Customer Details",
     "walkIn": "Walk-in Customer (No Khata)",
     "khataNote": "* Any unpaid amount will be added to this customer's khata.",
@@ -80,7 +84,7 @@
     "addItemsCta": "Add items to start billing",
     "subtotal": "Subtotal",
     "discount": "Discount",
-    "taxGst": "Tax GST",
+    "taxGst": "GST",
     "total": "Total",
     "netTotal": "Net Total",
     "off": "Off",
@@ -91,8 +95,13 @@
     "item": "Item",
     "rate": "Rate",
     "invoiceGenerated": "Invoice Generated",
+    "invoicePreview": "Invoice Preview",
     "printReceipt": "Print Receipt",
-    "close": "Close"
+    "downloadInvoice": "Download Invoice",
+    "close": "Close",
+    "customer": "Customer",
+    "balanceDueLabel": "Balance Due:",
+    "addedToKhata": "added to khata"
   },
   "customers": {
     "title": "Customers",
@@ -114,7 +123,7 @@
     "update": "Update",
     "cancel": "Cancel",
     "noCustomers": "No customers found",
-    "lastVisit": "Last",
+    "lastVisit": "Last Visit",
     "clear": "Clear",
     "risky": "Risky",
     "due": "Due",
@@ -122,7 +131,15 @@
     "settlement": "Payment Settlement",
     "amountToPay": "Amount to Pay",
     "confirmPayment": "Confirm Payment",
-    "paymentSuccess": "Payment recorded successfully"
+    "paymentSuccess": "Payment recorded successfully",
+    "transactionHistory": "Transaction History",
+    "noTransactionsYet": "No transactions yet",
+    "cleared": "Cleared",
+    "regular": "Regular",
+    "phone": "Phone",
+    "lifetime": "Lifetime",
+    "transactions": "Transactions",
+    "paymentMode": "Payment Mode"
   },
   "transactions": {
     "title": "Transactions",
@@ -138,9 +155,22 @@
     "filterAll": "All",
     "filterPaid": "Paid",
     "filterDue": "Due",
+    "filterPartial": "Partial",
     "filterMonth": "Month",
     "filterDay": "Day",
-    "allTime": "All Time"
+    "allTime": "All Time",
+    "paid": "Paid",
+    "partial": "Partial",
+    "udhaar": "Udhaar",
+    "transactions": "Transactions",
+    "revenue": "Revenue",
+    "collected": "Collected",
+    "outstanding": "Outstanding",
+    "showingOf": "Showing",
+    "of": "of",
+    "prev": "← Prev",
+    "next": "Next →",
+    "viewInvoice": "View Invoice"
   },
   "analytics": {
     "businessPerformance": "Business Intelligence",
@@ -169,7 +199,12 @@
     "whyButton": "Why?",
     "reasonRestock": "High demand detected. Stock is below {qty} units.",
     "reasonPromote": "No sales recorded in the last 30 days. {qty} units sitting idle.",
-    "reasonReviewPricing": "Profit margin is {margin}% — below 15% threshold."
+    "reasonReviewPricing": "Profit margin is {margin}% — below 15% threshold.",
+    "kpiRevenue": "Total Revenue",
+    "kpiProfit": "Total Profit",
+    "kpiAvgOrder": "Avg. Order Value",
+    "kpiTransactions": "Total Transactions",
+    "profit": "Profit"
   },
   "settings": {
     "settings": "Settings",
@@ -201,5 +236,25 @@
     "intelligenceMessage": "All insights below are computed from your real data — no assumptions.",
     "title": "Intelligence",
     "subtitle": "Actionable insights derived from your actual transactions."
+  },
+  "common": {
+    "items": "item(s)",
+    "showing": "Showing",
+    "of": "of",
+    "prev": "Prev",
+    "next": "Next",
+    "noData": "No data",
+    "search": "Search...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "walkin": "Walk-in",
+    "totalProducts": "Total Products",
+    "lowOutOfStock": "Low / Out of Stock",
+    "expired": "Expired",
+    "categories": "Categories"
   }
 }

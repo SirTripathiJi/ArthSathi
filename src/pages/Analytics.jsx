@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Component, useEffect, useMemo, useState } from 'react';
+import React, { Component, useMemo, useState } from 'react';
 
 class ErrorBoundary extends Component {
   constructor(props) {

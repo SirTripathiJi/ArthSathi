@@ -221,7 +221,7 @@ export function Transactions() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-2 border-[var(--border-color)] p-4 bg-[var(--card-bg)]">
           <p className="text-sm font-bold text-[var(--text-secondary)]">
-            Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
+            {t('transactions.showingOf')} {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} {t('transactions.of')} {filtered.length}
           </p>
           <div className="flex gap-2">
             <button
@@ -229,7 +229,7 @@ export function Transactions() {
               disabled={page === 1}
               onClick={() => setPage(p => Math.max(1, p - 1))}
             >
-              ← Prev
+              {t('transactions.prev')}
             </button>
             <span className="px-4 py-2 border-2 border-[var(--border-color)] font-black text-sm bg-[var(--color-brand)] text-[#111111]">
               {page} / {totalPages}
@@ -239,7 +239,7 @@ export function Transactions() {
               disabled={page === totalPages}
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             >
-              Next →
+              {t('transactions.next')}
             </button>
           </div>
         </div>

@@ -51,7 +51,11 @@
     "expiringSoon": "जल्द समाप्त होने वाला",
     "expired": "समाप्त",
     "intelligenceAlert": "इंटेलिजेंस: कुछ उत्पादों पर ध्यान देने की आवश्यकता है।",
-    "margin": "मार्जिन"
+    "margin": "मार्जिन",
+    "lowStock": "कम स्टॉक",
+    "totalProducts": "कुल उत्पाद",
+    "lowOutOfStock": "कम / खत्म स्टॉक",
+    "categories": "श्रेणियां"
   },
   "sales": {
     "newSale": "नई बिक्री",
@@ -69,8 +73,8 @@
     "confirmSale": "बिक्री की पुष्टि करें",
     "done": "हो गया",
     "recordSale": "बिक्री दर्ज करें",
-    "findItem": "आइटम खोजें",
-    "extraCharge": "अतिरिक्त शुल्क",
+    "findItem": "कस्टम आइटम जोड़ें",
+    "extraCharge": "कस्टम आइटम",
     "customerDetails": "ग्राहक विवरण",
     "walkIn": "वॉक-इन ग्राहक (कोई खाता नहीं)",
     "khataNote": "* कोई भी बकाया राशि इस ग्राहक के खाते में जोड़ दी जाएगी।",
@@ -80,7 +84,7 @@
     "addItemsCta": "बिलिंग शुरू करने के लिए आइटम जोड़ें",
     "subtotal": "उप-योग",
     "discount": "छूट",
-    "taxGst": "जीएसटी टैक्स",
+    "taxGst": "जीएसटी",
     "total": "कुल",
     "netTotal": "शुद्ध कुल",
     "off": "छूट",
@@ -91,8 +95,13 @@
     "item": "आइटम",
     "rate": "दर",
     "invoiceGenerated": "चालान जेनरेट हो गया",
+    "invoicePreview": "चालान पूर्वावलोकन",
     "printReceipt": "रसीद प्रिंट करें",
-    "close": "बंद करें"
+    "downloadInvoice": "चालान डाउनलोड करें",
+    "close": "बंद करें",
+    "customer": "ग्राहक",
+    "balanceDueLabel": "बकाया राशि:",
+    "addedToKhata": "खाते में जोड़ा गया"
   },
   "customers": {
     "title": "ग्राहक",
@@ -114,7 +123,7 @@
     "update": "अपडेट करें",
     "cancel": "रद्द करें",
     "noCustomers": "कोई ग्राहक नहीं मिला",
-    "lastVisit": "अंतिम",
+    "lastVisit": "अंतिम मुलाकात",
     "clear": "चुक्ता",
     "risky": "जोखिम भरा",
     "due": "बकाया",
@@ -122,7 +131,15 @@
     "settlement": "भुगतान निपटान",
     "amountToPay": "भुगतान करने की राशि",
     "confirmPayment": "भुगतान की पुष्टि करें",
-    "paymentSuccess": "भुगतान सफलतापूर्वक दर्ज किया गया"
+    "paymentSuccess": "भुगतान सफलतापूर्वक दर्ज किया गया",
+    "transactionHistory": "लेन-देन इतिहास",
+    "noTransactionsYet": "अभी कोई लेन-देन नहीं",
+    "cleared": "चुक्ता",
+    "regular": "नियमित",
+    "phone": "फ़ोन",
+    "lifetime": "कुल",
+    "transactions": "लेन-देन",
+    "paymentMode": "भुगतान मोड"
   },
   "transactions": {
     "title": "लेन-देन",
@@ -138,9 +155,22 @@
     "filterAll": "सभी",
     "filterPaid": "भुगतान",
     "filterDue": "बकाया",
+    "filterPartial": "आंशिक",
     "filterMonth": "महीना",
     "filterDay": "दिन",
-    "allTime": "पूरा समय"
+    "allTime": "पूरा समय",
+    "paid": "भुगतान",
+    "partial": "आंशिक",
+    "udhaar": "उधार",
+    "transactions": "लेन-देन",
+    "revenue": "राजस्व",
+    "collected": "संग्रहित",
+    "outstanding": "बकाया",
+    "showingOf": "दिखाया जा रहा है",
+    "of": "का",
+    "prev": "← पिछला",
+    "next": "अगला →",
+    "viewInvoice": "इनवॉइस देखें"
   },
   "analytics": {
     "businessPerformance": "बिजनेस इंटेलिजेंस",
@@ -169,7 +199,12 @@
     "whyButton": "क्यों?",
     "reasonRestock": "उच्च मांग का पता चला। स्टॉक {qty} इकाइयों से नीचे है।",
     "reasonPromote": "पिछले 30 दिनों में कोई बिक्री दर्ज नहीं की गई। {qty} इकाइयां बेकार पड़ी हैं।",
-    "reasonReviewPricing": "लाभ मार्जिन {margin}% है — 15% सीमा से नीचे।"
+    "reasonReviewPricing": "लाभ मार्जिन {margin}% है — 15% सीमा से नीचे।",
+    "kpiRevenue": "कुल राजस्व",
+    "kpiProfit": "कुल लाभ",
+    "kpiAvgOrder": "औसत ऑर्डर मूल्य",
+    "kpiTransactions": "कुल लेन-देन",
+    "profit": "लाभ"
   },
   "settings": {
     "settings": "सेटिंग्स",
@@ -201,5 +236,25 @@
     "intelligenceMessage": "नीचे दिए गए सभी इनसाइट्स आपके वास्तविक डेटा से गणना किए गए हैं — कोई धारणा नहीं।",
     "title": "इंटेलिजेंस",
     "subtitle": "आपके वास्तविक लेनदेन से प्राप्त कार्रवाई योग्य इनसाइट्स।"
+  },
+  "common": {
+    "items": "आइटम",
+    "showing": "दिखाया जा रहा है",
+    "of": "में से",
+    "prev": "पिछला",
+    "next": "अगला",
+    "noData": "कोई डेटा नहीं",
+    "search": "खोजें...",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "close": "बंद करें",
+    "confirm": "पुष्टि करें",
+    "walkin": "वॉक-इन",
+    "totalProducts": "कुल उत्पाद",
+    "lowOutOfStock": "कम / खत्म स्टॉक",
+    "expired": "समाप्त",
+    "categories": "श्रेणियां"
   }
 }
