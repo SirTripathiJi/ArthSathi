@@ -23,7 +23,7 @@ export function Inventory() {
   useEffect(() => { fetchProducts(); }, [user]);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
+    return products.filter((p) => String(p.name || '').toLowerCase().includes(String(search || '').toLowerCase()));
   }, [products, search]);
 
   const openAddModal = () => {
@@ -33,7 +33,7 @@ export function Inventory() {
   };
 
   const openEditModal = (id) => {
-    const idx = products.findIndex((p) => p.id === id);
+    const idx = products.findIndex((p) => String(p.id) === String(id));
     if (idx === -1) return;
     const p = products[idx];
     setEditIndex(idx);
@@ -43,7 +43,7 @@ export function Inventory() {
 
   const deleteProduct = (id) => {
     if (!window.confirm('Delete this product permanently?')) return;
-    const newProducts = products.filter((p) => p.id !== id);
+    const newProducts = products.filter((p) => String(p.id) !== String(id));
     DB.setProducts(user.uid, newProducts);
     setProducts(newProducts);
     toast.success('Product removed');
@@ -61,8 +61,8 @@ export function Inventory() {
       updatedProducts[editIndex] = { ...updatedProducts[editIndex], name, category: category || 'General', cost: c, sell: s, qty: q, lowStock: l, expiry };
       toast.success('Product updated');
     } else {
-      if (updatedProducts.find((p) => p.name.toLowerCase() === name.toLowerCase())) return toast.error('Product already exists');
-      updatedProducts.push({ id: Date.now(), name, category: category || 'General', cost: c, sell: s, qty: q, lowStock: l, expiry });
+      if (updatedProducts.find((p) => String(p.name || '').toLowerCase() === String(name || '').toLowerCase())) return toast.error('Product already exists');
+      updatedProducts.push({ id: String(Date.now()), name, category: category || 'General', cost: c, sell: s, qty: q, lowStock: l, expiry });
       toast.success('Product added');
     }
 
@@ -96,6 +96,7 @@ export function Inventory() {
               <th>{t('inventory.category')}</th>
               <th>{t('inventory.costPrice')}</th>
               <th>{t('inventory.sellingPrice')}</th>
+              <th>MARGIN</th>
               <th>{t('inventory.stock')}</th>
               <th>{t('inventory.expiryDate')}</th>
               <th className="text-right">{t('inventory.action')}</th>
@@ -124,6 +125,11 @@ export function Inventory() {
                     <td><span className="text-xs font-black uppercase border-2 border-[var(--border-color)] bg-[var(--card-bg)] px-3 py-1">{p.category}</span></td>
                     <td className="text-base font-bold">₹{p.cost}</td>
                     <td className="text-base font-bold">₹{p.sell}</td>
+                    <td>
+                      <span className="text-sm font-black border-2 border-[var(--border-color)] bg-[var(--color-success)] px-2 py-1 shadow-[2px_2px_0_var(--shadow-color)]">
+                        +₹{p.sell - p.cost} ({( ((p.sell - p.cost) / p.cost) * 100 || 0 ).toFixed(0)}%)
+                      </span>
+                    </td>
                     <td>
                       <div className="flex flex-col gap-2">
                         <span className="text-xl font-black">{p.qty}</span>

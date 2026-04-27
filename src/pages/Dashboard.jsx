@@ -47,13 +47,13 @@ export function Dashboard() {
 
   // ----------- DERIVED METRICS (zero hardcoded assumptions) -----------
   // totalRevenue = sum of all sale amounts
-  const totalSales = useMemo(() => salesData.reduce((a, x) => a + x.amt, 0), [salesData]);
+  const totalSales = useMemo(() => salesData.reduce((a, x) => a + (Number(x.total || x.amt) || 0), 0), [salesData]);
   // totalProfit = sum of (sell - cost) per transaction
-  const totalProfit = useMemo(() => salesData.reduce((a, x) => a + x.profit, 0), [salesData]);
+  const totalProfit = useMemo(() => salesData.reduce((a, x) => a + (Number(x.profit) || 0), 0), [salesData]);
   const totalProducts = productsData.length;
   const totalTxns = useMemo(() => {
     const today = new Date().toLocaleDateString();
-    return salesData.filter((x) => new Date(x.date).toLocaleDateString() === today).length;
+    return salesData.filter((x) => x.date && new Date(x.date).toLocaleDateString() === today).length;
   }, [salesData]);
 
   // ----------- STAT CARDS -----------

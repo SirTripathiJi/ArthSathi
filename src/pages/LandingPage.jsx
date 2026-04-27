@@ -17,15 +17,26 @@ export function LandingPage() {
 
   const go = () => navigate(user ? '/dashboard' : '/auth');
 
+  const FEATURE_FLAGS = {
+    inventory: true,
+    billing: true,
+    insights: true,
+    privacy: true,
+    profit: true,
+    customers: true,
+    assistant: false,
+    voice: false,
+  };
+
   const features = [
-    { icon: Package,     title: 'Inventory Control',  text: 'Stay accurate, avoid losses, and never miss a restock.',     color: 'var(--color-brand)' },
-    { icon: Receipt,     title: 'Billing Made Simple', text: 'Fast entries with instant, real profit visibility.',          color: 'var(--color-secondary)' },
-    { icon: LineChart,   title: 'Business Insights',   text: 'Understand performance clearly. No noise, just useful data.', color: 'var(--color-accent)' },
-    { icon: ShieldCheck, title: 'Privacy-First',       text: '100% local data storage. No cloud, no subscriptions.',       color: 'var(--color-success)' },
-    { icon: Sparkles,    title: 'Smart Assistant',     text: 'Simple business guidance based on your data.',               color: 'var(--text-secondary)', comingSoon: true },
-    { icon: Mic,         title: 'Voice Entries',       text: 'Add transactions by speaking naturally.',                    color: 'var(--text-secondary)', comingSoon: true },
-    { icon: TrendingUp,  title: 'Profit Intelligence', text: 'See true profit after cost and expenses.',                   color: 'var(--text-secondary)', comingSoon: true },
-    { icon: Users,       title: 'Customer Insights',   text: 'Identify reliable and risky customers.',                    color: 'var(--text-secondary)', comingSoon: true },
+    { id: 'inventory', icon: Package,     title: 'Inventory Control',  text: 'Stay accurate, avoid losses, and never miss a restock.',     color: 'var(--color-brand)' },
+    { id: 'billing',   icon: Receipt,     title: 'Billing Made Simple', text: 'Fast entries with instant, real profit visibility.',          color: 'var(--color-secondary)' },
+    { id: 'insights',  icon: LineChart,   title: 'Business Insights',   text: 'Understand performance clearly. No noise, just useful data.', color: 'var(--color-accent)' },
+    { id: 'privacy',   icon: ShieldCheck, title: 'Privacy-First',       text: '100% local data storage. No cloud, no subscriptions.',       color: 'var(--color-success)' },
+    { id: 'assistant', icon: Sparkles,    title: 'Smart Assistant',     text: 'Simple business guidance based on your data.',               color: 'var(--color-brand)' },
+    { id: 'voice',     icon: Mic,         title: 'Voice Entries',       text: 'Add transactions by speaking naturally.',                    color: 'var(--color-secondary)' },
+    { id: 'profit',    icon: TrendingUp,  title: 'Profit Intelligence', text: 'See true profit after cost and expenses.',                   color: 'var(--color-accent)' },
+    { id: 'customers', icon: Users,       title: 'Customer Insights',   text: 'Identify reliable and risky customers.',                    color: 'var(--color-success)' },
   ];
 
   const trustItems = [
@@ -177,22 +188,23 @@ export function LandingPage() {
         <div className="mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ maxWidth: 1120, gap: 24 }}>
           {features.map((f, i) => {
             const Icon = f.icon;
+            const isActive = FEATURE_FLAGS[f.id];
             return (
               <div key={i}
-                className="brutalist-card flex flex-col items-start hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--border-color)] transition-all animate-brutal-fade-in"
+                className={`brutalist-card flex flex-col items-start transition-all animate-brutal-fade-in ${!isActive ? 'opacity-70 grayscale hover:grayscale-0' : 'hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--border-color)]'}`}
                 style={{ overflow: 'hidden', wordBreak: 'break-word', animationDelay: `${i * 0.07}s` }}>
                 {/* Icon */}
-                <div className="flex-shrink-0 border-4 border-[var(--border-color)] flex items-center justify-center shadow-[3px_3px_0_var(--border-color)]"
-                  style={{ width: 52, height: 52, marginBottom: 16, backgroundColor: f.color }}>
-                  <Icon className="w-6 h-6 text-[#111111]" />
+                <div className={`flex-shrink-0 border-4 border-[var(--border-color)] flex items-center justify-center ${isActive ? 'shadow-[3px_3px_0_var(--border-color)]' : ''}`}
+                  style={{ width: 52, height: 52, marginBottom: 16, backgroundColor: isActive ? f.color : 'var(--bg-secondary)' }}>
+                  <Icon className={`w-6 h-6 ${isActive ? 'text-[#111111]' : 'text-[var(--text-secondary)]'}`} />
                 </div>
                 {/* Title */}
                 <h3 className="font-black uppercase text-[var(--text-primary)]"
-                  style={{ fontSize: f.comingSoon ? '0.95rem' : '1.1rem', lineHeight: 1.15, letterSpacing: '-0.02em', wordBreak: 'break-word', marginBottom: 8 }}>
+                  style={{ fontSize: !isActive ? '0.95rem' : '1.1rem', lineHeight: 1.15, letterSpacing: '-0.02em', wordBreak: 'break-word', marginBottom: 8 }}>
                   {f.title}
                 </h3>
                 {/* Badge */}
-                {f.comingSoon && (
+                {!isActive && (
                   <span className="inline-block bg-[var(--card-bg)] border-2 border-[var(--border-color)] text-[var(--text-secondary)] uppercase font-black tracking-widest"
                     style={{ fontSize: '8px', padding: '2px 6px', margin: '6px 0' }}>
                     Coming Soon
@@ -386,7 +398,7 @@ export function LandingPage() {
                       className="inline-block bg-[var(--bg-secondary)] border-2 border-[var(--border-color)] text-[var(--text-secondary)] uppercase font-black tracking-widest"
                       style={{ fontSize: '8px', padding: '2px 6px', marginLeft: 8, verticalAlign: 'middle' }}
                     >
-                      Coming Soon
+                      Preview
                     </span>
                   </h3>
                   <p className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.75rem' }}>Premium intelligence</p>
@@ -405,23 +417,24 @@ export function LandingPage() {
               {/* Divider */}
               <div style={{ borderTop: '2px solid var(--color-accent)', marginBottom: 24 }} />
 
-              {/* Features */}
               <ul className="flex flex-col" style={{ gap: 12, marginBottom: 32, flex: 1 }}>
                 {[
-                  { label: 'Everything in Starter', soon: false },
-                  { label: 'Smart Assistant',        soon: true },
-                  { label: 'Voice Entries',           soon: true },
-                  { label: 'Profit Intelligence',     soon: true },
-                  { label: 'Customer Insights',       soon: true },
-                ].map((feat) => (
-                  <li key={feat.label} className="flex items-center gap-3">
+                  { label: 'Everything in Starter', id: 'starter' },
+                  { label: 'Smart Assistant',       id: 'assistant' },
+                  { label: 'Voice Entries',         id: 'voice' },
+                  { label: 'Profit Intelligence',   id: 'profit' },
+                  { label: 'Customer Insights',     id: 'customers' },
+                ].map((feat) => {
+                  const isAvailable = feat.id === 'starter' ? true : FEATURE_FLAGS[feat.id];
+                  return (
+                  <li key={feat.label} className={`flex items-center gap-3 ${!isAvailable ? 'opacity-50' : ''}`}>
                     <div className="flex-shrink-0 w-5 h-5 border-2 flex items-center justify-center shadow-[2px_2px_0_var(--color-accent)]"
-                      style={{ backgroundColor: 'var(--color-accent)', borderColor: 'var(--color-accent)' }}>
-                      <span className="text-[#111111] font-black" style={{ fontSize: '10px', lineHeight: 1 }}>✓</span>
+                      style={{ backgroundColor: isAvailable ? 'var(--color-accent)' : 'transparent', borderColor: 'var(--color-accent)' }}>
+                      {isAvailable && <span className="text-[#111111] font-black" style={{ fontSize: '10px', lineHeight: 1 }}>✓</span>}
                     </div>
                     <span className="font-bold text-[var(--text-secondary)]" style={{ fontSize: '0.9rem' }}>
                       {feat.label}
-                      {feat.soon && (
+                      {!isAvailable && (
                         <span
                           className="inline-block bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] uppercase font-black tracking-widest"
                           style={{ fontSize: '7px', padding: '1px 4px', marginLeft: 6, verticalAlign: 'middle' }}
@@ -431,25 +444,17 @@ export function LandingPage() {
                       )}
                     </span>
                   </li>
-                ))}
+                )})}
               </ul>
 
-              {/* CTA — disabled, Coming Soon state */}
+              {/* CTA */}
               <button
-                disabled
-                className="brutalist-btn w-full cursor-not-allowed"
-                style={{
-                  fontSize: '1rem',
-                  padding: '14px 24px',
-                  background: 'var(--bg-secondary)',
-                  color: 'var(--text-secondary)',
-                  borderColor: 'var(--border-color)',
-                  boxShadow: 'none',
-                  transform: 'none',
-                  opacity: 0.7,
-                }}
+                className="brutalist-btn w-full bg-[var(--color-accent)] text-[#111111] hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--border-color)] transition-all"
+                style={{ fontSize: '1rem', padding: '14px 24px' }}
+                title="Pro+ features are currently in partial preview"
+                onClick={go}
               >
-                Coming Soon
+                Upgrade (Preview)
               </button>
             </div>
 

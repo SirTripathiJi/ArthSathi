@@ -1,39 +1,46 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { Plus, Receipt, Search, Trash2, CheckCircle2, ShoppingCart, User, X, ChevronDown } from 'lucide-react';
+import { Plus, Receipt, Search, Trash2, CheckCircle2, Printer, X, ShoppingCart, User } from 'lucide-react';
 import { Modal } from '../components/UI/Modal';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { DB } from '../services/db';
+import { InvoicePrint } from '../components/UI/InvoicePrint';
 
 export function Sales() {
   const { user } = useAuth();
   const toast = useToast();
   const { t } = useLanguage();
 
-  const [sales, setSales] = useState([]);
   const [products, setProducts] = useState([]);
   const [customers, setCustomers] = useState([]);
-  const [search, setSearch] = useState('');
-  
-  const [isBillModalOpen, setIsBillModalOpen] = useState(false);
-  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
-  const [lastTxn, setLastTxn] = useState(null);
-
-  // Cart State
   const [cart, setCart] = useState([]);
-  const [productSearch, setProductSearch] = useState('');
-  const [selectedProduct, setSelectedProduct] = useState('');
-  const [selectedCustomer, setSelectedCustomer] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('cash');
-  const [tax, setTax] = useState(0);
+  
+  // Invoice Details
+  const [customerId, setCustomerId] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [taxPercent, setTaxPercent] = useState(0);
+  const [paid, setPaid] = useState('');
+  const [notes, setNotes] = useState('');
+
+  // Modals
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [isCustomItemModalOpen, setIsCustomItemModalOpen] = useState(false);
+  const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
+  
+  const [lastInvoice, setLastInvoice] = useState(null);
+  const printRef = useRef(null);
+
+  // Item Modal State
+  const [searchItem, setSearchItem] = useState('');
+  
+  // Custom Item Modal State
+  const [customName, setCustomName] = useState('');
+  const [customPrice, setCustomPrice] = useState('');
 
   const fetchAll = () => {
     if (user?.uid) {
-      setSales(DB.getSales(user.uid).slice().reverse());
       setProducts(DB.getProducts(user.uid));
       setCustomers(DB.getCustomers(user.uid));
     }
@@ -41,402 +48,322 @@ export function Sales() {
 
   useEffect(() => { fetchAll(); }, [user]);
 
-  const filteredSales = useMemo(
-    () => sales.filter((s) => s.customerName?.toLowerCase().includes(search.toLowerCase()) || s.id.toString().includes(search)),
-    [sales, search]
-  );
+  // Cart Calculations
+  const subtotal = cart.reduce((acc, item) => acc + (item.qty * item.rate), 0);
+  const totalMargin = cart.reduce((acc, item) => acc + (item.qty * (item.rate - (item.cost || 0))), 0);
+  const taxAmount = (subtotal - discount) * (taxPercent / 100);
+  const finalTotal = subtotal - discount + taxAmount;
+  const paidAmount = paid === '' ? finalTotal : Number(paid);
+  const dueAmount = Math.max(0, finalTotal - paidAmount);
 
-  const openBillModal = () => {
-    if (!products.filter((x) => x.qty > 0).length) return toast.error('No inventory available');
+  const addToCart = (product) => {
+    if (product.qty <= 0 && !product.isCustom) return toast.error('Out of stock');
+    
+    setCart(prev => {
+      const existing = prev.find(p => String(p.id) === String(product.id));
+      if (existing) {
+        if (!product.isCustom && existing.qty + 1 > product.qty) {
+          toast.error('Cannot add more than available stock');
+          return prev;
+        }
+        return prev.map(p => String(p.id) === String(product.id) ? { ...p, qty: p.qty + 1 } : p);
+      }
+      return [...prev, { 
+        id: product.id, 
+        name: product.name, 
+        rate: product.sell || product.rate, 
+        cost: product.cost || 0,
+        qty: 1,
+        isCustom: product.isCustom || false
+      }];
+    });
+    toast.success(`${product.name} added`);
+  };
+
+  const addCustomCharge = () => {
+    if (!customName || !customPrice) return toast.error('Enter valid details');
+    addToCart({
+      id: 'custom_' + Date.now(),
+      name: customName,
+      rate: Number(customPrice),
+      cost: 0,
+      qty: 1,
+      isCustom: true
+    });
+    setIsCustomItemModalOpen(false);
+    setCustomName('');
+    setCustomPrice('');
+  };
+
+  const updateCartQty = (id, delta) => {
+    setCart(prev => prev.map(p => {
+      if (String(p.id) === String(id)) {
+        const newQty = p.qty + delta;
+        if (newQty <= 0) return null; // will be filtered out
+        const stockProduct = products.find(prod => String(prod.id) === String(id));
+        if (!p.isCustom && stockProduct && newQty > stockProduct.qty) {
+          toast.error('Exceeds available stock');
+          return p;
+        }
+        return { ...p, qty: newQty };
+      }
+      return p;
+    }).filter(Boolean));
+  };
+
+  const removeFromCart = (id) => setCart(prev => prev.filter(p => String(p.id) !== String(id)));
+
+  const clearCart = () => {
+    if (!window.confirm('Clear all items?')) return;
     setCart([]);
-    setSelectedCustomer('');
-    setPaymentMethod('cash');
-    setTax(0);
+    setCustomerId('');
     setDiscount(0);
-    setIsBillModalOpen(true);
+    setTaxPercent(0);
+    setPaid('');
+    setNotes('');
   };
-
-  const deleteSale = (id) => {
-    if (!window.confirm('Void this transaction? (Inventory will not be reversed automatically in this version)')) return;
-    const updated = sales.filter((s) => s.id !== id);
-    DB.setSales(user.uid, updated.slice().reverse());
-    setSales(updated);
-    toast.success('Transaction voided');
-  };
-
-  const addToCartFast = (product) => {
-    if (!product) return;
-    if (product.qty <= 0) return toast.error('Product out of stock');
-
-    const existingItem = cart.find(item => item.pid === product.id);
-    if (existingItem) {
-      if (existingItem.qty + 1 > product.qty) return toast.error('Insufficient stock');
-      setCart(cart.map(item => item.pid === product.id ? { ...item, qty: item.qty + 1 } : item));
-    } else {
-      setCart([...cart, { pid: product.id, name: product.name, price: product.sell, cost: product.cost, qty: 1, maxQty: product.qty }]);
-    }
-  };
-
-  const addToCart = () => {
-    if (!selectedProduct) return;
-    const product = products.find(p => p.id === Number(selectedProduct));
-    addToCartFast(product);
-    setSelectedProduct('');
-  };
-
-  const updateCartQty = (pid, newQty) => {
-    if (newQty <= 0) {
-      setCart(cart.filter(item => item.pid !== pid));
-      return;
-    }
-    const item = cart.find(i => i.pid === pid);
-    if (newQty > item.maxQty) return toast.error('Insufficient stock');
-    setCart(cart.map(item => item.pid === pid ? { ...item, qty: newQty } : item));
-  };
-
-  const cartSubtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  const cartTax = (cartSubtotal * tax) / 100;
-  const cartTotal = cartSubtotal + cartTax - discount;
-  const cartProfit = cart.reduce((sum, item) => sum + ((item.price - item.cost) * item.qty), 0);
 
   const confirmSale = () => {
     if (cart.length === 0) return toast.error('Cart is empty');
-    if (paymentMethod === 'credit' && !selectedCustomer) return toast.error('Select a customer for Udhaar');
+    if (dueAmount > 0 && !customerId) return toast.error('Udhaar (Due) requires a customer to be selected.');
 
-    // Double check inventory
+    const selectedCustomer = customers.find(c => c.id === customerId);
+    
+    // Deduct Inventory
     const updatedProducts = [...products];
-    for (const item of cart) {
-      const pIdx = updatedProducts.findIndex(p => p.id === item.pid);
-      if (updatedProducts[pIdx].qty < item.qty) {
-        return toast.error(`Insufficient stock for ${item.name}`);
-      }
-      updatedProducts[pIdx].qty -= item.qty;
-    }
-
-    let customerName = 'Walk-in Customer';
-    let customerId = null;
-
-    if (selectedCustomer) {
-      const cust = customers.find(c => c.id === Number(selectedCustomer));
-      if (cust) {
-        customerName = cust.name;
-        customerId = cust.id;
-        
-        // Update customer credit if Udhaar
-        if (paymentMethod === 'credit') {
-          const updatedCustomers = customers.map(c => {
-            if (c.id === cust.id) {
-              return {
-                ...c,
-                totalCredit: c.totalCredit + cartTotal,
-                lastTxn: new Date().toISOString(),
-                history: [{
-                  id: Date.now(),
-                  type: 'sale',
-                  amount: cartTotal,
-                  date: new Date().toISOString()
-                }, ...(c.history || [])]
-              };
-            }
-            return c;
-          });
-          DB.setCustomers(user.uid, updatedCustomers);
-          setCustomers(updatedCustomers);
+    cart.forEach(item => {
+      if (!item.isCustom) {
+        const pIdx = updatedProducts.findIndex(p => String(p.id) === String(item.id));
+        if (pIdx > -1) {
+          updatedProducts[pIdx].qty -= item.qty;
         }
       }
-    }
+    });
 
-    const txnId = Date.now();
-    const txn = {
-      id: txnId,
-      customerId,
-      customerName,
-      items: cart,
-      subtotal: cartSubtotal,
-      tax,
-      discount,
-      amt: cartTotal, // Backwards compatible with Analytics
-      profit: cartProfit, // Backwards compatible with Analytics
-      paymentMethod,
+    const invoice = {
+      id: 'INV-' + Math.floor(100000 + Math.random() * 900000),
       date: new Date().toISOString(),
+      customerId,
+      customerName: selectedCustomer ? selectedCustomer.name : 'Walk-in',
+      customerPhone: selectedCustomer ? selectedCustomer.phone : '',
+      items: cart,
+      subtotal,
+      discount,
+      taxPercent,
+      tax: taxAmount,
+      total: finalTotal,
+      paid: paidAmount,
+      due: dueAmount,
+      profit: totalMargin - discount, // Simplified profit calculation
+      notes,
+      status: dueAmount > 0 ? 'DUE' : 'PAID'
     };
 
-    const updatedSales = DB.getSales(user.uid);
-    updatedSales.push(txn);
-    DB.setSales(user.uid, updatedSales);
-    setSales(updatedSales.slice().reverse());
+    const existingSales = DB.getSales(user.uid);
+    existingSales.push(invoice);
     
     DB.setProducts(user.uid, updatedProducts);
-    setProducts(updatedProducts);
+    DB.setSales(user.uid, existingSales);
     
-    setLastTxn(txn);
-    setIsBillModalOpen(false);
-    toast.success('Invoice generated successfully');
+    setProducts(updatedProducts);
+    setLastInvoice(invoice);
+    setIsReceiptModalOpen(true);
+    
+    // Reset Form
+    setCart([]);
+    setCustomerId('');
+    setDiscount(0);
+    setTaxPercent(0);
+    setPaid('');
+    setNotes('');
+    
+    toast.success('Invoice Generated Successfully');
     confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#FFD600', '#FF4081', '#000000'] });
-    setIsInvoiceModalOpen(true);
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const filteredProducts = useMemo(() => 
+    products.filter(p => String(p.name || '').toLowerCase().includes(String(searchItem || '').toLowerCase())),
+  [products, searchItem]);
+
   return (
-    <div className="space-y-10">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="relative w-full md:w-[400px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-primary)]" />
-          <input className="brutalist-input !pl-16 text-base py-4" placeholder={t('sales.searchReceipts')} value={search} onChange={(e) => setSearch(e.target.value)} />
-        </div>
-        <button className="brutalist-btn gap-4 w-full md:w-auto px-10 py-5 text-base bg-[var(--color-secondary)] text-[#ffffff]" onClick={openBillModal}>
-          <Plus className="w-7 h-7" /> <span className="uppercase">{t('billing.createInvoice')}</span>
-        </button>
-      </div>
+    <div className="space-y-6">
+      {/* Hidden Print Component */}
+      <InvoicePrint ref={printRef} invoice={lastInvoice} type="thermal" shopDetails={{ name: user?.store || 'My Shop' }} />
 
-      <div className="brutalist-table-wrap">
-        <table className="brutalist-table">
-          <thead>
-            <tr>
-              <th>{t('billing.invoiceId')}</th>
-              <th>Customer</th>
-              <th>Items</th>
-              <th>{t('sales.amount')}</th>
-              <th>Payment</th>
-              <th>{t('sales.date')}</th>
-              <th className="text-right">{t('sales.actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredSales.length > 0 ? (
-              filteredSales.map((s) => (
-                <tr key={s.id}>
-                  <td><span className="text-sm font-black uppercase tracking-widest text-[var(--text-secondary)]">#{s.id.toString().slice(-6)}</span></td>
-                  <td>
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-[var(--text-secondary)]" />
-                      <span className="text-lg font-black uppercase italic tracking-tight">{s.customerName || s.name || 'Walk-in'}</span>
-                    </div>
-                  </td>
-                  <td><span className="font-bold text-sm bg-[var(--bg-secondary)] px-2 py-1 border-2 border-[var(--border-color)]">{s.items ? s.items.length : 1} Items</span></td>
-                  <td><span className="font-black text-xl">₹{s.amt.toLocaleString()}</span></td>
-                  <td>
-                    <span className={`text-xs font-black uppercase border-2 border-[var(--border-color)] px-2 py-1 ${s.paymentMethod === 'credit' ? 'bg-[#FF4081] text-[#ffffff]' : 'bg-[#00C853] text-[#111111]'}`}>
-                      {s.paymentMethod || 'cash'}
-                    </span>
-                  </td>
-                  <td><span className="text-sm font-black">{new Date(s.date).toLocaleDateString()}</span></td>
-                  <td className="text-right">
-                    <button onClick={() => { setLastTxn(s); setIsInvoiceModalOpen(true); }} className="p-2 border-2 border-[var(--border-color)] bg-[var(--card-bg)] hover:bg-[var(--color-secondary)] hover:text-[#ffffff] transition-all shadow-[2px_2px_0_var(--shadow-color)] active:shadow-none mr-2" title="View Invoice"><Receipt className="w-4 h-4" /></button>
-                    <button onClick={() => deleteSale(s.id)} className="p-2 border-2 border-[var(--border-color)] bg-[var(--card-bg)] hover:bg-red-500 hover:text-[#ffffff] transition-all shadow-[2px_2px_0_var(--shadow-color)] active:shadow-none"><Trash2 className="w-4 h-4" /></button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="text-center py-32 bg-[var(--bg-secondary)]">
-                  <div className="flex flex-col items-center justify-center gap-6 opacity-30">
-                    <Receipt className="w-20 h-20" />
-                    <p className="text-xl font-black uppercase tracking-widest">{t('sales.noSales')}</p>
-                  </div>
-                </td>
-              </tr>
+      <div className="flex flex-col xl:flex-row gap-6">
+        
+        {/* Left Area: Billing Actions */}
+        <div className="flex-1 space-y-6">
+          <div className="flex flex-wrap gap-4">
+            <button className="brutalist-btn flex-1 gap-2" onClick={() => setIsItemModalOpen(true)}>
+              <Search className="w-5 h-5" /> FIND ITEM
+            </button>
+            <button className="brutalist-btn bg-[var(--color-secondary)] text-white flex-1 gap-2" onClick={() => setIsCustomItemModalOpen(true)}>
+              <Plus className="w-5 h-5" /> EXTRA CHARGE
+            </button>
+          </div>
+
+          <div className="brutalist-card space-y-4">
+            <h3 className="text-xl font-black uppercase mb-4 flex items-center gap-2 border-b-4 border-[var(--border-color)] pb-2">
+              <User className="w-6 h-6" /> CUSTOMER DETAILS
+            </h3>
+            <div>
+              <select className="brutalist-input py-3" value={customerId} onChange={(e) => setCustomerId(e.target.value)}>
+                <option value="">Walk-in Customer (No Khata)</option>
+                {customers.map(c => <option key={c.id} value={c.id}>{c.name} - {c.phone}</option>)}
+              </select>
+            </div>
+            {customerId && (
+              <p className="text-sm font-bold text-[var(--color-secondary)] uppercase">
+                * Any unpaid amount will be added to this customer's khata.
+              </p>
             )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* POS BILLING FULLSCREEN OVERLAY */}
-      {isBillModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[var(--bg-primary)] overflow-y-auto overflow-x-hidden flex flex-col">
-          <div className="flex flex-col max-w-[1400px] w-full mx-auto min-h-screen">
-            {/* Header */}
-            <div className="flex justify-between items-center py-6 px-4 xl:px-0 mb-4 border-b-4 border-[var(--border-color)]">
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter text-[var(--text-primary)]">New Invoice</h2>
-              <button onClick={() => setIsBillModalOpen(false)} className="brutalist-btn px-6 py-2 bg-[var(--color-brand)] text-[#111111] text-sm shadow-[4px_4px_0_var(--shadow-color)] hover:shadow-none hover:translate-y-1 hover:translate-x-1">
-                <X className="w-5 h-5 inline-block mr-2" /> Close
-              </button>
-            </div>
-
-            {/* Main 3-Column Grid */}
-            <div className="flex-1 px-4 xl:px-0 grid grid-cols-1 lg:grid-cols-12 gap-6 pb-10">
-              
-              {/* COLUMN 1: PRODUCTS & CART (40% ≈ 5 cols) */}
-              <div className="lg:col-span-5 flex flex-col gap-4 h-[calc(100vh-140px)]">
-                {/* Product Search */}
-                <div className="relative shrink-0">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-secondary)]" />
-                  <input className="brutalist-input !pl-12 py-3 text-base w-full" placeholder="Search products..." value={productSearch} onChange={(e) => setProductSearch(e.target.value)} />
-                </div>
-                
-                {/* Product Cards Grid */}
-                <div className="flex-1 min-h-0 overflow-y-auto border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-3 grid grid-cols-2 gap-3 custom-scrollbar">
-                  {products.filter(p => p.qty > 0 && p.name.toLowerCase().includes(productSearch.toLowerCase())).map(p => (
-                    <button key={p.id} onClick={() => addToCartFast(p)} className="text-left p-3 border-2 border-[var(--border-color)] bg-[var(--bg-secondary)] hover:bg-[var(--color-brand)] transition-colors flex flex-col gap-2 min-h-[80px]">
-                      <span className="font-black uppercase truncate w-full text-sm text-[var(--text-primary)]">{p.name}</span>
-                      <div className="flex justify-between items-end w-full mt-auto">
-                        <span className="font-bold text-[var(--text-secondary)] text-xs">Stock: {p.qty}</span>
-                        <span className="font-black italic text-base text-[var(--text-primary)]">₹{p.sell}</span>
-                      </div>
-                    </button>
-                  ))}
-                  {products.filter(p => p.qty > 0 && p.name.toLowerCase().includes(productSearch.toLowerCase())).length === 0 && (
-                    <div className="col-span-2 text-center opacity-50 py-10 font-bold uppercase tracking-widest text-sm">No products found</div>
-                  )}
-                </div>
-
-                {/* Cart */}
-                <div className="flex-1 min-h-0 flex flex-col border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-4 shadow-[4px_4px_0_var(--shadow-color)]">
-                  <h4 className="text-sm font-black uppercase tracking-widest mb-3 border-b-2 border-[var(--border-color)] pb-2 shrink-0 flex items-center gap-2"><ShoppingCart className="w-4 h-4"/> Cart ({cart.reduce((a,b)=>a+b.qty,0)} items)</h4>
-                  <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-                    {cart.map((item) => (
-                      <div key={item.pid} className="flex items-center border-2 border-[var(--border-color)] p-3 bg-[var(--bg-primary)] gap-4">
-                        <div className="flex-1 overflow-hidden">
-                          <p className="font-black uppercase truncate text-sm">{item.name}</p>
-                          <p className="text-xs font-bold text-[var(--text-secondary)]">₹{item.price} each</p>
-                        </div>
-                        <div className="flex items-center border-2 border-[var(--border-color)] bg-[var(--card-bg)] shrink-0">
-                          <button onClick={() => updateCartQty(item.pid, item.qty - 1)} className="px-3 py-1 font-black text-lg hover:bg-[var(--border-color)] hover:text-[var(--bg-primary)] transition-colors">-</button>
-                          <span className="font-black text-sm w-8 text-center">{item.qty}</span>
-                          <button onClick={() => updateCartQty(item.pid, item.qty + 1)} className="px-3 py-1 font-black text-lg hover:bg-[var(--border-color)] hover:text-[var(--bg-primary)] transition-colors">+</button>
-                        </div>
-                        <div className="shrink-0 w-24 text-right">
-                          <span className="font-black text-lg">₹{(item.price * item.qty).toLocaleString()}</span>
-                        </div>
-                      </div>
-                    ))}
-                    {cart.length === 0 && <div className="text-center opacity-50 py-10 font-bold uppercase tracking-widest text-xs">Cart is empty</div>}
-                  </div>
-                </div>
-              </div>
-
-              {/* COLUMN 2: CUSTOMER & ADJUSTMENTS (33% ≈ 4 cols) */}
-              <div className="lg:col-span-4 flex flex-col gap-6 h-[calc(100vh-140px)] overflow-y-auto pr-2 custom-scrollbar">
-                <div className="border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-[4px_4px_0_var(--shadow-color)]">
-                  <h3 className="text-lg font-black uppercase tracking-widest mb-4 border-b-2 border-[var(--border-color)] pb-2 flex items-center gap-2"><User className="w-5 h-5"/> Customer</h3>
-                  
-                  <label className="block text-xs font-black uppercase tracking-wider text-[var(--text-secondary)] mb-2">{t('billing.selectCustomer')}</label>
-                  <div className="relative">
-                    <select className="brutalist-input bg-[var(--bg-primary)] text-[var(--text-primary)] text-sm py-3 w-full appearance-none cursor-pointer" value={selectedCustomer} onChange={(e) => setSelectedCustomer(e.target.value)}>
-                      <option value="">{t('billing.walkInCustomer')}</option>
-                      {customers.map((c) => (
-                        <option key={c.id} value={c.id}>{c.name} ({c.phone})</option>
-                      ))}
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[var(--text-primary)]">
-                      <ChevronDown className="w-5 h-5" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-4 border-[var(--border-color)] bg-[var(--card-bg)] p-5 shadow-[4px_4px_0_var(--shadow-color)]">
-                  <h3 className="text-lg font-black uppercase tracking-widest mb-4 border-b-2 border-[var(--border-color)] pb-2 flex items-center gap-2"><Receipt className="w-5 h-5"/> Adjustments</h3>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-xs font-black uppercase tracking-wider text-[var(--text-secondary)] mb-2">{t('billing.tax')} (%)</label>
-                      <input className="brutalist-input py-3 text-base text-center w-full" type="number" min="0" placeholder="0" value={tax} onChange={(e) => setTax(Number(e.target.value))} />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-black uppercase tracking-wider text-[var(--text-secondary)] mb-2">{t('billing.discount')} (₹)</label>
-                      <input className="brutalist-input py-3 text-base text-center w-full" type="number" min="0" placeholder="0" value={discount} onChange={(e) => setDiscount(Number(e.target.value))} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* COLUMN 3: SUMMARY & PAYMENT (25% ≈ 3 cols) */}
-              <div className="lg:col-span-3">
-                <div className="sticky top-0 flex flex-col border-4 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[4px_4px_0_var(--shadow-color)]">
-                  <div className="p-5 bg-[var(--color-brand)] border-b-4 border-[var(--border-color)]">
-                    <div className="space-y-2 mb-4">
-                      <div className="flex justify-between items-center text-sm font-bold text-[#111111]">
-                        <span>{t('billing.subtotal')}</span>
-                        <span>₹{cartSubtotal.toLocaleString()}</span>
-                      </div>
-                      {tax > 0 && (
-                        <div className="flex justify-between items-center text-sm font-bold text-[#111111]">
-                          <span>Tax ({tax}%)</span>
-                          <span>+₹{cartTax.toFixed(2)}</span>
-                        </div>
-                      )}
-                      {discount > 0 && (
-                        <div className="flex justify-between items-center text-sm font-bold text-[#111111]">
-                          <span>Discount</span>
-                          <span>-₹{discount.toLocaleString()}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="border-t-2 border-[#111111] pt-3">
-                      <span className="block text-xs font-black uppercase tracking-widest text-[#111111] mb-1">{t('billing.finalAmount')}</span>
-                      <span className="block text-4xl font-black italic text-[#111111] leading-none tracking-tighter">₹{cartTotal.toLocaleString()}</span>
-                    </div>
-                  </div>
-
-                  <div className="p-5">
-                    <label className="block text-xs font-black uppercase tracking-wider text-[var(--text-primary)] mb-3">{t('billing.paymentMethod')}</label>
-                    <div className="grid grid-cols-1 gap-2 mb-6">
-                      {['cash', 'upi', 'credit'].map((method) => (
-                        <button key={method} onClick={() => setPaymentMethod(method)}
-                          className={`py-3 text-sm font-black uppercase border-2 border-[var(--border-color)] transition-colors ${paymentMethod === method ? 'bg-[var(--text-primary)] text-[var(--bg-primary)]' : 'bg-[var(--bg-secondary)] text-[var(--text-primary)] hover:bg-[var(--color-brand)]'}`}>
-                          {t(`billing.${method}`)}
-                        </button>
-                      ))}
-                    </div>
-
-                    <button className="brutalist-btn w-full py-4 text-lg font-black uppercase tracking-widest bg-[#00C853] text-[#111111] transition-all border-2 border-[#111111] shadow-[4px_4px_0_#111111] hover:translate-y-1 hover:shadow-[2px_2px_0_#111111] active:translate-y-2 active:shadow-none" onClick={confirmSale}>
-                      <CheckCircle2 className="w-5 h-5 inline-block mr-2" /> {t('billing.confirmPrint')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-            </div>
           </div>
         </div>
-      )}
 
-      {/* INVOICE MODAL */}
-      {isInvoiceModalOpen && lastTxn && (
-        <Modal isOpen={true} onClose={() => setIsInvoiceModalOpen(false)} title="Receipt">
-          <div className="text-center py-6">
-            <div className="w-16 h-16 border-4 border-[var(--border-color)] bg-[#00C853] flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0_var(--shadow-color)]">
-              <CheckCircle2 className="w-8 h-8 text-[#111111]" />
+        {/* Right Area: Cart & Checkout */}
+        <div className="flex-[2] border-4 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[8px_8px_0_var(--shadow-color)] flex flex-col min-h-[600px]">
+          <div className="p-4 border-b-4 border-[var(--border-color)] bg-[var(--color-brand)] flex justify-between items-center">
+            <h2 className="text-2xl font-black uppercase flex items-center gap-2 text-[#111111]">
+              <ShoppingCart className="w-6 h-6" /> CURRENT BILL
+            </h2>
+            <button onClick={clearCart} className="text-sm font-black uppercase underline hover:text-[var(--color-error)] text-[#111111]">Clear All</button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[var(--bg-secondary)]">
+            {cart.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center opacity-30 text-center py-20">
+                <Receipt className="w-24 h-24 mb-4" />
+                <p className="text-xl font-black uppercase">Cart is Empty</p>
+                <p className="font-bold">Add items to start billing</p>
+              </div>
+            ) : (
+              cart.map((item) => (
+                <div key={item.id} className="flex justify-between items-center bg-white border-2 border-[var(--border-color)] p-3 shadow-[2px_2px_0_var(--shadow-color)]">
+                  <div className="flex-1">
+                    <p className="font-black uppercase text-lg leading-none mb-1">{item.name}</p>
+                    <p className="text-sm font-bold text-[var(--text-secondary)]">₹{item.rate.toLocaleString()} / unit</p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center border-2 border-[var(--border-color)] bg-[var(--bg-secondary)]">
+                      <button className="px-3 py-1 font-black hover:bg-[var(--color-brand)]" onClick={() => updateCartQty(item.id, -1)}>-</button>
+                      <span className="px-3 py-1 font-black text-lg border-x-2 border-[var(--border-color)]">{item.qty}</span>
+                      <button className="px-3 py-1 font-black hover:bg-[var(--color-brand)]" onClick={() => updateCartQty(item.id, 1)}>+</button>
+                    </div>
+                    <div className="w-24 text-right font-black text-xl">
+                      ₹{(item.qty * item.rate).toLocaleString()}
+                    </div>
+                    <button className="p-2 text-[var(--color-error)] hover:bg-[var(--color-error)] hover:text-white border-2 border-transparent hover:border-[var(--border-color)] transition-all" onClick={() => removeFromCart(item.id)}>
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Totals & Checkout */}
+          <div className="p-6 border-t-4 border-[var(--border-color)] bg-white space-y-4">
+            <div className="grid grid-cols-2 gap-4 text-sm font-black uppercase">
+              <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
+                <span>Subtotal</span>
+                <span className="text-lg">₹{subtotal.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
+                <span>Discount (₹)</span>
+                <input type="number" className="w-20 border-2 border-[var(--border-color)] px-1 text-right outline-none" value={discount} onChange={e => setDiscount(Number(e.target.value) || 0)} />
+              </div>
+              <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
+                <span>Tax GST (%)</span>
+                <input type="number" className="w-20 border-2 border-[var(--border-color)] px-1 text-right outline-none" value={taxPercent} onChange={e => setTaxPercent(Number(e.target.value) || 0)} />
+              </div>
+              <div className="flex items-center justify-between bg-[var(--color-brand)] border-2 border-[var(--border-color)] p-1 px-2 text-[#111111]">
+                <span>TOTAL</span>
+                <span className="text-xl">₹{finalTotal.toLocaleString()}</span>
+              </div>
             </div>
-            <h3 className="text-3xl font-black tracking-tighter uppercase italic mb-2">Invoice Confirmed</h3>
-            <p className="text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] mb-8 italic">ID: {lastTxn.id}</p>
-            
-            <div className="border-4 border-[var(--border-color)] p-8 mb-8 text-left space-y-4 bg-[var(--card-bg)] shadow-[10px_10px_0_var(--shadow-color)]">
-              <div className="flex justify-between items-center border-b-2 border-[var(--border-color)] pb-4 mb-4">
+
+            <div className="grid grid-cols-2 gap-6 pt-2">
+              <div>
+                <label className="block text-xs font-black uppercase mb-1">Paid Amount (₹)</label>
+                <input type="number" placeholder={finalTotal.toString()} className="brutalist-input py-2 text-xl" value={paid} onChange={e => setPaid(e.target.value)} />
+              </div>
+              <div className="flex flex-col justify-end">
+                <div className="flex justify-between items-end border-b-4 border-[var(--border-color)] pb-1">
+                  <span className="text-sm font-black uppercase text-[var(--color-error)]">DUE (UDHAAR)</span>
+                  <span className="text-3xl font-black text-[var(--color-error)]">₹{dueAmount.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+
+            <button className="brutalist-btn w-full py-5 text-xl mt-4" onClick={confirmSale}>
+              CONFIRM & GENERATE INVOICE
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Select Item Modal */}
+      <Modal isOpen={isItemModalOpen} onClose={() => setIsItemModalOpen(false)} title="ADD ITEM TO BILL"
+        actions={<button className="brutalist-btn w-full" onClick={() => setIsItemModalOpen(false)}>DONE</button>}>
+        <div className="space-y-4">
+          <input className="brutalist-input py-3" placeholder="Search Inventory..." value={searchItem} onChange={e => setSearchItem(e.target.value)} autoFocus />
+          <div className="max-h-80 overflow-y-auto space-y-2">
+            {filteredProducts.map(p => (
+              <div key={p.id} className="flex justify-between items-center p-3 border-2 border-[var(--border-color)] hover:bg-[var(--color-brand)] cursor-pointer" onClick={() => addToCart(p)}>
                 <div>
-                  <p className="text-xs font-black uppercase text-[var(--text-secondary)]">Customer</p>
-                  <p className="text-lg font-black uppercase italic">{lastTxn.customerName || lastTxn.name || 'Walk-in'}</p>
+                  <p className="font-black uppercase">{p.name}</p>
+                  <p className="text-sm font-bold">Stock: {p.qty} | ₹{p.sell}</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-xs font-black uppercase text-[var(--text-secondary)]">Payment</p>
-                  <p className="text-sm font-black uppercase px-2 py-1 bg-[var(--border-color)] text-[var(--bg-primary)] inline-block mt-1">{lastTxn.paymentMethod || 'Cash'}</p>
-                </div>
+                <Plus className="w-6 h-6" />
               </div>
+            ))}
+            {filteredProducts.length === 0 && <p className="text-center font-bold py-4 uppercase">No items found</p>}
+          </div>
+        </div>
+      </Modal>
 
-              <div className="space-y-3">
-                {lastTxn.items?.map((item, idx) => (
-                  <div key={idx} className="flex justify-between text-sm font-bold">
-                    <span>{item.qty}x {item.name}</span>
-                    <span>₹{item.price * item.qty}</span>
-                  </div>
-                ))}
-                {!lastTxn.items && (
-                  <div className="flex justify-between text-sm font-bold">
-                    <span>{lastTxn.qty}x {lastTxn.name}</span>
-                    <span>₹{lastTxn.amt}</span>
-                  </div>
-                )}
-              </div>
-              
-              <div className="pt-6 border-t-4 border-[var(--border-color)]">
-                {lastTxn.tax > 0 && <div className="flex justify-between text-sm font-bold text-[var(--text-secondary)] mb-1"><span>Tax</span><span>+₹{((lastTxn.subtotal * lastTxn.tax)/100).toFixed(2)}</span></div>}
-                {lastTxn.discount > 0 && <div className="flex justify-between text-sm font-bold text-[var(--text-secondary)] mb-3"><span>Discount</span><span>-₹{lastTxn.discount}</span></div>}
-                <div className="flex justify-between items-center"><span className="text-lg font-black uppercase tracking-widest">Total</span><span className="text-4xl font-black italic">₹{lastTxn.amt.toLocaleString()}</span></div>
-              </div>
+      {/* Custom Item Modal */}
+      <Modal isOpen={isCustomItemModalOpen} onClose={() => setIsCustomItemModalOpen(false)} title="ADD EXTRA CHARGE"
+        actions={
+          <div className="flex gap-4">
+            <button className="text-sm font-black uppercase underline decoration-2" onClick={() => setIsCustomItemModalOpen(false)}>CANCEL</button>
+            <button className="brutalist-btn px-8" onClick={addCustomCharge}>ADD</button>
+          </div>
+        }>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-black uppercase tracking-wider mb-2">Charge Name</label>
+            <input className="brutalist-input py-3" placeholder="Delivery, Labor, Custom Item..." value={customName} onChange={e => setCustomName(e.target.value)} autoFocus />
+          </div>
+          <div>
+            <label className="block text-sm font-black uppercase tracking-wider mb-2">Amount (₹)</label>
+            <input type="number" className="brutalist-input py-3" placeholder="0" value={customPrice} onChange={e => setCustomPrice(e.target.value)} />
+          </div>
+        </div>
+      </Modal>
+
+      {/* Receipt Modal */}
+      {isReceiptModalOpen && lastInvoice && (
+        <Modal isOpen={true} onClose={() => setIsReceiptModalOpen(false)} title="INVOICE GENERATED">
+          <div className="text-center py-4">
+            <div className="w-20 h-20 border-4 border-[var(--border-color)] bg-[var(--color-success)] flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0_var(--shadow-color)]">
+              <CheckCircle2 className="w-10 h-10 text-[#111111]" />
             </div>
-
+            <h3 className="text-3xl font-black tracking-tighter uppercase mb-2">₹{lastInvoice.total.toLocaleString()}</h3>
+            <p className="text-sm font-black uppercase tracking-widest text-[var(--text-secondary)] mb-6">INV: {lastInvoice.id}</p>
+            
             <div className="flex gap-4">
-              <button className="brutalist-btn w-full py-5 text-lg bg-[var(--bg-secondary)]" onClick={() => window.print()}>Print</button>
-              <button className="brutalist-btn w-full py-5 text-lg bg-[var(--color-brand)] text-[#111111]" onClick={() => setIsInvoiceModalOpen(false)}>Close</button>
+              <button className="brutalist-btn flex-1 bg-[var(--color-accent)] text-[#111111] gap-2" onClick={handlePrint}>
+                <Printer className="w-5 h-5" /> PRINT RECIEPT
+              </button>
+              <button className="brutalist-btn flex-1 gap-2" onClick={() => setIsReceiptModalOpen(false)}>
+                <X className="w-5 h-5" /> CLOSE
+              </button>
             </div>
           </div>
         </Modal>

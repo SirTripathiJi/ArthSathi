@@ -29,11 +29,18 @@
     --card-bg: #ffffff;
     --text-primary: #111111;
     --text-secondary: #555555;
-    --border-color: #000000;
-    --shadow-color: rgba(0,0,0,0.15);
+    --border-color: #0a0a0a;
+    --shadow-color: rgba(10,10,10,0.15);
     
     --radius: 0px; /* Sharp corners for Brutalism */
     --transition: all 0.1s ease-in-out;
+
+    /* Theme Tokens */
+    --bg: #ffffff;
+    --text: #111111;
+    --card: #f5f5f5;
+    --border: #e5e5e5;
+    --accent: #ffd400;
   }
 
   [data-theme="dark"] {
@@ -44,12 +51,18 @@
     --text-secondary: #b0b0b0;
     --border-color: #ffffff;
     --shadow-color: rgba(255,255,255,0.08);
+
+    /* Theme Tokens */
+    --bg: #0a0a0a;
+    --text: #f5f5f5;
+    --card: #121212;
+    --border: #2a2a2a;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    background-color: var(--bg);
+    color: var(--text);
     font-size: 17px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -68,8 +81,8 @@
   html[data-theme="light"] body {
     background-color: var(--bg-secondary);
     background-image:
-      linear-gradient(#00000010 1px, transparent 1px),
-      linear-gradient(90deg, #00000010 1px, transparent 1px);
+      linear-gradient(#0a0a0a10 1px, transparent 1px),
+      linear-gradient(90deg, #0a0a0a10 1px, transparent 1px);
     background-size: 40px 40px;
   }
 
@@ -99,20 +112,20 @@
   /* Brutalist Card */
   .brutalist-card {
     background: var(--card-bg);
-    border: 3px solid var(--border-color);
-    box-shadow: 4px 4px 0px var(--shadow-color);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px var(--shadow-color);
     transition: var(--transition);
     padding: 20px;
   }
   .brutalist-card:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px var(--shadow-color);
+    box-shadow: 0 8px 24px var(--shadow-color);
   }
   html[data-theme="dark"] .brutalist-card {
-    box-shadow: 0 0 0 1px var(--border-color), 0 8px 20px rgba(0,0,0,0.6);
+    box-shadow: 0 0 0 1px var(--border-color), 0 8px 20px rgba(10,10,10,0.6);
   }
   html[data-theme="dark"] .brutalist-card:hover {
-    box-shadow: 0 0 0 1px var(--border-color), 0 12px 24px rgba(0,0,0,0.8);
+    box-shadow: 0 0 0 1px var(--border-color), 0 12px 24px rgba(10,10,10,0.8);
   }
 
   /* Brutalist Input */
@@ -227,8 +240,8 @@
   background: linear-gradient(to bottom, #FF6B6B, #FFA94D, #FFD43B, #69DB7C, #4DABF7);
   opacity: 0.13;
 }
-.stripe-bar-left  { left: 0;  border-radius: 0 12px 12px 0; box-shadow: 4px 0 20px rgba(0,0,0,0.08); }
-.stripe-bar-right { right: 0; border-radius: 12px 0 0 12px; box-shadow: -4px 0 20px rgba(0,0,0,0.08); }
+.stripe-bar-left  { left: 0;  border-radius: 0 12px 12px 0; box-shadow: 4px 0 20px rgba(10,10,10,0.08); }
+.stripe-bar-right { right: 0; border-radius: 12px 0 0 12px; box-shadow: -4px 0 20px rgba(10,10,10,0.08); }
 @media (max-width: 768px) {
   .stripe-bar { width: 60px; opacity: 0.09; }
 }
@@ -244,7 +257,7 @@ html[data-theme="dark"] .page-glass {
 
 /* Dashboard inset depth */
 .dashboard-main {
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.04);
+  box-shadow: inset 0 0 40px rgba(10,10,10,0.04);
 }
 
 .animate-brutal-bounce {
@@ -323,3 +336,46 @@ html[data-theme="dark"] .page-glass {
   animation: brutal-modal-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* User Requested Overrides */
+.card, .grid-box { background: var(--card); border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(10,10,10,0.05); }
+
+th, td { color: var(--text); }
+th:hover, td:hover {
+  background: var(--accent);
+  color: #0a0a0a; /* force contrast */
+}
+
+.table-row:hover {
+  background: rgba(255,255,255,0.08);
+}
+[data-theme="light"] .table-row:hover {
+  background: rgba(10,10,10,0.05);
+}
+
+/* --- Print Styles --- */
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .print-only, .print-only * {
+    visibility: visible;
+  }
+  .print-only {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+}

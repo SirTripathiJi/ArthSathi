@@ -22,10 +22,10 @@ export function AuthPage() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const email = logEmail.trim().toLowerCase();
+    const email = String(logEmail || '').trim().toLowerCase();
     if (!email || !logPass) return toast.error('Required fields missing');
     const users = DB.getUsers();
-    const user = users.find((u) => u.email === email && u.pass === logPass);
+    const user = users.find((u) => String(u.email || '').toLowerCase() === email && u.pass === logPass);
     if (!user) return toast.error('Invalid credentials');
     setSession({ uid: user.uid, name: user.name, store: user.store });
     navigate('/dashboard');
@@ -33,11 +33,11 @@ export function AuthPage() {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    const email = regEmail.trim().toLowerCase();
+    const email = String(regEmail || '').trim().toLowerCase();
     if (!regName || !email || !regStore || !regPass) return toast.error('All fields are required');
     if (regPass.length < 6) return toast.error('Password too short');
     const users = DB.getUsers();
-    if (users.find((u) => u.email === email)) return toast.error('Account already exists');
+    if (users.find((u) => String(u.email || '').toLowerCase() === email)) return toast.error('Account already exists');
     const newUser = { uid: 'u_' + Date.now(), name: regName, email, store: regStore, pass: regPass };
     users.push(newUser);
     DB.setUsers(users);

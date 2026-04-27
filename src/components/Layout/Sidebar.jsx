@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, LineChart, LogOut, Package, Receipt, Settings, Users } from 'lucide-react';
+import { LayoutDashboard, LineChart, LogOut, Package, Receipt, Settings, Users, FileText } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { DB } from '../../services/db';
@@ -19,12 +19,13 @@ export function Sidebar({ isOpen, toggleSidebar }) {
   }, [user]);
 
   const nav = [
-    { to: '/dashboard', icon: LayoutDashboard, label: t('nav.overview') },
-    { to: '/inventory', icon: Package, label: t('nav.inventory'), badge: lowStockCount },
-    { to: '/customers', icon: Users, label: t('nav.customers') },
-    { to: '/sales', icon: Receipt, label: t('nav.billing') },
-    { to: '/analytics', icon: LineChart, label: t('nav.insights') },
-    { to: '/settings', icon: Settings, label: t('nav.settings') },
+    { to: '/dashboard', icon: LayoutDashboard, label: t('nav.overview') || 'Overview' },
+    { to: '/inventory', icon: Package, label: t('nav.inventory') || 'Inventory', badge: lowStockCount },
+    { to: '/customers', icon: Users, label: 'Customers' },
+    { to: '/sales', icon: Receipt, label: t('nav.billing') || 'Billing' },
+    { to: '/transactions', icon: FileText, label: 'Transactions' },
+    { to: '/analytics', icon: LineChart, label: t('nav.insights') || 'Insights' },
+    { to: '/settings', icon: Settings, label: t('nav.settings') || 'Settings' },
   ];
 
   return (
