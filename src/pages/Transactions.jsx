@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FileText, Search, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../context/LanguageContext';
 import { DB } from '../services/db';
 
 export function Transactions() {
   const { user } = useAuth();
+  const { t = (k) => k } = useTranslation();
   
   const [sales, setSales] = useState([]);
   const [search, setSearch] = useState('');

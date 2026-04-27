@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Logo } from '../components/UI/Logo';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../context/LanguageContext';
 import { DB } from '../services/db';
 
 export function AuthPage() {
@@ -12,6 +13,7 @@ export function AuthPage() {
   const navigate = useNavigate();
   const { login: setSession } = useAuth();
   const toast = useToast();
+  const { t = (k) => k } = useTranslation();
 
   const [logEmail, setLogEmail] = useState('');
   const [logPass, setLogPass] = useState('');

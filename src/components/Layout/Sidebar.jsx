@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, LineChart, LogOut, Package, Receipt, Settings, Users, FileText } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useLanguage } from '../../context/LanguageContext';
+import { useTranslation } from '../../context/LanguageContext';
 import { DB } from '../../services/db';
 import { Logo } from '../UI/Logo';
 
 export function Sidebar({ isOpen, toggleSidebar }) {
   const { user, logout } = useAuth();
-  const { t } = useLanguage();
+  const { t = (k) => k } = useTranslation();
   const [lowStockCount, setLowStockCount] = useState(0);
 
   useEffect(() => {

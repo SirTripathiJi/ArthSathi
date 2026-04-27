@@ -4,7 +4,7 @@ import { ShieldCheck, Trash2, Sun, Moon, AlertTriangle, Globe } from 'lucide-rea
 import { Modal } from '../components/UI/Modal';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { DB } from '../services/db';
 
@@ -13,7 +13,7 @@ export function Settings() {
   const { theme, toggleTheme } = useTheme();
   const toast = useToast();
   const navigate = useNavigate();
-  const { t, lang, changeLanguage, LANGS, LANG_NAMES } = useLanguage();
+  const { t = (k) => k, LANGS, LANG_NAMES, changeLanguage, lang } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const clearData = () => {

@@ -6,14 +6,14 @@ import {
 } from 'lucide-react';
 import { Logo } from '../components/UI/Logo';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 
 export function LandingPage() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
-  const { lang, changeLanguage, LANGS } = useLanguage();
+  const { t = (k) => k, lang, changeLanguage, LANGS } = useTranslation();
 
   const go = () => navigate(user ? '/dashboard' : '/auth');
 

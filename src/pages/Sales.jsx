@@ -4,14 +4,14 @@ import { Plus, Receipt, Search, Trash2, CheckCircle2, Printer, X, ShoppingCart, 
 import { Modal } from '../components/UI/Modal';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 import { DB } from '../services/db';
 import { InvoicePrint } from '../components/UI/InvoicePrint';
 
 export function Sales() {
   const { user } = useAuth();
   const toast = useToast();
-  const { t } = useLanguage();
+  const { t = (k) => k } = useTranslation();
 
   const [products, setProducts] = useState([]);
   const [customers, setCustomers] = useState([]);

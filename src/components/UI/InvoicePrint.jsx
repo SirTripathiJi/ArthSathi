@@ -1,7 +1,9 @@
 import { forwardRef } from 'react';
+import { useTranslation } from '../../context/LanguageContext';
 
 // A component designed strictly for printing. Hidden on screen via CSS.
 export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, ref) => {
+  const { t = (k) => k } = useTranslation();
   if (!invoice) return null;
 
   const isThermal = type === 'thermal';
@@ -21,17 +23,17 @@ export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, r
       {/* Invoice Details */}
       <div className={`flex justify-between mb-4 ${isThermal ? 'text-[10px] flex-col gap-1' : 'text-sm font-bold uppercase'}`}>
         <div>
-          <p>Invoice #: {invoice.id}</p>
-          <p>Date: {invoice.date ? new Date(invoice.date).toLocaleString() : '-'}</p>
+          <p>{t('transactions.invoice')}: {invoice.id}</p>
+          <p>{t('transactions.date')}: {invoice.date ? new Date(invoice.date).toLocaleString() : '-'}</p>
         </div>
         <div className={isThermal ? '' : 'text-right'}>
           {invoice.customerName ? (
             <>
-              <p>Bill To: {invoice.customerName}</p>
-              <p>Ph: {invoice.customerPhone || '-'}</p>
+              <p>{t('sales.customer')}: {invoice.customerName}</p>
+              <p>{t('customers.phone')}: {invoice.customerPhone || '-'}</p>
             </>
           ) : (
-            <p>Cash Walk-in</p>
+            <p>{t('sales.walkIn')}</p>
           )}
         </div>
       </div>
@@ -40,10 +42,10 @@ export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, r
       <table className="w-full text-left mb-4 border-collapse">
         <thead>
           <tr className={`border-b-2 border-black ${isThermal ? 'text-[10px]' : 'text-sm uppercase'}`}>
-            <th className="py-2">Item</th>
-            <th className="py-2 text-center">Qty</th>
-            <th className="py-2 text-right">Rate</th>
-            <th className="py-2 text-right">Amount</th>
+            <th className="py-2">{t('inventory.product')}</th>
+            <th className="py-2 text-center">{t('inventory.stockQty')}</th>
+            <th className="py-2 text-right">{t('inventory.sellingPrice')}</th>
+            <th className="py-2 text-right">{t('sales.subtotal')}</th>
           </tr>
         </thead>
         <tbody>
@@ -77,16 +79,16 @@ export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, r
           </div>
         )}
         <div className={`flex justify-between w-48 mt-2 pt-2 border-t-2 border-black ${isThermal ? 'font-bold text-sm' : 'text-xl font-black'}`}>
-          <span>Total:</span>
+          <span>{t('sales.total')}:</span>
           <span>₹{(invoice.total || invoice.amt || 0).toLocaleString()}</span>
         </div>
         <div className="flex justify-between w-48 mt-2 text-gray-600">
-          <span>Paid:</span>
+          <span>{t('sales.paidAmount')}:</span>
           <span>₹{(invoice.paid || invoice.total || 0).toLocaleString()}</span>
         </div>
         {(invoice.due > 0) && (
           <div className="flex justify-between w-48 text-gray-600">
-            <span>Due:</span>
+            <span>{t('sales.balanceDue')}:</span>
             <span>₹{(invoice.due || 0).toLocaleString()}</span>
           </div>
         )}

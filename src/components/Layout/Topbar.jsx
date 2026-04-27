@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { Menu, Sun, Moon } from 'lucide-react';
-import { useLanguage } from '../../context/LanguageContext';
+import { useTranslation } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 
 const PAGE_KEYS = {
@@ -11,7 +11,7 @@ const PAGE_KEYS = {
 export function Topbar({ toggleSidebar }) {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
-  const { t } = useLanguage();
+  const { t = (k) => k } = useTranslation();
   const path = location.pathname.split('/')[1] || 'dashboard';
   const titleKey = PAGE_KEYS[path] || 'nav.overview';
 

@@ -3,11 +3,13 @@ import { Plus, Search, Trash2, Edit, AlertCircle, CheckCircle2, User } from 'luc
 import { Modal } from '../components/UI/Modal';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from '../context/LanguageContext';
 import { DB } from '../services/db';
 
 export function Customers() {
   const { user } = useAuth();
   const toast = useToast();
+  const { t = (k) => k } = useTranslation();
 
   const [customers, setCustomers] = useState([]);
   const [sales, setSales] = useState([]);
