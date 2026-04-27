@@ -19,13 +19,13 @@ export function Sidebar({ isOpen, toggleSidebar }) {
   }, [user]);
 
   const nav = [
-    { to: '/dashboard', icon: LayoutDashboard, label: t('nav.overview') || 'Overview' },
-    { to: '/inventory', icon: Package, label: t('nav.inventory') || 'Inventory', badge: lowStockCount },
-    { to: '/customers', icon: Users, label: 'Customers' },
-    { to: '/sales', icon: Receipt, label: t('nav.billing') || 'Billing' },
-    { to: '/transactions', icon: FileText, label: 'Transactions' },
-    { to: '/analytics', icon: LineChart, label: t('nav.insights') || 'Insights' },
-    { to: '/settings', icon: Settings, label: t('nav.settings') || 'Settings' },
+    { to: '/dashboard', icon: LayoutDashboard, label: t('nav.overview') },
+    { to: '/inventory', icon: Package, label: t('nav.inventory'), badge: lowStockCount },
+    { to: '/customers', icon: Users, label: t('nav.customers') },
+    { to: '/sales', icon: Receipt, label: t('nav.billing') },
+    { to: '/transactions', icon: FileText, label: t('nav.transactions') },
+    { to: '/analytics', icon: LineChart, label: t('nav.insights') },
+    { to: '/settings', icon: Settings, label: t('nav.settings') },
   ];
 
   return (

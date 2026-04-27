@@ -186,15 +186,18 @@
     border-collapse: collapse;
   }
   .brutalist-table th {
-    background: var(--border-color);
-    color: var(--bg-primary);
+    background: #000000 !important;
+    color: #ffffff !important;
     padding: 16px;
     text-align: left;
     text-transform: uppercase;
     font-weight: 900;
     font-size: 12px;
     letter-spacing: 1px;
-    border: 1px solid var(--text-secondary);
+    border: 1px solid #333333;
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
   .brutalist-table td {
     padding: 16px;

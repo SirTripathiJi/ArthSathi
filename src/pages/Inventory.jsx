@@ -4,13 +4,13 @@ import { PackageOpen, Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { Modal } from '../components/UI/Modal';
 import { useToast } from '../components/UI/ToastContext';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 import { DB } from '../services/db';
 
 export function Inventory() {
   const { user } = useAuth();
   const toast = useToast();
-  const { t } = useLanguage();
+  const { t = (k) => k } = useTranslation();
 
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');

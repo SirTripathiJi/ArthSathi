@@ -22,7 +22,7 @@ export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, r
       <div className={`flex justify-between mb-4 ${isThermal ? 'text-[10px] flex-col gap-1' : 'text-sm font-bold uppercase'}`}>
         <div>
           <p>Invoice #: {invoice.id}</p>
-          <p>Date: {new Date(invoice.date).toLocaleString()}</p>
+          <p>Date: {invoice.date ? new Date(invoice.date).toLocaleString() : '-'}</p>
         </div>
         <div className={isThermal ? '' : 'text-right'}>
           {invoice.customerName ? (
@@ -51,8 +51,8 @@ export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, r
             <tr key={idx} className={`border-b border-gray-300 ${isThermal ? 'text-[10px]' : 'text-sm font-bold'}`}>
               <td className="py-2">{item.name}</td>
               <td className="py-2 text-center">{item.qty}</td>
-              <td className="py-2 text-right">{(item.rate || item.sell).toLocaleString()}</td>
-              <td className="py-2 text-right">{(item.qty * (item.rate || item.sell)).toLocaleString()}</td>
+              <td className="py-2 text-right">{(item.rate || item.sell || 0).toLocaleString()}</td>
+              <td className="py-2 text-right">{(item.qty * (item.rate || item.sell || 0)).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
@@ -62,32 +62,32 @@ export const InvoicePrint = forwardRef(({ invoice, shopDetails, type = 'a4' }, r
       <div className={`flex flex-col items-end border-b-2 border-black pb-4 mb-4 ${isThermal ? 'text-[10px]' : 'text-sm font-bold uppercase'}`}>
         <div className="flex justify-between w-48 mb-1">
           <span>Subtotal:</span>
-          <span>{(invoice.subtotal || invoice.total).toLocaleString()}</span>
+          <span>{(invoice.subtotal || invoice.total || 0).toLocaleString()}</span>
         </div>
         {invoice.discount > 0 && (
           <div className="flex justify-between w-48 mb-1">
             <span>Discount:</span>
-            <span>-{invoice.discount.toLocaleString()}</span>
+            <span>-{(invoice.discount || 0).toLocaleString()}</span>
           </div>
         )}
         {invoice.tax > 0 && (
           <div className="flex justify-between w-48 mb-1">
             <span>Tax:</span>
-            <span>+{invoice.tax.toLocaleString()}</span>
+            <span>+{(invoice.tax || 0).toLocaleString()}</span>
           </div>
         )}
         <div className={`flex justify-between w-48 mt-2 pt-2 border-t-2 border-black ${isThermal ? 'font-bold text-sm' : 'text-xl font-black'}`}>
           <span>Total:</span>
-          <span>₹{(invoice.total || invoice.amt).toLocaleString()}</span>
+          <span>₹{(invoice.total || invoice.amt || 0).toLocaleString()}</span>
         </div>
         <div className="flex justify-between w-48 mt-2 text-gray-600">
           <span>Paid:</span>
-          <span>₹{(invoice.paid || invoice.total).toLocaleString()}</span>
+          <span>₹{(invoice.paid || invoice.total || 0).toLocaleString()}</span>
         </div>
         {(invoice.due > 0) && (
           <div className="flex justify-between w-48 text-gray-600">
             <span>Due:</span>
-            <span>₹{invoice.due.toLocaleString()}</span>
+            <span>₹{(invoice.due || 0).toLocaleString()}</span>
           </div>
         )}
       </div>

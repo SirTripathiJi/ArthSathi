@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { StatCard } from '../components/UI/StatCard';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { DB } from '../services/db';
 
@@ -25,7 +25,7 @@ const ANALYSIS_THRESHOLDS = { lowStockQty: 5, deadStockDays: 30, fastMovingSales
 export function Dashboard() {
   const { user } = useAuth();
   const { theme } = useTheme();
-  const { t, lang } = useLanguage();
+  const { t = (k) => k, lang } = useTranslation();
 
   const [salesData, setSalesData] = useState([]);
   const [productsData, setProductsData] = useState([]);
@@ -123,10 +123,16 @@ export function Dashboard() {
       p.qty > 0 && p.qty <= lowStockQty
     );
     const deadStockItems = productsData.filter(p =>
-      p.qty > 0 && !salesData.some(s => s.pid === p.id && new Date(s.date) >= cutoff)
+      p.qty > 0 && !salesData.some(s => {
+        const items = s.items || [s];
+        return items.some(item => String(item.pid || item.id) === String(p.id)) && new Date(s.date) >= cutoff;
+      })
     );
     const fastMovingItems = productsData.filter(p => {
-      const recent = salesData.filter(s => s.pid === p.id && new Date(s.date) >= cutoff);
+      const recent = salesData.filter(s => {
+        const items = s.items || [s];
+        return items.some(item => String(item.pid || item.id) === String(p.id)) && new Date(s.date) >= cutoff;
+      });
       return recent.length > fastMovingSales;
     });
 
@@ -165,7 +171,7 @@ export function Dashboard() {
               </div>
               <p className="text-base font-black text-[var(--text-primary)] uppercase tracking-widest">{t('dashboard.cashflow')}</p>
             </div>
-            <div className="text-xs font-black text-[#111111] border-2 border-[var(--border-color)] bg-[var(--color-brand)] px-4 py-1.5 shadow-[3px_3px_0_var(--shadow-color)] min-w-[80px] text-center whitespace-nowrap uppercase">7 Days</div>
+            <div className="text-xs font-black text-[#111111] border-2 border-[var(--border-color)] bg-[var(--color-brand)] px-4 py-1.5 shadow-[3px_3px_0_var(--shadow-color)] min-w-[80px] text-center whitespace-nowrap uppercase">7 {t('analytics.daily', 'Days')}</div>
           </div>
           {salesData.length > 0 ? (
             <div className="h-[300px]">

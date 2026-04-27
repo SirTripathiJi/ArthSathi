@@ -26,9 +26,9 @@ import {
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ArrowDownRight, ArrowUpRight, CheckCircle2, ChevronDown, ChevronUp, LineChart as LineChartIcon, Package, PieChart, AlertTriangle, TrendingDown, TrendingUp, Lightbulb, HelpCircle, X } from 'lucide-react';
-
+import { StatCard } from '../components/UI/StatCard';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { DB } from '../services/db';
 
@@ -37,7 +37,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 export function Analytics() {
   const { user } = useAuth();
   const { theme } = useTheme();
-  const { t, lang } = useLanguage();
+  const { t = (k) => k, lang } = useTranslation();
 
   const [salesData, setSalesData] = useState([]);
   const [productsData, setProductsData] = useState([]);
@@ -322,20 +322,38 @@ export function Analytics() {
       }
     }
 
-    // Dead Stock
+    // Promote / Slow Moving Item
+    const slowMoving = productGridData.filter(p => {
+      const prod = productsData.find(pd => String(pd.id) === String(p.id));
+      return prod && prod.qty > 30 && p.units < 5; // Over 30 in stock but less than 5 sold
+    });
+
+    if (slowMoving.length > 0) {
+      const item = slowMoving[0];
+      recs.push({
+        type: 'dead',
+        title: `${t('analytics.promote')}: ${item.product}`,
+        desc: `High inventory tied up with low demand.`,
+        reason: `Formula: ${item.units} units sold in 30 days vs ${productsData.find(p=>String(p.id)===String(item.id))?.qty} units in stock. Sales velocity is below healthy threshold for this stock level.`,
+        icon: <TrendingDown className="w-6 h-6 text-[#111111]" />, bg: '#00E5FF'
+      });
+    }
+
+    // Dead Stock (Zero sales)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     const deadStock = productsData.filter(p => p.qty > 0 && !salesData.some(s => {
       const items = s.items || [s];
       return items.some(item => String(item.pid || item.id) === String(p.id)) && new Date(s.date) >= thirtyDaysAgo;
     }));
-    if (deadStock.length > 0) {
+    
+    if (deadStock.length > 0 && !recs.some(r => r.title.includes(deadStock[0].name))) {
       recs.push({
         type: 'dead',
-        title: `${t('analytics.promote')}: ${deadStock[0].name}`,
-        desc: t('analytics.reasonPromote', '').replace('{qty}', deadStock[0].qty),
-        reason: `Formula: product has ${deadStock[0].qty} units in stock AND zero sales recorded in last 30 days → dead stock flag. Holding cost = tied-up capital.`,
-        icon: <TrendingDown className="w-6 h-6 text-[#111111]" />, bg: '#00E5FF'
+        title: `Dead Stock Review: ${deadStock[0].name}`,
+        desc: `No sales recorded in the last 30 days.`,
+        reason: `Formula: Item has ${deadStock[0].qty} units in stock but has 0 sales in the last 30-day window. Recommend liquidation or return to supplier.`,
+        icon: <TrendingDown className="w-6 h-6 text-[#111111]" />, bg: '#FF9100'
       });
     }
 

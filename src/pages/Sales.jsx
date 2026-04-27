@@ -19,9 +19,10 @@ export function Sales() {
   
   // Invoice Details
   const [customerId, setCustomerId] = useState('');
-  const [discount, setDiscount] = useState(0);
+  const [discountPercent, setDiscountPercent] = useState(0);
   const [taxPercent, setTaxPercent] = useState(0);
   const [paid, setPaid] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('Cash'); // UPI, Cash, Card, Udhaar
   const [notes, setNotes] = useState('');
 
   // Modals
@@ -49,12 +50,19 @@ export function Sales() {
   useEffect(() => { fetchAll(); }, [user]);
 
   // Cart Calculations
-  const subtotal = cart.reduce((acc, item) => acc + (item.qty * item.rate), 0);
-  const totalMargin = cart.reduce((acc, item) => acc + (item.qty * (item.rate - (item.cost || 0))), 0);
-  const taxAmount = (subtotal - discount) * (taxPercent / 100);
-  const finalTotal = subtotal - discount + taxAmount;
-  const paidAmount = paid === '' ? finalTotal : Number(paid);
+  const subtotal = cart.reduce((acc, item) => acc + (item.qty * (item.rate || 0)), 0);
+  const totalMargin = cart.reduce((acc, item) => acc + (item.qty * ((item.rate || 0) - (item.cost || 0))), 0);
+  const discountAmount = (subtotal * (discountPercent / 100)) || 0;
+  const taxAmount = (subtotal - discountAmount) * (taxPercent / 100) || 0;
+  const finalTotal = Math.max(0, subtotal - discountAmount + taxAmount);
+  const paidAmount = paid === '' ? (paymentMethod === 'Udhaar' ? 0 : finalTotal) : Number(paid);
   const dueAmount = Math.max(0, finalTotal - paidAmount);
+
+  const getPaymentStatus = () => {
+    if (dueAmount <= 0) return 'PAID';
+    if (paidAmount <= 0) return 'DUE';
+    return 'PARTIAL';
+  };
 
   const addToCart = (product) => {
     if (product.qty <= 0 && !product.isCustom) return toast.error('Out of stock');
@@ -117,17 +125,18 @@ export function Sales() {
     if (!window.confirm('Clear all items?')) return;
     setCart([]);
     setCustomerId('');
-    setDiscount(0);
+    setDiscountPercent(0);
     setTaxPercent(0);
     setPaid('');
+    setPaymentMethod('Cash');
     setNotes('');
   };
 
   const confirmSale = () => {
     if (cart.length === 0) return toast.error('Cart is empty');
-    if (dueAmount > 0 && !customerId) return toast.error('Udhaar (Due) requires a customer to be selected.');
+    if ((dueAmount > 0 || paymentMethod === 'Udhaar') && !customerId) return toast.error('Selected payment mode or Due balance requires a customer.');
 
-    const selectedCustomer = customers.find(c => c.id === customerId);
+    const selectedCustomer = customers.find(c => String(c.id) === String(customerId));
     
     // Deduct Inventory
     const updatedProducts = [...products];
@@ -140,26 +149,39 @@ export function Sales() {
       }
     });
 
+    const existingSales = DB.getSales(user.uid);
+    let nextNum = 10001;
+    if (existingSales.length > 0) {
+      const lastId = existingSales[existingSales.length - 1].id;
+      if (lastId && String(lastId).startsWith('INV-')) {
+        const lastNum = parseInt(String(lastId).split('-')[1]);
+        if (!isNaN(lastNum)) nextNum = lastNum + 1;
+      }
+    }
+    const invId = `INV-${nextNum}`;
+
     const invoice = {
-      id: 'INV-' + Math.floor(100000 + Math.random() * 900000),
+      id: invId,
       date: new Date().toISOString(),
       customerId,
       customerName: selectedCustomer ? selectedCustomer.name : 'Walk-in',
       customerPhone: selectedCustomer ? selectedCustomer.phone : '',
       items: cart,
       subtotal,
-      discount,
+      discount: discountAmount,
+      discountPercent,
       taxPercent,
       tax: taxAmount,
       total: finalTotal,
       paid: paidAmount,
       due: dueAmount,
-      profit: totalMargin - discount, // Simplified profit calculation
+      paymentMethod,
+      paymentStatus: getPaymentStatus(),
+      profit: totalMargin - discountAmount, 
       notes,
-      status: dueAmount > 0 ? 'DUE' : 'PAID'
+      status: getPaymentStatus()
     };
 
-    const existingSales = DB.getSales(user.uid);
     existingSales.push(invoice);
     
     DB.setProducts(user.uid, updatedProducts);
@@ -172,9 +194,10 @@ export function Sales() {
     // Reset Form
     setCart([]);
     setCustomerId('');
-    setDiscount(0);
+    setDiscountPercent(0);
     setTaxPercent(0);
     setPaid('');
+    setPaymentMethod('Cash');
     setNotes('');
     
     toast.success('Invoice Generated Successfully');
@@ -200,26 +223,26 @@ export function Sales() {
         <div className="flex-1 space-y-6">
           <div className="flex flex-wrap gap-4">
             <button className="brutalist-btn flex-1 gap-2" onClick={() => setIsItemModalOpen(true)}>
-              <Search className="w-5 h-5" /> FIND ITEM
+              <Search className="w-5 h-5" /> {t('sales.findItem')}
             </button>
             <button className="brutalist-btn bg-[var(--color-secondary)] text-white flex-1 gap-2" onClick={() => setIsCustomItemModalOpen(true)}>
-              <Plus className="w-5 h-5" /> EXTRA CHARGE
+              <Plus className="w-5 h-5" /> {t('sales.extraCharge')}
             </button>
           </div>
 
           <div className="brutalist-card space-y-4">
             <h3 className="text-xl font-black uppercase mb-4 flex items-center gap-2 border-b-4 border-[var(--border-color)] pb-2">
-              <User className="w-6 h-6" /> CUSTOMER DETAILS
+              <User className="w-6 h-6" /> {t('sales.customerDetails')}
             </h3>
             <div>
               <select className="brutalist-input py-3" value={customerId} onChange={(e) => setCustomerId(e.target.value)}>
-                <option value="">Walk-in Customer (No Khata)</option>
+                <option value="">{t('sales.walkIn')}</option>
                 {customers.map(c => <option key={c.id} value={c.id}>{c.name} - {c.phone}</option>)}
               </select>
             </div>
             {customerId && (
               <p className="text-sm font-bold text-[var(--color-secondary)] uppercase">
-                * Any unpaid amount will be added to this customer's khata.
+                {t('sales.khataNote')}
               </p>
             )}
           </div>
@@ -229,17 +252,17 @@ export function Sales() {
         <div className="flex-[2] border-4 border-[var(--border-color)] bg-[var(--card-bg)] shadow-[8px_8px_0_var(--shadow-color)] flex flex-col min-h-[600px]">
           <div className="p-4 border-b-4 border-[var(--border-color)] bg-[var(--color-brand)] flex justify-between items-center">
             <h2 className="text-2xl font-black uppercase flex items-center gap-2 text-[#111111]">
-              <ShoppingCart className="w-6 h-6" /> CURRENT BILL
+              <ShoppingCart className="w-6 h-6" /> {t('sales.currentBill')}
             </h2>
-            <button onClick={clearCart} className="text-sm font-black uppercase underline hover:text-[var(--color-error)] text-[#111111]">Clear All</button>
+            <button onClick={clearCart} className="text-sm font-black uppercase underline hover:text-[var(--color-error)] text-[#111111]">{t('sales.clearAll')}</button>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[var(--bg-secondary)]">
             {cart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center opacity-30 text-center py-20">
                 <Receipt className="w-24 h-24 mb-4" />
-                <p className="text-xl font-black uppercase">Cart is Empty</p>
-                <p className="font-bold">Add items to start billing</p>
+                <p className="text-xl font-black uppercase">{t('sales.cartEmpty')}</p>
+                <p className="font-bold">{t('sales.addItemsCta')}</p>
               </div>
             ) : (
               cart.map((item) => (
@@ -270,38 +293,78 @@ export function Sales() {
           <div className="p-6 border-t-4 border-[var(--border-color)] bg-white space-y-4">
             <div className="grid grid-cols-2 gap-4 text-sm font-black uppercase">
               <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
-                <span>Subtotal</span>
+                <span>{t('sales.subtotal')}</span>
                 <span className="text-lg">₹{subtotal.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
-                <span>Discount (₹)</span>
-                <input type="number" className="w-20 border-2 border-[var(--border-color)] px-1 text-right outline-none" value={discount} onChange={e => setDiscount(Number(e.target.value) || 0)} />
+                <span>{t('sales.discount')} (%)</span>
+                <input 
+                  type="number" 
+                  className="w-20 border-2 border-[var(--border-color)] px-1 text-right outline-none" 
+                  value={discountPercent} 
+                  onFocus={e => e.target.select()}
+                  onChange={e => setDiscountPercent(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
+                />
               </div>
               <div className="flex items-center justify-between border-b-2 border-dashed border-[var(--border-color)] pb-1">
-                <span>Tax GST (%)</span>
-                <input type="number" className="w-20 border-2 border-[var(--border-color)] px-1 text-right outline-none" value={taxPercent} onChange={e => setTaxPercent(Number(e.target.value) || 0)} />
+                <span>{t('sales.taxGst')} (%)</span>
+                <input 
+                  type="number" 
+                  className="w-20 border-2 border-[var(--border-color)] px-1 text-right outline-none" 
+                  value={taxPercent} 
+                  onFocus={e => e.target.select()}
+                  onChange={e => setTaxPercent(Number(e.target.value) || 0)} 
+                />
               </div>
               <div className="flex items-center justify-between bg-[var(--color-brand)] border-2 border-[var(--border-color)] p-1 px-2 text-[#111111]">
-                <span>TOTAL</span>
-                <span className="text-xl">₹{finalTotal.toLocaleString()}</span>
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black leading-none">{t('sales.netTotal')}</span>
+                  <span className="text-xl leading-tight">₹{finalTotal.toLocaleString()}</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-black leading-none">{t('sales.off')}: ₹{discountAmount.toLocaleString()}</span>
+                </div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6 pt-2">
-              <div>
-                <label className="block text-xs font-black uppercase mb-1">Paid Amount (₹)</label>
-                <input type="number" placeholder={finalTotal.toString()} className="brutalist-input py-2 text-xl" value={paid} onChange={e => setPaid(e.target.value)} />
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-black uppercase mb-1">{t('sales.paymentMode')}</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['Cash', 'UPI', 'Card', 'Udhaar'].map(mode => (
+                      <button 
+                        key={mode} 
+                        onClick={() => setPaymentMethod(mode)}
+                        className={`text-[10px] font-black py-1 border-2 border-[var(--border-color)] transition-all ${paymentMethod === mode ? 'bg-[var(--color-brand)] shadow-[2px_2px_0_var(--shadow-color)]' : 'bg-white hover:bg-[var(--bg-secondary)]'}`}
+                      >
+                        {mode}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-black uppercase mb-1">{t('sales.paidAmount')}</label>
+                  <input 
+                    type="number" 
+                    placeholder={paidAmount.toString()} 
+                    className="brutalist-input py-2 text-xl" 
+                    value={paid} 
+                    onFocus={e => e.target.select()}
+                    onChange={e => setPaid(e.target.value)} 
+                  />
+                </div>
               </div>
               <div className="flex flex-col justify-end">
                 <div className="flex justify-between items-end border-b-4 border-[var(--border-color)] pb-1">
-                  <span className="text-sm font-black uppercase text-[var(--color-error)]">DUE (UDHAAR)</span>
+                  <span className="text-sm font-black uppercase text-[var(--color-error)]">{t('sales.balanceDue')}</span>
                   <span className="text-3xl font-black text-[var(--color-error)]">₹{dueAmount.toLocaleString()}</span>
                 </div>
               </div>
             </div>
 
             <button className="brutalist-btn w-full py-5 text-xl mt-4" onClick={confirmSale}>
-              CONFIRM & GENERATE INVOICE
+              {t('sales.generateInvoice')}
             </button>
           </div>
         </div>
@@ -349,20 +412,20 @@ export function Sales() {
 
       {/* Receipt Modal */}
       {isReceiptModalOpen && lastInvoice && (
-        <Modal isOpen={true} onClose={() => setIsReceiptModalOpen(false)} title="INVOICE GENERATED">
+        <Modal isOpen={true} onClose={() => setIsReceiptModalOpen(false)} title={t('sales.invoiceGenerated')}>
           <div className="text-center py-4">
             <div className="w-20 h-20 border-4 border-[var(--border-color)] bg-[var(--color-success)] flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0_var(--shadow-color)]">
               <CheckCircle2 className="w-10 h-10 text-[#111111]" />
             </div>
-            <h3 className="text-3xl font-black tracking-tighter uppercase mb-2">₹{lastInvoice.total.toLocaleString()}</h3>
+            <h3 className="text-3xl font-black tracking-tighter uppercase mb-2">₹{(lastInvoice.total || 0).toLocaleString()}</h3>
             <p className="text-sm font-black uppercase tracking-widest text-[var(--text-secondary)] mb-6">INV: {lastInvoice.id}</p>
             
             <div className="flex gap-4">
               <button className="brutalist-btn flex-1 bg-[var(--color-accent)] text-[#111111] gap-2" onClick={handlePrint}>
-                <Printer className="w-5 h-5" /> PRINT RECIEPT
+                <Printer className="w-5 h-5" /> {t('sales.printReceipt')}
               </button>
               <button className="brutalist-btn flex-1 gap-2" onClick={() => setIsReceiptModalOpen(false)}>
-                <X className="w-5 h-5" /> CLOSE
+                <X className="w-5 h-5" /> {t('sales.close')}
               </button>
             </div>
           </div>

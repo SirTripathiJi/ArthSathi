@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 const LanguageContext = createContext();
 export const useLanguage = () => useContext(LanguageContext);
+export const useTranslation = useLanguage;
 
 // Dynamically import all JSON locales
 const modules = import.meta.glob('../locales/*.json', { eager: true });
